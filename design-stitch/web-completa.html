@@ -479,36 +479,66 @@
           <span>Abrir Google Notebook</span>
         </a>
 
-        <!-- Botones Secundarios: Copiar Solo Texto / Descargar .txt -->
-        <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
-          <button id="copy-text-only-btn" type="button" style="touch-action: manipulation;" class="cursor-pointer inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-bright text-xs font-semibold text-primary transition-all border border-outline-variant/40 hover-lift btn-press">
-            <span class="material-symbols-outlined text-[16px]">content_copy</span>
-            <span id="copy-btn-label">Copiar Texto al Portapapeles</span>
+        <!-- Botones de Acción Rápida: Descargar Archivo / Copiar Texto / Compartir -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">
+          <!-- Opción Recomendada: Descargar Archivo .txt para NotebookLM -->
+          <button id="download-txt-btn" type="button" style="touch-action: manipulation;" class="cursor-pointer inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-primary-container/15 hover:bg-primary-container/25 text-primary-container text-xs font-bold transition-all border border-primary-container/40 hover-lift btn-press">
+            <span class="material-symbols-outlined text-[18px]">download</span>
+            <span id="download-btn-label">1. Descargar Archivo (.txt)</span>
           </button>
 
-          <button id="download-txt-btn" type="button" style="touch-action: manipulation;" class="cursor-pointer inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-bright text-xs font-semibold text-primary transition-all border border-outline-variant/40 hover-lift btn-press">
-            <span class="material-symbols-outlined text-[16px]">download</span>
-            <span>Descargar Archivo (.txt)</span>
+          <!-- Opción Portapapeles: Copiar Texto -->
+          <button id="copy-text-only-btn" type="button" style="touch-action: manipulation;" class="cursor-pointer inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-surface-container-high hover:bg-surface-bright text-xs font-semibold text-primary transition-all border border-outline-variant/40 hover-lift btn-press">
+            <span class="material-symbols-outlined text-[18px]">content_copy</span>
+            <span id="copy-btn-label">2. Copiar Texto</span>
+          </button>
+
+          <!-- Opción Móvil Nativa: Compartir o Guardar en Archivos del móvil -->
+          <button id="share-transcript-btn" type="button" style="touch-action: manipulation;" class="cursor-pointer inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-surface-container-high hover:bg-surface-bright text-xs font-semibold text-primary transition-all border border-outline-variant/40 hover-lift btn-press">
+            <span class="material-symbols-outlined text-[18px]">share</span>
+            <span>3. Compartir / Guardar</span>
           </button>
         </div>
 
         <!-- Tarjeta de instrucciones visuales paso a paso para NotebookLM -->
-        <div id="notebook-guide-box" class="p-4 rounded-2xl bg-surface-container-high/90 border border-primary-container/30 space-y-2.5 shadow-lg">
+        <div id="notebook-guide-box" class="p-4 rounded-2xl bg-surface-container-high/90 border border-primary-container/30 space-y-3 shadow-lg">
           <div class="flex items-center justify-between text-xs font-headline font-bold text-primary">
             <span class="flex items-center gap-2 text-primary-container">
-              <span class="material-symbols-outlined text-[18px]">info</span>
-              <span>Cómo usar tu texto copiado en Google NotebookLM:</span>
+              <span class="material-symbols-outlined text-[18px]">help</span>
+              <span>Cómo añadir tu clase en Google NotebookLM:</span>
             </span>
             <span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
-              Paso a paso
+              2 Vías Disponibles
             </span>
           </div>
-          <ol class="text-xs text-on-surface-variant space-y-2 pl-4 list-decimal leading-relaxed">
-            <li>En la pestaña de <strong>Google NotebookLM</strong>, pulsa <strong>«+ Nuevo cuaderno»</strong> (o entra en uno que ya tengas).</li>
-            <li>Pulsa <strong>«Añadir fuente»</strong> y selecciona <strong>«Texto copiado»</strong>.</li>
-            <li><strong>Pega tu texto</strong> (en iPhone/móvil mantén pulsado en la caja y elige <em>"Pegar"</em>; en PC pulsa <em>Ctrl+V</em>) y dale a <strong>«Insertar»</strong>.</li>
-            <li>En la sección <strong>Studio</strong> de NotebookLM, pulsa <strong>«Resumen en audio»</strong> para que genere el podcast a dos voces de tu clase.</li>
-          </ol>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-on-surface-variant">
+            <!-- Opción A: Archivo (La más recomendada) -->
+            <div class="p-3 rounded-xl bg-surface-container-lowest/80 border border-primary-container/30 space-y-1.5">
+              <div class="flex items-center gap-1.5 text-primary-container font-bold">
+                <span class="material-symbols-outlined text-[16px]">folder_open</span>
+                <span>Opción A (Recomendada): Por Archivo</span>
+              </div>
+              <p class="text-[11px] leading-relaxed">
+                1. Pulsa arriba en <strong>«1. Descargar Archivo (.txt)»</strong>.<br/>
+                2. En NotebookLM pulsa <strong>«Añadir fuente» ➔ «Archivos»</strong>.<br/>
+                3. Elige <em>Clase_Grabada.txt</em>. ¡Se carga al instante sin tener que pegar nada!
+              </p>
+            </div>
+
+            <!-- Opción B: Texto Copiado -->
+            <div class="p-3 rounded-xl bg-surface-container-lowest/80 border border-outline-variant/40 space-y-1.5">
+              <div class="flex items-center gap-1.5 text-emerald-300 font-bold">
+                <span class="material-symbols-outlined text-[16px]">content_paste</span>
+                <span>Opción B: Por Texto Copiado</span>
+              </div>
+              <p class="text-[11px] leading-relaxed">
+                1. Pulsa en <strong>«2. Copiar Texto»</strong>.<br/>
+                2. En NotebookLM pulsa <strong>«Añadir fuente» ➔ «Texto copiado»</strong>.<br/>
+                3. Toca la caja, <strong>mantén pulsado 1 segundo</strong> y pulsa <strong>«Pegar»</strong>.
+              </p>
+            </div>
+          </div>
         </div>
 
         <!-- Notificación Toast de copiado -->
@@ -1406,6 +1436,9 @@
       }).catch(err => console.warn("Auditoría offline:", err));
     }
 
+    const shareTranscriptBtn = document.getElementById("share-transcript-btn");
+    const downloadBtnLabel = document.getElementById("download-btn-label");
+
     if (openNotebookBtn) {
       openNotebookBtn.addEventListener("click", handleNotebookAction);
     }
@@ -1424,32 +1457,89 @@
         copyRawTextToClipboard(rawText);
         const wordsCount = rawText.split(/\s+/).filter(Boolean).length;
         if (copyBtnLabel) {
-          copyBtnLabel.textContent = `¡Copiado (${wordsCount} palabras)!`;
+          copyBtnLabel.textContent = `¡Copiado (${wordsCount} pal.)!`;
           copyTextOnlyBtn.classList.add("text-emerald-300", "border-emerald-500/50");
           setTimeout(() => {
-            copyBtnLabel.textContent = "Copiar Texto al Portapapeles";
+            copyBtnLabel.textContent = "2. Copiar Texto";
             copyTextOnlyBtn.classList.remove("text-emerald-300", "border-emerald-500/50");
           }, 3000);
         }
-        showCopyToast(`¡Texto copiado al portapapeles (${wordsCount} palabras)! Ya puedes pegarlo con 'Pegar' o 'Ctrl+V'.`);
+        showCopyToast(`¡Texto copiado al portapapeles (${wordsCount} palabras)! En NotebookLM mantén pulsado y elige 'Pegar'.`);
       });
     }
 
     if (downloadTxtBtn) {
       downloadTxtBtn.addEventListener("click", () => {
+        if (recordingState === "recording") {
+          stopRecording();
+        }
         const rawText = liveTranscript.value.trim();
         if (!rawText) {
-          alert("No hay texto para descargar.");
+          alert("⚠️ No hay texto para descargar. Graba tu voz primero.");
           return;
         }
-        triggerHaptic("light");
+        triggerHaptic("success");
         const blob = new Blob([rawText], { type: "text/plain;charset=utf-8" });
+        const fileUrl = URL.createObjectURL(blob);
         const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download = "Transcripcion_Clase.txt";
+        a.href = fileUrl;
+        a.download = "Clase_Grabada.txt";
         document.body.appendChild(a);
         a.click();
-        document.body.removeChild(a);
+        setTimeout(() => {
+          document.body.removeChild(a);
+          URL.revokeObjectURL(fileUrl);
+        }, 1500);
+
+        if (downloadBtnLabel) {
+          downloadBtnLabel.textContent = "¡Archivo Descargado! ✓";
+          downloadTxtBtn.classList.add("bg-emerald-500/20", "text-emerald-300", "border-emerald-500/50");
+          setTimeout(() => {
+            downloadBtnLabel.textContent = "1. Descargar Archivo (.txt)";
+            downloadTxtBtn.classList.remove("bg-emerald-500/20", "text-emerald-300", "border-emerald-500/50");
+          }, 3500);
+        }
+
+        showCopyToast("¡Archivo 'Clase_Grabada.txt' descargado! En NotebookLM pulsa 'Añadir fuente' > 'Archivos' y elígelo.");
+      });
+    }
+
+    if (shareTranscriptBtn) {
+      shareTranscriptBtn.addEventListener("click", async () => {
+        if (recordingState === "recording") {
+          stopRecording();
+        }
+        const rawText = liveTranscript.value.trim();
+        if (!rawText) {
+          alert("⚠️ No hay texto para compartir. Graba tu voz primero.");
+          return;
+        }
+        triggerHaptic("medium");
+
+        if (navigator.share) {
+          try {
+            const file = new File([rawText], "Clase_Grabada.txt", { type: "text/plain" });
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+              await navigator.share({
+                title: "Clase Grabada - OFG.ai",
+                text: "Transcripción de clase para Google NotebookLM",
+                files: [file]
+              });
+            } else {
+              await navigator.share({
+                title: "Clase Grabada - OFG.ai",
+                text: rawText
+              });
+            }
+          } catch (shareErr) {
+            if (shareErr.name !== "AbortError") {
+              console.warn("Share API aviso:", shareErr);
+            }
+          }
+        } else {
+          copyRawTextToClipboard(rawText);
+          showCopyToast("¡Texto copiado al portapapeles! Ya puedes pegarlo o guardarlo donde prefieras.");
+        }
       });
     }
 
