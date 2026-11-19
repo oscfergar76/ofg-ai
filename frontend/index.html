@@ -766,6 +766,18 @@
       barElements.push(bar);
     }
 
+    // Haptic feedback seguro para smartphones
+    function triggerHaptic(type = "light") {
+      try {
+        if (window.navigator && window.navigator.vibrate) {
+          if (type === "heavy") window.navigator.vibrate([30, 20, 30]);
+          else if (type === "medium") window.navigator.vibrate(25);
+          else if (type === "success") window.navigator.vibrate([15, 30, 15]);
+          else window.navigator.vibrate(10);
+        }
+      } catch (e) {}
+    }
+
     // -------------------------------------------------------------
     // B. REAL MICROPHONE & SPEECH RECOGNITION SETUP (DEDUPLICATED & CONTROLS)
     // -------------------------------------------------------------
@@ -955,8 +967,13 @@
         drawSpectrumLoop();
 
       } catch (err) {
-        alert("No se pudo acceder al micrófono. Asegúrate de permitir el acceso en tu navegador.");
         console.error("Mic error:", err);
+        const errName = err ? (err.name || err.message || String(err)) : "Error desconocido";
+        if (errName.includes("NotAllowed") || errName.includes("Permission")) {
+          alert("Safari ha bloqueado el micrófono. Toca en 'aA' > Ajustes del sitio web > Micrófono > Permitir y recarga.");
+        } else {
+          alert("Aviso de micrófono: " + errName);
+        }
       }
     }
 
