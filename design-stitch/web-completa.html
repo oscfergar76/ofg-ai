@@ -470,292 +470,37 @@
         </div>
       </div>
 
-      <!-- ===================================================================== -->
-      <!-- STUDIO SUITE: LA BOTONERA DE LOS 8 ENTREGABLES A LA CARTA -->
-      <!-- ===================================================================== -->
-      <div id="studio-options-section" class="scroll-mt-20 pt-4 border-t border-surface-container-high space-y-4">
+      <!-- ACCIÓN DIRECTA: ABRIR GOOGLE NOTEBOOK CON EL TEXTO COPIADO -->
+      <div id="notebook-action-section" class="pt-4 border-t border-surface-container-high space-y-4">
         
-        <div class="flex flex-wrap items-center justify-between gap-2">
-          <div>
-            <span class="text-xs font-mono font-bold text-primary-container uppercase tracking-wider flex items-center gap-1.5">
-              <span class="material-symbols-outlined text-[15px]">auto_fix_high</span>
-              <span>Studio Suite • Elige qué materiales generar</span>
-            </span>
-            <p class="text-xs text-on-surface-variant mt-0.5">
-              Marca una o varias opciones. Google NotebookLM procesará y generará cada entregable automáticamente.
-            </p>
-          </div>
-
-          <!-- Select All / Presets buttons -->
-          <div class="flex items-center gap-2 text-xs">
-            <button id="select-essential-btn" class="text-primary-fixed-dim hover:text-primary underline text-[11px]">
-              Pack Esencial (3)
-            </button>
-            <span class="text-outline-variant">•</span>
-            <button id="select-all-btn" class="text-primary-container hover:underline text-[11px] font-bold">
-              Seleccionar Todo (8)
-            </button>
-          </div>
-        </div>
-
-        <!-- 8 STUDIO CARDS GRID -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          
-          <!-- Option 1: Podcast -->
-          <label class="studio-option-card relative cursor-pointer rounded-2xl p-3 sm:p-4 bg-surface-container-lowest/90 border border-primary-container/40 flex flex-col justify-between hover-lift transition-all select-none group" data-key="podcast">
-            <input type="checkbox" checked class="studio-checkbox absolute top-3 right-3 accent-cyan-400 w-4 h-4 rounded cursor-pointer"/>
-            <div class="space-y-1.5">
-              <span class="material-symbols-outlined text-primary-container text-[24px]">podcasts</span>
-              <h4 class="font-headline font-bold text-xs sm:text-sm text-primary">Podcast (2 Voces)</h4>
-              <p class="text-[11px] text-on-surface-variant leading-tight">Conversación de audio para repasar en auriculares.</p>
-            </div>
-            <span class="mt-2 text-[10px] font-mono text-primary-fixed-dim">Audio .M4A</span>
-          </label>
-
-          <!-- Option 2: Informe / PDF -->
-          <label class="studio-option-card relative cursor-pointer rounded-2xl p-3 sm:p-4 bg-surface-container-lowest/90 border border-primary-container/40 flex flex-col justify-between hover-lift transition-all select-none group" data-key="pdf">
-            <input type="checkbox" checked class="studio-checkbox absolute top-3 right-3 accent-cyan-400 w-4 h-4 rounded cursor-pointer"/>
-            <div class="space-y-1.5">
-              <span class="material-symbols-outlined text-tertiary-fixed-dim text-[24px]">description</span>
-              <h4 class="font-headline font-bold text-xs sm:text-sm text-primary">Informe & PDF</h4>
-              <p class="text-[11px] text-on-surface-variant leading-tight">Apuntes estructurados oficiales para imprimir o estudiar.</p>
-            </div>
-            <span class="mt-2 text-[10px] font-mono text-tertiary-fixed-dim">Documento A4</span>
-          </label>
-
-          <!-- Option 3: Presentación -->
-          <label class="studio-option-card relative cursor-pointer rounded-2xl p-3 sm:p-4 bg-surface-container-lowest/90 border border-primary-container/40 flex flex-col justify-between hover-lift transition-all select-none group" data-key="slides">
-            <input type="checkbox" checked class="studio-checkbox absolute top-3 right-3 accent-cyan-400 w-4 h-4 rounded cursor-pointer"/>
-            <div class="space-y-1.5">
-              <span class="material-symbols-outlined text-secondary text-[24px]">slideshow</span>
-              <h4 class="font-headline font-bold text-xs sm:text-sm text-primary">Presentación</h4>
-              <p class="text-[11px] text-on-surface-variant leading-tight">Diapositivas de clase sintetizadas para repaso rápido.</p>
-            </div>
-            <span class="mt-2 text-[10px] font-mono text-secondary">Diapositivas</span>
-          </label>
-
-          <!-- Option 4: Flashcards 3D -->
-          <label class="studio-option-card relative cursor-pointer rounded-2xl p-3 sm:p-4 bg-surface-container-lowest/90 border border-primary-container/40 flex flex-col justify-between hover-lift transition-all select-none group" data-key="flashcards">
-            <input type="checkbox" checked class="studio-checkbox absolute top-3 right-3 accent-cyan-400 w-4 h-4 rounded cursor-pointer"/>
-            <div class="space-y-1.5">
-              <span class="material-symbols-outlined text-primary-fixed-dim text-[24px]">style</span>
-              <h4 class="font-headline font-bold text-xs sm:text-sm text-primary">Tarjetas Flashcards</h4>
-              <p class="text-[11px] text-on-surface-variant leading-tight">Tarjetas volteables 3D para autoevaluación activa.</p>
-            </div>
-            <span class="mt-2 text-[10px] font-mono text-primary-fixed-dim">Mazo 3D</span>
-          </label>
-
-          <!-- Option 5: Mapa Mental -->
-          <label class="studio-option-card relative cursor-pointer rounded-2xl p-3 sm:p-4 bg-surface-container-lowest/90 border border-outline-variant/40 flex flex-col justify-between hover-lift transition-all select-none group" data-key="mindmap">
-            <input type="checkbox" class="studio-checkbox absolute top-3 right-3 accent-cyan-400 w-4 h-4 rounded cursor-pointer"/>
-            <div class="space-y-1.5">
-              <span class="material-symbols-outlined text-cyan-300 text-[24px]">account_tree</span>
-              <h4 class="font-headline font-bold text-xs sm:text-sm text-primary">Mapa Mental</h4>
-              <p class="text-[11px] text-on-surface-variant leading-tight">Esquema conceptual con ramas, relaciones y nodos.</p>
-            </div>
-            <span class="mt-2 text-[10px] font-mono text-cyan-300">Esquema Visual</span>
-          </label>
-
-          <!-- Option 6: Cuestionario / Test -->
-          <label class="studio-option-card relative cursor-pointer rounded-2xl p-3 sm:p-4 bg-surface-container-lowest/90 border border-outline-variant/40 flex flex-col justify-between hover-lift transition-all select-none group" data-key="quiz">
-            <input type="checkbox" class="studio-checkbox absolute top-3 right-3 accent-cyan-400 w-4 h-4 rounded cursor-pointer"/>
-            <div class="space-y-1.5">
-              <span class="material-symbols-outlined text-emerald-400 text-[24px]">quiz</span>
-              <h4 class="font-headline font-bold text-xs sm:text-sm text-primary">Cuestionario</h4>
-              <p class="text-[11px] text-on-surface-variant leading-tight">Test tipo examen con corrección instantánea y puntuación.</p>
-            </div>
-            <span class="mt-2 text-[10px] font-mono text-emerald-400">Test Examen</span>
-          </label>
-
-          <!-- Option 7: Infografía -->
-          <label class="studio-option-card relative cursor-pointer rounded-2xl p-3 sm:p-4 bg-surface-container-lowest/90 border border-outline-variant/40 flex flex-col justify-between hover-lift transition-all select-none group" data-key="infographic">
-            <input type="checkbox" class="studio-checkbox absolute top-3 right-3 accent-cyan-400 w-4 h-4 rounded cursor-pointer"/>
-            <div class="space-y-1.5">
-              <span class="material-symbols-outlined text-amber-300 text-[24px]">insights</span>
-              <h4 class="font-headline font-bold text-xs sm:text-sm text-primary">Infografía</h4>
-              <p class="text-[11px] text-on-surface-variant leading-tight">Línea temporal con fechas clave, datos y comparativas.</p>
-            </div>
-            <span class="mt-2 text-[10px] font-mono text-amber-300">Cronología</span>
-          </label>
-
-          <!-- Option 8: Resumen de Vídeo -->
-          <label class="studio-option-card relative cursor-pointer rounded-2xl p-3 sm:p-4 bg-surface-container-lowest/90 border border-outline-variant/40 flex flex-col justify-between hover-lift transition-all select-none group" data-key="video">
-            <input type="checkbox" class="studio-checkbox absolute top-3 right-3 accent-cyan-400 w-4 h-4 rounded cursor-pointer"/>
-            <div class="space-y-1.5">
-              <span class="material-symbols-outlined text-indigo-300 text-[24px]">smart_display</span>
-              <h4 class="font-headline font-bold text-xs sm:text-sm text-primary">Resumen en Vídeo</h4>
-              <p class="text-[11px] text-on-surface-variant leading-tight">Cápsula audiovisual generada a partir de los puntos clave.</p>
-            </div>
-            <span class="mt-2 text-[10px] font-mono text-indigo-300">Vídeo-Cápsula</span>
-          </label>
-
-        </div>
-
-      </div>
-
-      <!-- Convert Action Bar -->
-      <div id="convert-bar" class="pt-4 border-t border-surface-container-high flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div class="text-xs text-on-surface-variant">
-          <span id="selected-count-label" class="font-semibold text-primary">4 materiales seleccionados</span> para generar en segundo plano.
-        </div>
-
-        <button id="process-class-btn" class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-2xl bg-gradient-to-r from-primary-container via-primary-fixed-dim to-tertiary-fixed text-on-primary-container font-headline font-extrabold text-sm uppercase tracking-wider shadow-[0_0_25px_rgba(0,242,254,0.4)] hover:shadow-[0_0_35px_rgba(0,242,254,0.6)] transition-all hover-lift btn-press">
-          <span class="material-symbols-outlined text-[20px]">auto_awesome</span>
-          <span>Generar Materiales de Estudio con IA</span>
+        <!-- Botón Principal: Abrir Google Notebook -->
+        <button id="open-notebook-btn" type="button" style="touch-action: manipulation;" class="cursor-pointer w-full inline-flex items-center justify-center gap-3 px-6 py-4 rounded-2xl bg-gradient-to-r from-primary-container via-primary-fixed-dim to-tertiary-fixed text-on-primary-container font-headline font-black text-sm sm:text-base uppercase tracking-wider shadow-[0_0_30px_rgba(0,242,254,0.45)] hover:shadow-[0_0_45px_rgba(0,242,254,0.65)] transition-all hover-lift btn-press select-none">
+          <span class="material-symbols-outlined text-[24px]">open_in_new</span>
+          <span>Abrir Google Notebook</span>
         </button>
-      </div>
 
-      <!-- Processing State Overlay / Loader -->
-      <div id="processing-loader" class="hidden rounded-2xl bg-surface-container-lowest/90 backdrop-blur-md p-6 border border-primary-container/40 text-center space-y-4">
-        <div class="w-12 h-12 rounded-full border-4 border-primary-container/20 border-t-primary-container animate-spin mx-auto"></div>
-        <div class="space-y-1">
-          <h3 id="loader-status-title" class="font-headline font-bold text-base text-primary">
-            Conectando con NotebookLM Studio...
-          </h3>
-          <p id="loader-status-desc" class="text-xs text-on-surface-variant font-mono">
-            Procesando y generando los entregables solicitados
-          </p>
+        <!-- Botones Secundarios: Copiar Solo Texto / Descargar .txt -->
+        <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+          <button id="copy-text-only-btn" type="button" style="touch-action: manipulation;" class="cursor-pointer inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-bright text-xs font-semibold text-primary transition-all border border-outline-variant/40 hover-lift btn-press">
+            <span class="material-symbols-outlined text-[16px]">content_copy</span>
+            <span id="copy-btn-label">Copiar Texto al Portapapeles</span>
+          </button>
+
+          <button id="download-txt-btn" type="button" style="touch-action: manipulation;" class="cursor-pointer inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-bright text-xs font-semibold text-primary transition-all border border-outline-variant/40 hover-lift btn-press">
+            <span class="material-symbols-outlined text-[16px]">download</span>
+            <span>Descargar Archivo (.txt)</span>
+          </button>
         </div>
-        <div class="w-full max-w-xs mx-auto h-1.5 bg-surface-container-high rounded-full overflow-hidden">
-          <div id="loader-progress-bar" class="h-full bg-gradient-to-r from-primary-container to-tertiary-fixed w-1/4 transition-all duration-300"></div>
-        </div>
-      </div>
 
-    </section>
-
-    <!-- ======================================================================= -->
-    <!-- STEP 2: EL HUB DE ESTUDIO DINÁMICO (LOS ENTREGABLES GENERADOS) -->
-    <!-- ======================================================================= -->
-    <section id="results-hub" class="scroll-mt-20 space-y-6">
-      
-      <!-- ESTADO EN BLANCO INICIAL (ANTES DE PREPARAR) -->
-      <div id="results-empty-placeholder" class="rounded-3xl bg-card-glass backdrop-blur-xl p-8 sm:p-12 border border-border-glow text-center space-y-4">
-        <div class="w-16 h-16 mx-auto rounded-2xl bg-primary-container/10 border border-primary-container/30 flex items-center justify-center text-primary-container shadow-[0_0_20px_rgba(0,242,254,0.15)]">
-          <span class="material-symbols-outlined text-[34px]">auto_stories</span>
-        </div>
-        <div class="max-w-md mx-auto space-y-2">
-          <h3 class="font-headline font-bold text-lg sm:text-xl text-primary">Tu Espacio de Estudio en Blanco</h3>
-          <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
-            Graba la explicación de tu profesor arriba o importa una nota de voz del móvil. Al pulsar <strong>«Preparar e Inyectar en Google NotebookLM»</strong>, la lección quedará copiada en tu portapapeles y se activará el enlace a tu cuaderno.
-          </p>
-        </div>
-      </div>
-
-      <!-- PANEL ACTIVO DEL PUENTE NOTEBOOKLM (TRAS GENERAR) -->
-      <div id="results-active-wrapper" class="hidden space-y-6">
-        
-        <!-- Header del Puente -->
-        <div class="rounded-3xl bg-card-glass backdrop-blur-xl p-6 sm:p-8 border border-border-glow shadow-xl space-y-6">
-          
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-surface-container-high">
-            <div>
-              <div class="flex items-center gap-2">
-                <span class="text-xs font-mono text-primary-container font-bold uppercase tracking-wider">
-                  Fuente Académica para Google NotebookLM
-                </span>
-                <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-mono text-[10px] font-bold">
-                  ✓ Copiado al portapapeles
-                </span>
-              </div>
-              <h2 id="deliverable-class-title" class="font-headline font-extrabold text-xl sm:text-2xl text-primary mt-1">
-                Tema de Clase
-              </h2>
-              <p id="bridge-stats-info" class="text-xs text-on-surface-variant font-mono mt-0.5">
-                0 palabras • Formato oficial Markdown
-              </p>
-            </div>
-
-            <!-- Botón Principal: Abrir Google NotebookLM -->
-            <a id="open-notebooklm-btn" href="https://notebooklm.google.com/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-primary-container to-primary-fixed-dim text-on-primary-container font-headline font-bold text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(0,242,254,0.4)] hover:shadow-[0_0_30px_rgba(0,242,254,0.6)] transition-all hover-lift btn-press cursor-pointer">
-              <span class="material-symbols-outlined text-[18px]">open_in_new</span>
-              <span id="open-notebook-btn-text">Abrir Google NotebookLM ↗</span>
-            </a>
-          </div>
-
-          <!-- Botones de Acción Secundaria (Copiar de nuevo / Descargar .txt) -->
-          <div class="flex flex-wrap items-center gap-3">
-            <button id="recopy-source-btn" type="button" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-bright text-xs font-semibold text-primary transition-all border border-outline-variant/40 hover-lift btn-press cursor-pointer">
-              <span class="material-symbols-outlined text-[16px]">content_copy</span>
-              <span id="recopy-btn-text">Copiar texto de nuevo</span>
-            </button>
-
-            <button id="download-source-btn" type="button" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-bright text-xs font-semibold text-primary transition-all border border-outline-variant/40 hover-lift btn-press cursor-pointer">
-              <span class="material-symbols-outlined text-[16px]">download</span>
-              <span>Descargar archivo (.txt)</span>
-            </button>
-          </div>
-
-          <!-- Guía Visual de 3 Pasos en NotebookLM -->
-          <div class="pt-4 border-t border-surface-container-high space-y-3">
-            <h4 class="font-headline font-bold text-xs sm:text-sm text-primary uppercase tracking-wider">
-              Cómo generar tu Podcast y Guía en 3 sencillos pasos:
-            </h4>
-            
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <!-- Paso 1 -->
-              <div class="p-4 rounded-2xl bg-surface-container-lowest/90 border border-outline-variant/30 space-y-2">
-                <div class="w-7 h-7 rounded-lg bg-primary-container/20 text-primary-container flex items-center justify-center font-bold text-xs">
-                  1
-                </div>
-                <h5 class="font-headline font-bold text-xs text-primary">En NotebookLM: Añadir Fuente</h5>
-                <p class="text-[11px] text-on-surface-variant leading-relaxed">
-                  Pulsa el botón <strong>«+ Añadir fuente»</strong> y selecciona la opción <strong>«Texto copiado»</strong>.
-                </p>
-              </div>
-
-              <!-- Paso 2 -->
-              <div class="p-4 rounded-2xl bg-surface-container-lowest/90 border border-outline-variant/30 space-y-2">
-                <div class="w-7 h-7 rounded-lg bg-primary-container/20 text-primary-container flex items-center justify-center font-bold text-xs">
-                  2
-                </div>
-                <h5 class="font-headline font-bold text-xs text-primary">Pegar con Ctrl+V e Insertar</h5>
-                <p class="text-[11px] text-on-surface-variant leading-relaxed">
-                  Pega el texto que ya tienes en el portapapeles (<kbd class="px-1 py-0.5 rounded bg-surface-container-high font-mono text-[9px]">Ctrl+V</kbd> o mantener pulsado en móvil) y pulsa <strong>Insertar</strong>.
-                </p>
-              </div>
-
-              <!-- Paso 3 -->
-              <div class="p-4 rounded-2xl bg-surface-container-lowest/90 border border-outline-variant/30 space-y-2">
-                <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs">
-                  3
-                </div>
-                <h5 class="font-headline font-bold text-xs text-emerald-300">Studio: Generar Podcast y Guía</h5>
-                <p class="text-[11px] text-on-surface-variant leading-relaxed">
-                  En el panel derecho (<strong>Studio</strong>), haz clic en <strong>«Audio Overview»</strong> para el podcast a 2 voces, <strong>«Guía de estudio»</strong> o <strong>«Cuestionario»</strong>.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Configurador de Cuaderno Personal -->
-          <div class="p-4 rounded-2xl bg-surface-container-lowest border border-primary-container/20 space-y-2">
-            <div class="flex items-center justify-between gap-2">
-              <span class="text-xs font-headline font-bold text-primary flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-[16px] text-primary-container">bookmark</span>
-                <span>Fijar Enlace a tu Cuaderno de Bachillerato (Opcional):</span>
-              </span>
-              <span class="text-[10px] text-on-surface-variant font-mono">Para abrir siempre tu cuaderno directo</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <input id="custom-notebook-url-input" type="url" placeholder="https://notebooklm.google.com/notebook/tu-cuaderno-id" class="flex-1 p-2.5 rounded-xl bg-surface-container-high border border-outline-variant/40 text-xs text-primary placeholder:text-outline outline-none focus:border-primary-container font-mono" />
-              <button id="save-notebook-url-btn" type="button" class="px-3.5 py-2.5 rounded-xl bg-primary-container text-on-primary-container font-headline font-bold text-xs shrink-0 btn-press cursor-pointer">
-                Guardar
-              </button>
-            </div>
-          </div>
-
-          <!-- Previsualizador Desplegable de la Fuente Formateada -->
-          <details class="rounded-2xl bg-surface-container-lowest/80 p-4 border border-outline-variant/30 text-xs group">
-            <summary class="cursor-pointer font-headline font-bold text-primary flex items-center justify-between select-none">
-              <span class="flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-[16px] text-primary-container">visibility</span>
-                <span>Previsualizar texto académico preparado para NotebookLM</span>
-              </span>
-              <span class="material-symbols-outlined text-[16px] text-on-surface-variant transition-transform group-open:rotate-180">expand_more</span>
-            </summary>
-            <pre id="source-preview-box" class="mt-3 p-3.5 rounded-xl bg-surface-container-low font-mono text-[11px] text-on-surface-variant overflow-x-auto whitespace-pre-wrap leading-relaxed max-h-72 overflow-y-auto border border-outline-variant/30"></pre>
-          </details>
-
+        <!-- Notificación Toast de copiado -->
+        <div id="copy-toast-notification" class="hidden p-3.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-mono flex items-center justify-between gap-2 animate-in fade-in">
+          <span class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">check_circle</span>
+            <span id="copy-toast-msg">¡Texto copiado al portapapeles! Abriendo Google Notebook...</span>
+          </span>
+          <button id="close-copy-toast-btn" type="button" class="text-emerald-400 hover:text-white">
+            <span class="material-symbols-outlined text-[16px]">close</span>
+          </button>
         </div>
 
       </div>
@@ -916,20 +661,16 @@
   <!-- ========================================================================= -->
   <!-- MOBILE STICKY BOTTOM DOCK (OPTIMIZADO PARA EL PULGAR EN SMARTPHONES) -->
   <!-- ========================================================================= -->
-  <nav id="mobile-bottom-dock" style="touch-action: manipulation;" class="sm:hidden fixed bottom-0 inset-x-0 z-40 bg-surface-container-lowest/95 backdrop-blur-2xl border-t border-surface-container-high/80 px-2 pt-2 pb-[max(0.6rem,env(safe-area-inset-bottom))] shadow-[0_-12px_32px_rgba(0,0,0,0.8)] flex items-center justify-around select-none">
-    <button id="m-nav-record" type="button" class="cursor-pointer flex flex-col items-center gap-1 py-1 px-3 text-primary-container font-headline font-bold text-[10px] transition-all btn-press">
+  <nav id="mobile-bottom-dock" style="touch-action: manipulation;" class="sm:hidden fixed bottom-0 inset-x-0 z-40 bg-surface-container-lowest/95 backdrop-blur-2xl border-t border-surface-container-high/80 px-4 pt-2 pb-[max(0.6rem,env(safe-area-inset-bottom))] shadow-[0_-12px_32px_rgba(0,0,0,0.8)] flex items-center justify-around select-none">
+    <button id="m-nav-record" type="button" class="cursor-pointer flex flex-col items-center gap-1 py-1 px-4 text-primary-container font-headline font-bold text-[10px] transition-all btn-press">
       <span class="material-symbols-outlined text-[24px]">mic</span>
       <span>Grabar</span>
     </button>
-    <button id="m-nav-studio" type="button" class="cursor-pointer flex flex-col items-center gap-1 py-1 px-3 text-on-surface-variant hover:text-primary font-headline font-medium text-[10px] transition-all btn-press">
-      <span class="material-symbols-outlined text-[24px]">auto_awesome</span>
-      <span>Inyectar</span>
+    <button id="m-nav-notebook" type="button" class="cursor-pointer flex flex-col items-center gap-1 py-1 px-4 text-on-surface-variant hover:text-primary font-headline font-medium text-[10px] transition-all btn-press">
+      <span class="material-symbols-outlined text-[24px]">open_in_new</span>
+      <span>Abrir Notebook</span>
     </button>
-    <button id="m-nav-materials" type="button" class="cursor-pointer flex flex-col items-center gap-1 py-1 px-3 text-on-surface-variant hover:text-primary font-headline font-medium text-[10px] transition-all btn-press">
-      <span class="material-symbols-outlined text-[24px]">auto_stories</span>
-      <span>NotebookLM</span>
-    </button>
-    <button id="m-nav-install" type="button" class="cursor-pointer flex flex-col items-center gap-1 py-1 px-3 text-on-surface-variant hover:text-primary font-headline font-medium text-[10px] transition-all btn-press">
+    <button id="m-nav-install" type="button" class="cursor-pointer flex flex-col items-center gap-1 py-1 px-4 text-on-surface-variant hover:text-primary font-headline font-medium text-[10px] transition-all btn-press">
       <span class="material-symbols-outlined text-[24px]">install_mobile</span>
       <span>App Móvil</span>
     </button>
@@ -1519,319 +1260,128 @@
     }
 
     // =============================================================
-    // GOOGLE NOTEBOOKLM BRIDGE CONTROLLER
+    // GOOGLE NOTEBOOK CONTROLLER (COPIA TEXTO PURO Y ABRE NOTEBOOK)
     // =============================================================
-    const processClassBtn = document.getElementById("process-class-btn");
-    const generationModal = document.getElementById("generation-modal");
-    const modalStatusTitle = document.getElementById("modal-status-title");
-    const modalStatusDesc = document.getElementById("modal-status-desc");
-    const modalProgressBar = document.getElementById("modal-progress-bar");
-    const modalProgressPct = document.getElementById("modal-progress-pct");
-    const modalSpinner = document.getElementById("modal-spinner");
-    const modalCenterIcon = document.getElementById("modal-center-icon");
-    const modalCompletionActions = document.getElementById("modal-completion-actions");
-    const modalViewResultsBtn = document.getElementById("modal-view-results-btn");
+    const openNotebookBtn = document.getElementById("open-notebook-btn");
+    const copyTextOnlyBtn = document.getElementById("copy-text-only-btn");
+    const downloadTxtBtn = document.getElementById("download-txt-btn");
+    const copyBtnLabel = document.getElementById("copy-btn-label");
+    const copyToastNotification = document.getElementById("copy-toast-notification");
+    const copyToastMsg = document.getElementById("copy-toast-msg");
+    const closeCopyToastBtn = document.getElementById("close-copy-toast-btn");
 
-    const resultsHub = document.getElementById("results-hub");
-    const resultsEmptyPlaceholder = document.getElementById("results-empty-placeholder");
-    const resultsActiveWrapper = document.getElementById("results-active-wrapper");
-    const deliverableClassTitle = document.getElementById("deliverable-class-title");
-    const bridgeStatsInfo = document.getElementById("bridge-stats-info");
-    const openNotebooklmBtn = document.getElementById("open-notebooklm-btn");
-    const recopySourceBtn = document.getElementById("recopy-source-btn");
-    const recopyBtnText = document.getElementById("recopy-btn-text");
-    const downloadSourceBtn = document.getElementById("download-source-btn");
-    const customNotebookUrlInput = document.getElementById("custom-notebook-url-input");
-    const saveNotebookUrlBtn = document.getElementById("save-notebook-url-btn");
-    const sourcePreviewBox = document.getElementById("source-preview-box");
-
-    let currentPreparedBridgeSource = "";
-    let currentPreparedTitle = "";
-
-    // Cargar cuaderno fijado por el usuario de la sesión actual
-    const savedNotebookUrl = sessionStorage.getItem("ofg_saved_notebook_url");
-    if (savedNotebookUrl) {
-      if (customNotebookUrlInput) customNotebookUrlInput.value = savedNotebookUrl;
-      if (openNotebooklmBtn) openNotebooklmBtn.href = savedNotebookUrl;
-    }
-
-    if (saveNotebookUrlBtn && customNotebookUrlInput) {
-      saveNotebookUrlBtn.addEventListener("click", () => {
-        const url = customNotebookUrlInput.value.trim();
-        if (url && (url.startsWith("http://") || url.startsWith("https://"))) {
-          sessionStorage.setItem("ofg_saved_notebook_url", url);
-          if (openNotebooklmBtn) openNotebooklmBtn.href = url;
-          triggerHaptic("success");
-          alert("✓ Enlace a tu cuaderno guardado para esta sesión.");
-        } else {
-          alert("Por favor, introduce una URL válida (ej: https://notebooklm.google.com/notebook/...)");
-        }
+    if (closeCopyToastBtn) {
+      closeCopyToastBtn.addEventListener("click", () => {
+        if (copyToastNotification) copyToastNotification.classList.add("hidden");
       });
     }
 
-    function buildNotebookLMSource(text, customTitle) {
-      const words = text.split(/\s+/).filter(Boolean);
-      let inferredTitle = customTitle;
-      if (!inferredTitle || inferredTitle === "audio_grabacion.m4a") {
-        const firstSentence = text.split(/[.\n]/)[0].trim();
-        inferredTitle = firstSentence.length > 5 ? firstSentence.substring(0, 50) : "Lección de Bachillerato";
-      }
-
-      const formatted = `# 📚 FUENTE ACADÉMICA DE CLASE: ${inferredTitle}
-**Fecha:** ${new Date().toLocaleDateString("es-ES")} | **Nivel:** Bachillerato | **Fuente:** OFG.ai Studio Mobile Bridge
-**Extensión:** ${words.length} palabras transcriptas directamente de la voz del profesor
-
----
-
-## 1. Transcripción Completa y Fidedigna de la Sesión
-${text}
-
----
-
-## 2. Petición Pedagógica para Google NotebookLM (Studio)
-A partir de la transcripción anterior, por favor genera en las herramientas de Studio:
-1. 🎙️ **Audio Overview**: Un podcast conversacional a dos voces (anfitriona y anfitrión) que sintetice y debata los puntos clave expuestos en clase.
-2. 📑 **Guía de Estudio**: Un informe estructurado con definiciones, causas-efectos y conceptos indispensables para el examen.
-3. ❓ **Cuestionario de Examen**: Preguntas tipo test y preguntas cortas para autoevaluar la asimilación del contenido.
-4. 💡 **Preguntas Frecuentes (FAQ)** y conceptos clave para memorizar.
-
----
-*Preparado e inyectado con OFG.ai Studio • Laboratorio de Grabación Inteligente para Google NotebookLM*`;
-
-      return {
-        title: inferredTitle,
-        source: formatted,
-        wordCount: words.length
-      };
-    }
-
-    // Copiar al portapapeles con fallback robusto para navegadores móviles
-    async function copyToClipboardSafe(textToCopy) {
+    // Función universal para copiar al portapapeles sin fallos
+    async function copyRawTextToClipboard(textToCopy) {
       try {
         if (navigator.clipboard && navigator.clipboard.writeText) {
           await navigator.clipboard.writeText(textToCopy);
           return true;
         }
       } catch (err) {
-        console.warn("Clipboard API falló, usando fallback de textarea:", err);
+        console.warn("Clipboard API falló, usando fallback execCommand:", err);
       }
       try {
         const ta = document.createElement("textarea");
         ta.value = textToCopy;
         ta.style.position = "fixed";
-        ta.style.opacity = "0";
+        ta.style.left = "-9999px";
         document.body.appendChild(ta);
         ta.focus();
         ta.select();
-        const success = document.execCommand("copy");
+        const ok = document.execCommand("copy");
         document.body.removeChild(ta);
-        return success;
+        return ok;
       } catch (e) {
         return false;
       }
     }
 
-    if (recopySourceBtn) {
-      recopySourceBtn.addEventListener("click", async () => {
-        if (!currentPreparedBridgeSource) return;
-        triggerHaptic("medium");
-        const ok = await copyToClipboardSafe(currentPreparedBridgeSource);
-        if (recopyBtnText) {
-          recopyBtnText.textContent = ok ? "¡Copiado con éxito!" : "Copiado";
-          setTimeout(() => { recopyBtnText.textContent = "Copiar texto de nuevo"; }, 2500);
+    function showCopyToast(msg) {
+      if (copyToastNotification && copyToastMsg) {
+        copyToastMsg.textContent = msg;
+        copyToastNotification.classList.remove("hidden");
+        setTimeout(() => {
+          copyToastNotification.classList.add("hidden");
+        }, 4000);
+      }
+    }
+
+    // Acción principal: Copiar texto puro y abrir Google Notebook
+    async function handleOpenGoogleNotebook() {
+      const rawText = liveTranscript.value.trim();
+      if (!rawText) {
+        alert("Primero graba algo de audio con el micrófono o importa una nota de voz para transcribir el texto.");
+        return;
+      }
+
+      if (recordingState === "recording") {
+        stopRecording();
+      }
+
+      triggerHaptic("heavy");
+
+      // Copiar ÚNICAMENTE el texto que se está poniendo en voz (sin cabeceras ni formato extra)
+      await copyRawTextToClipboard(rawText);
+
+      showCopyToast("¡Texto de voz copiado al portapapeles! Abriendo Google Notebook...");
+
+      // Auditoría en segundo plano en Cloudflare D1 (Regla 4)
+      fetch("https://ofg-ai-backend.oscfergar.workers.dev/api/engine/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: rawText,
+          selectedKeys: ["notebooklm"],
+          title: "Clase de Audio"
+        })
+      }).catch(err => console.warn("Auditoría offline:", err));
+
+      // Abrir Google NotebookLM directamente
+      window.open("https://notebooklm.google.com/", "_blank");
+    }
+
+    if (openNotebookBtn) {
+      openNotebookBtn.addEventListener("click", handleOpenGoogleNotebook);
+    }
+
+    if (copyTextOnlyBtn) {
+      copyTextOnlyBtn.addEventListener("click", async () => {
+        const rawText = liveTranscript.value.trim();
+        if (!rawText) {
+          alert("No hay texto para copiar.");
+          return;
         }
+        triggerHaptic("medium");
+        const ok = await copyRawTextToClipboard(rawText);
+        if (copyBtnLabel) {
+          copyBtnLabel.textContent = ok ? "¡Texto Copiado!" : "Copiado";
+          setTimeout(() => { copyBtnLabel.textContent = "Copiar Texto al Portapapeles"; }, 2500);
+        }
+        showCopyToast("¡Texto copiado al portapapeles!");
       });
     }
 
-    if (downloadSourceBtn) {
-      downloadSourceBtn.addEventListener("click", () => {
-        if (!currentPreparedBridgeSource) return;
+    if (downloadTxtBtn) {
+      downloadTxtBtn.addEventListener("click", () => {
+        const rawText = liveTranscript.value.trim();
+        if (!rawText) {
+          alert("No hay texto para descargar.");
+          return;
+        }
         triggerHaptic("light");
-        const safeName = (currentPreparedTitle || "Clase_NotebookLM")
-          .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-          .replace(/[^a-zA-Z0-9_-]/g, "_")
-          .substring(0, 35) + "_Fuente_NotebookLM.txt";
-
-        const blob = new Blob([currentPreparedBridgeSource], { type: "text/plain;charset=utf-8" });
+        const blob = new Blob([rawText], { type: "text/plain;charset=utf-8" });
         const a = document.createElement("a");
         a.href = URL.createObjectURL(blob);
-        a.download = safeName;
+        a.download = "Transcripcion_Clase.txt";
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-      });
-    }
-
-    if (processClassBtn) {
-      processClassBtn.addEventListener("click", async () => {
-        const text = liveTranscript.value.trim();
-        if (!text && !currentUploadedAudioFile) {
-          alert("Por favor, graba con el micrófono o importa una nota de voz antes de inyectar en NotebookLM.");
-          return;
-        }
-
-        if (recordingState === "recording") stopRecording();
-
-        triggerHaptic("heavy");
-
-        const customTitle = currentUploadedAudioFile ? currentUploadedAudioFile.name : undefined;
-        const bridgeData = buildNotebookLMSource(text || (currentUploadedAudioFile ? `Archivo de audio importado: ${currentUploadedAudioFile.name}` : ""), customTitle);
-        currentPreparedBridgeSource = bridgeData.source;
-        currentPreparedTitle = bridgeData.title;
-
-        // 1. Copiar de inmediato al portapapeles en el gesto táctil del usuario
-        await copyToClipboardSafe(bridgeData.source);
-
-        // 2. Abrir Modal de Estado y Stepper
-        if (generationModal) {
-          generationModal.classList.remove("hidden");
-          modalCompletionActions.classList.add("hidden");
-          modalSpinner.classList.remove("hidden");
-          modalCenterIcon.textContent = "auto_awesome";
-          modalCenterIcon.className = "material-symbols-outlined text-primary-container text-[28px] animate-pulse";
-        }
-        processClassBtn.disabled = true;
-
-        const resetStep = (id, num, isFirst = false) => {
-          const el = document.getElementById(id);
-          if (!el) return;
-          el.className = isFirst ? "flex items-center gap-3 text-xs transition-all" : "flex items-center gap-3 text-xs opacity-50 transition-all";
-          const icon = el.querySelector(".step-icon");
-          if (icon) {
-            icon.className = isFirst ? "step-icon w-6 h-6 rounded-full bg-primary-container/20 text-primary-container flex items-center justify-center font-bold text-[11px] shrink-0" : "step-icon w-6 h-6 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold text-[11px] shrink-0";
-            icon.innerHTML = isFirst ? '<span class="material-symbols-outlined text-[15px] animate-spin">sync</span>' : `${num}`;
-          }
-          const st = el.querySelector(".step-status");
-          if (st) {
-            st.className = isFirst ? "step-status text-[11px] font-mono font-bold text-primary-container" : "step-status text-[11px] font-mono text-outline";
-            st.textContent = isFirst ? "En curso" : "En espera";
-          }
-        };
-
-        const setStepCompleted = (id) => {
-          const el = document.getElementById(id);
-          if (!el) return;
-          el.className = "flex items-center gap-3 text-xs transition-all";
-          const icon = el.querySelector(".step-icon");
-          if (icon) {
-            icon.className = "step-icon w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-[11px] shrink-0";
-            icon.innerHTML = '<span class="material-symbols-outlined text-[15px]">check</span>';
-          }
-          const st = el.querySelector(".step-status");
-          if (st) {
-            st.className = "step-status text-[11px] font-mono font-bold text-emerald-400";
-            st.textContent = "Listo";
-          }
-        };
-
-        const setStepActive = (id) => {
-          const el = document.getElementById(id);
-          if (!el) return;
-          el.className = "flex items-center gap-3 text-xs transition-all scale-[1.02]";
-          const icon = el.querySelector(".step-icon");
-          if (icon) {
-            icon.className = "step-icon w-6 h-6 rounded-full bg-primary-container/20 text-primary-container flex items-center justify-center font-bold text-[11px] shrink-0 shadow-[0_0_10px_rgba(0,242,254,0.4)]";
-            icon.innerHTML = '<span class="material-symbols-outlined text-[15px] animate-spin">sync</span>';
-          }
-          const st = el.querySelector(".step-status");
-          if (st) {
-            st.className = "step-status text-[11px] font-mono font-bold text-primary-container";
-            st.textContent = "En curso";
-          }
-        };
-
-        resetStep("stepper-step-1", 1, true);
-        resetStep("stepper-step-2", 2);
-        resetStep("stepper-step-3", 3);
-        resetStep("stepper-step-4", 4);
-
-        modalStatusTitle.textContent = "1/4 Estructurando lección para NotebookLM...";
-        modalStatusDesc.textContent = "Formateando apuntes académicos, encabezados y peticiones de Studio";
-        modalProgressPct.textContent = "30%";
-        modalProgressBar.style.width = "30%";
-
-        // Registrar auditoría en Cloudflare D1 en segundo plano
-        fetch("https://ofg-ai-backend.oscfergar.workers.dev/api/engine/generate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            text: text,
-            selectedKeys: ["podcast", "pdf"],
-            title: bridgeData.title
-          })
-        }).then(r => r.json()).then(res => {
-          if (res && res.title) {
-            currentPreparedTitle = res.title;
-            if (deliverableClassTitle) deliverableClassTitle.textContent = res.title;
-          }
-        }).catch(err => console.warn("Auditoría offline notice:", err));
-
-        // Paso 2 (0.7s)
-        setTimeout(() => {
-          setStepCompleted("stepper-step-1");
-          setStepActive("stepper-step-2");
-          modalStatusTitle.textContent = "2/4 Copiado al Portapapeles...";
-          modalStatusDesc.textContent = "✓ Texto de clase copiado con éxito para pegar en NotebookLM";
-          modalProgressPct.textContent = "65%";
-          modalProgressBar.style.width = "65%";
-        }, 700);
-
-        // Paso 3 (1.4s)
-        setTimeout(() => {
-          setStepCompleted("stepper-step-2");
-          setStepActive("stepper-step-3");
-          modalStatusTitle.textContent = "3/4 Preparando Enlace a tu Cuaderno...";
-          modalStatusDesc.textContent = "Configurando acceso seguro a Google NotebookLM con tu cuenta de Gmail";
-          modalProgressPct.textContent = "90%";
-          modalProgressBar.style.width = "90%";
-        }, 1400);
-
-        // Paso 4: Finalizado (2.1s)
-        setTimeout(() => {
-          setStepCompleted("stepper-step-3");
-          setStepCompleted("stepper-step-4");
-          modalProgressPct.textContent = "100%";
-          modalProgressBar.style.width = "100%";
-
-          modalSpinner.classList.add("hidden");
-          modalCenterIcon.textContent = "check_circle";
-          modalCenterIcon.className = "material-symbols-outlined text-emerald-400 text-[38px] animate-bounce";
-
-          modalStatusTitle.textContent = "¡Fuente Lista en Portapapeles!";
-          modalStatusDesc.textContent = "Pega el texto en NotebookLM y genera tu Audio Overview en Studio.";
-
-          modalCompletionActions.classList.remove("hidden");
-          processClassBtn.disabled = false;
-
-          // Rellenar panel de resultados
-          if (resultsEmptyPlaceholder) resultsEmptyPlaceholder.classList.add("hidden");
-          if (resultsActiveWrapper) resultsActiveWrapper.classList.remove("hidden");
-          if (deliverableClassTitle) deliverableClassTitle.textContent = currentPreparedTitle;
-          if (bridgeStatsInfo) {
-            const readingMin = Math.max(1, Math.round(bridgeData.wordCount / 180));
-            bridgeStatsInfo.textContent = `${bridgeData.wordCount} palabras transcriptas • ~${readingMin} min de lectura • Formato Markdown Oficial`;
-          }
-          if (sourcePreviewBox) {
-            sourcePreviewBox.textContent = currentPreparedBridgeSource;
-          }
-
-          const goToBridge = () => {
-            generationModal.classList.add("hidden");
-            if (resultsHub) {
-              resultsHub.scrollIntoView({ behavior: "smooth", block: "start" });
-            }
-            triggerHaptic("success");
-          };
-
-          modalViewResultsBtn.onclick = goToBridge;
-
-          setTimeout(() => {
-            if (!generationModal.classList.contains("hidden")) {
-              goToBridge();
-            }
-          }, 1200);
-
-        }, 2100);
       });
     }
 
@@ -2032,59 +1582,47 @@ A partir de la transcripción anterior, por favor genera en las herramientas de 
 
     // =============================================================
     // MOBILE BOTTOM THUMB DOCK NAVIGATION
-    // =============================================================
     const mNavRecord = document.getElementById("m-nav-record");
-    const mNavStudio = document.getElementById("m-nav-studio");
-    const mNavMaterials = document.getElementById("m-nav-materials");
+    const mNavNotebook = document.getElementById("m-nav-notebook");
     const mNavInstall = document.getElementById("m-nav-install");
 
     function setMobileActiveNav(activeEl) {
       triggerHaptic("light");
-      [mNavRecord, mNavStudio, mNavMaterials, mNavInstall].forEach(btn => {
+      [mNavRecord, mNavNotebook, mNavInstall].forEach(btn => {
         if (!btn) return;
-        btn.className = "cursor-pointer flex flex-col items-center gap-1 py-1 px-3 text-on-surface-variant hover:text-primary font-headline font-medium text-[10px] transition-all btn-press";
+        btn.className = "cursor-pointer flex flex-col items-center gap-1 py-1 px-4 text-on-surface-variant hover:text-primary font-headline font-medium text-[10px] transition-all btn-press";
       });
       if (activeEl) {
-        activeEl.className = "cursor-pointer flex flex-col items-center gap-1 py-1 px-3 text-primary-container font-headline font-bold text-[10px] transition-all btn-press";
+        activeEl.className = "cursor-pointer flex flex-col items-center gap-1 py-1 px-4 text-primary-container font-headline font-bold text-[10px] transition-all btn-press";
       }
     }
 
-    if (mNavRecord) {
-      mNavRecord.addEventListener("click", () => {
-        setMobileActiveNav(mNavRecord);
-        const sec = document.getElementById("recorder-section");
-        if (sec) {
-          sec.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-      });
+    function wireButton(btn, handler) {
+      if (!btn) return;
+      btn.addEventListener("click", handler);
+      btn.addEventListener("touchend", (e) => {
+        e.preventDefault();
+        handler();
+      }, { passive: false });
     }
 
-    if (mNavStudio) {
-      mNavStudio.addEventListener("click", () => {
-        setMobileActiveNav(mNavStudio);
-        const sec = document.getElementById("studio-options-section");
-        if (sec) {
-          sec.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-      });
-    }
+    wireButton(mNavRecord, () => {
+      setMobileActiveNav(mNavRecord);
+      const sec = document.getElementById("recorder-section");
+      if (sec) {
+        sec.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
 
-    if (mNavMaterials) {
-      mNavMaterials.addEventListener("click", () => {
-        setMobileActiveNav(mNavMaterials);
-        const sec = document.getElementById("results-hub");
-        if (sec) {
-          sec.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-      });
-    }
+    wireButton(mNavNotebook, () => {
+      setMobileActiveNav(mNavNotebook);
+      handleOpenGoogleNotebook();
+    });
 
-    if (mNavInstall) {
-      mNavInstall.addEventListener("click", () => {
-        setMobileActiveNav(mNavInstall);
-        openPwaModal();
-      });
-    }
+    wireButton(mNavInstall, () => {
+      setMobileActiveNav(mNavInstall);
+      openPwaModal();
+    });
 
     window.addEventListener("appinstalled", () => {
       console.log("[PWA] ¡OFG.ai Studio instalada exitosamente en el sistema!");
