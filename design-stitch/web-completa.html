@@ -492,6 +492,25 @@
           </button>
         </div>
 
+        <!-- Tarjeta de instrucciones visuales paso a paso para NotebookLM -->
+        <div id="notebook-guide-box" class="p-4 rounded-2xl bg-surface-container-high/90 border border-primary-container/30 space-y-2.5 shadow-lg">
+          <div class="flex items-center justify-between text-xs font-headline font-bold text-primary">
+            <span class="flex items-center gap-2 text-primary-container">
+              <span class="material-symbols-outlined text-[18px]">info</span>
+              <span>Cómo usar tu texto copiado en Google NotebookLM:</span>
+            </span>
+            <span class="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+              Paso a paso
+            </span>
+          </div>
+          <ol class="text-xs text-on-surface-variant space-y-2 pl-4 list-decimal leading-relaxed">
+            <li>En la pestaña de <strong>Google NotebookLM</strong>, pulsa <strong>«+ Nuevo cuaderno»</strong> (o entra en uno que ya tengas).</li>
+            <li>Pulsa <strong>«Añadir fuente»</strong> y selecciona <strong>«Texto copiado»</strong>.</li>
+            <li><strong>Pega tu texto</strong> (en iPhone/móvil mantén pulsado en la caja y elige <em>"Pegar"</em>; en PC pulsa <em>Ctrl+V</em>) y dale a <strong>«Insertar»</strong>.</li>
+            <li>En la sección <strong>Studio</strong> de NotebookLM, pulsa <strong>«Resumen en audio»</strong> para que genere el podcast a dos voces de tu clase.</li>
+          </ol>
+        </div>
+
         <!-- Notificación Toast de copiado -->
         <div id="copy-toast-notification" class="hidden p-3.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-mono flex items-center justify-between gap-2 animate-in fade-in">
           <span class="flex items-center gap-2">
@@ -1293,27 +1312,40 @@
       });
     }
 
-    // Función universal para copiar al portapapeles sin fallos
+    // Función universal para copiar al portapapeles sin fallos (iOS Safari, Android y Desktop)
     function copyRawTextToClipboard(textToCopy) {
-      if (!textToCopy) return;
-      try {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(textToCopy);
+      if (!textToCopy) return false;
+      let copied = false;
+
+      // Método 1: Selección y copiado directo en el elemento textarea visible (100% fiable en iOS Safari y móviles)
+      if (liveTranscript) {
+        try {
+          const originalStart = liveTranscript.selectionStart;
+          const originalEnd = liveTranscript.selectionEnd;
+          liveTranscript.focus();
+          liveTranscript.select();
+          liveTranscript.setSelectionRange(0, liveTranscript.value.length);
+          copied = document.execCommand("copy");
+          setTimeout(() => {
+            try { liveTranscript.setSelectionRange(originalStart, originalEnd); } catch(e){}
+          }, 150);
+        } catch (e) {
+          console.warn("execCommand on liveTranscript aviso:", e);
         }
-      } catch (err) {
-        console.warn("Clipboard API aviso:", err);
       }
-      try {
-        const ta = document.createElement("textarea");
-        ta.value = textToCopy;
-        ta.style.position = "fixed";
-        ta.style.left = "-9999px";
-        document.body.appendChild(ta);
-        ta.focus();
-        ta.select();
-        document.execCommand("copy");
-        document.body.removeChild(ta);
-      } catch (e) {}
+
+      // Método 2: API moderna navigator.clipboard
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        try {
+          navigator.clipboard.writeText(textToCopy).then(() => {
+            copied = true;
+          }).catch(err => {
+            console.warn("navigator.clipboard.writeText aviso:", err);
+          });
+        } catch (err) {}
+      }
+
+      return copied;
     }
 
     function showCopyToast(msg) {
@@ -1322,34 +1354,56 @@
         copyToastNotification.classList.remove("hidden");
         setTimeout(() => {
           copyToastNotification.classList.add("hidden");
-        }, 4000);
+        }, 5000);
       }
     }
 
-    function handleNotebookAction() {
+    function handleNotebookAction(e) {
       triggerHaptic("heavy");
-      const rawText = liveTranscript.value.trim();
       if (recordingState === "recording") {
         stopRecording();
       }
+      const rawText = liveTranscript.value.trim();
 
-      if (rawText) {
-        copyRawTextToClipboard(rawText);
-        showCopyToast("¡Texto de voz copiado al portapapeles! Abriendo Google Notebook...");
-
-        // Auditoría en segundo plano en Cloudflare D1 (Regla 4)
-        fetch("https://ofg-ai-backend.oscfergar.workers.dev/api/engine/generate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            text: rawText,
-            selectedKeys: ["notebooklm"],
-            title: "Clase de Audio"
-          })
-        }).catch(err => console.warn("Auditoría offline:", err));
-      } else {
-        showCopyToast("Abriendo Google Notebook...");
+      if (!rawText) {
+        if (e && e.preventDefault) e.preventDefault();
+        alert("⚠️ No hay texto transcrito todavía. Pulsa el botón de grabar y habla, o escribe en el cuadro de texto antes de abrir NotebookLM.");
+        return;
       }
+
+      // Copiado síncrono e inmediato al portapapeles
+      copyRawTextToClipboard(rawText);
+      const wordsCount = rawText.split(/\s+/).filter(Boolean).length;
+      showCopyToast(`¡Texto copiado al portapapeles (${wordsCount} palabras)! Abriendo Google Notebook...`);
+
+      // Feedback visual inmediato en el botón principal
+      if (openNotebookBtn) {
+        const origContent = openNotebookBtn.innerHTML;
+        openNotebookBtn.classList.remove("from-primary-container", "via-primary-fixed-dim", "to-tertiary-fixed");
+        openNotebookBtn.classList.add("bg-emerald-500", "text-black");
+        openNotebookBtn.innerHTML = `
+          <span class="material-symbols-outlined text-[24px]">check_circle</span>
+          <span>¡Texto Copiado! Abriendo NotebookLM...</span>
+        `;
+        setTimeout(() => {
+          if (openNotebookBtn) {
+            openNotebookBtn.classList.remove("bg-emerald-500", "text-black");
+            openNotebookBtn.classList.add("from-primary-container", "via-primary-fixed-dim", "to-tertiary-fixed");
+            openNotebookBtn.innerHTML = origContent;
+          }
+        }, 3500);
+      }
+
+      // Auditoría en segundo plano en Cloudflare D1 (Regla 4)
+      fetch("https://ofg-ai-backend.oscfergar.workers.dev/api/engine/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: rawText,
+          selectedKeys: ["notebooklm"],
+          title: "Clase de Audio"
+        })
+      }).catch(err => console.warn("Auditoría offline:", err));
     }
 
     if (openNotebookBtn) {
@@ -1358,18 +1412,26 @@
 
     if (copyTextOnlyBtn) {
       copyTextOnlyBtn.addEventListener("click", () => {
+        if (recordingState === "recording") {
+          stopRecording();
+        }
         const rawText = liveTranscript.value.trim();
         if (!rawText) {
-          alert("No hay texto para copiar.");
+          alert("⚠️ No hay texto para copiar. Graba tu voz o escribe algo primero.");
           return;
         }
         triggerHaptic("medium");
         copyRawTextToClipboard(rawText);
+        const wordsCount = rawText.split(/\s+/).filter(Boolean).length;
         if (copyBtnLabel) {
-          copyBtnLabel.textContent = "¡Texto Copiado!";
-          setTimeout(() => { copyBtnLabel.textContent = "Copiar Texto al Portapapeles"; }, 2500);
+          copyBtnLabel.textContent = `¡Copiado (${wordsCount} palabras)!`;
+          copyTextOnlyBtn.classList.add("text-emerald-300", "border-emerald-500/50");
+          setTimeout(() => {
+            copyBtnLabel.textContent = "Copiar Texto al Portapapeles";
+            copyTextOnlyBtn.classList.remove("text-emerald-300", "border-emerald-500/50");
+          }, 3000);
         }
-        showCopyToast("¡Texto copiado al portapapeles!");
+        showCopyToast(`¡Texto copiado al portapapeles (${wordsCount} palabras)! Ya puedes pegarlo con 'Pegar' o 'Ctrl+V'.`);
       });
     }
 
@@ -1586,9 +1648,9 @@
     }
 
     if (mNavNotebook) {
-      mNavNotebook.addEventListener("click", () => {
+      mNavNotebook.addEventListener("click", (e) => {
         setMobileActiveNav(mNavNotebook);
-        handleNotebookAction();
+        handleNotebookAction(e);
       });
     }
 
