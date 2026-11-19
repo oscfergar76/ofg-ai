@@ -1806,7 +1806,8 @@
       let backendDeliveredData = null;
 
       // Disparar llamada real al motor de generación NotebookLM
-      fetch("/api/engine/generate", {
+      const apiEndpoint = "https://ofg-ai-backend.oscfergar.workers.dev/api/engine/generate";
+      fetch(apiEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -1879,8 +1880,9 @@
           setTimeout(() => {
             successToast.classList.add("hidden");
           }, 4500);
-          const top = resultsHub.getBoundingClientRect().top + window.pageYOffset - 80;
-          window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+          if (resultsHub) {
+            resultsHub.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
           triggerHaptic("success");
         };
 

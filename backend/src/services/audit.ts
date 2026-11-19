@@ -32,12 +32,25 @@ export async function logAiUsage(db: D1Database, params: AuditParams): Promise<v
   const costCentsEur = calculateCostInCentsEur(params.model, params.promptTokens, params.completionTokens);
   const now = Date.now();
 
+  // Validar si el userId existe en users para no violar la Foreign Key en D1
+  let validUserId: string | null = null;
+  if (params.userId && typeof params.userId === "string") {
+    try {
+      const userExists = await db.prepare("SELECT id FROM users WHERE id = ?").bind(params.userId).first();
+      if (userExists) {
+        validUserId = params.userId;
+      }
+    } catch {
+      validUserId = null;
+    }
+  }
+
   await db.prepare(`
     INSERT INTO ai_audit_logs (id, user_id, model, feature, prompt_tokens, completion_tokens, total_tokens, cost_cents_eur, created_at)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
   `).bind(
     id,
-    params.userId || null,
+    validUserId,
     params.model,
     params.feature,
     params.promptTokens,

@@ -242,7 +242,7 @@ app.post("/api/engine/generate", async (c) => {
       return c.json({ error: "El contenido de la clase a procesar está vacío." }, 400);
     }
     const keys = Array.isArray(selectedKeys) && selectedKeys.length > 0 ? selectedKeys : ["podcast", "pdf", "flashcards"];
-    const pkg = await generateNotebookLMPackage(c.env, "student_session", rawText, keys, title);
+    const pkg = await generateNotebookLMPackage(c.env, undefined, rawText, keys, title);
     return c.json({
       success: true,
       title: pkg.title,
