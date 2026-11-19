@@ -8,5 +8,6 @@ dist/
 .DS_Store
 Thumbs.db
 *.m4a
+!frontend/public/audio/podcast-notebooklm.m4a
 *.zip
 .agents/

@@ -1087,6 +1087,99 @@
   </div>
 
   <!-- ========================================================================= -->
+  <!-- MOBILE STICKY BOTTOM DOCK (OPTIMIZADO PARA EL PULGAR EN SMARTPHONES) -->
+  <!-- ========================================================================= -->
+  <nav id="mobile-bottom-dock" class="sm:hidden fixed bottom-0 inset-x-0 z-40 bg-surface-container-lowest/95 backdrop-blur-2xl border-t border-surface-container-high/80 px-2 pt-2 pb-[max(0.6rem,env(safe-area-inset-bottom))] shadow-[0_-12px_32px_rgba(0,0,0,0.8)] flex items-center justify-around select-none">
+    <button id="m-nav-record" class="flex flex-col items-center gap-1 py-1 px-3 text-primary-container font-headline font-bold text-[10px] transition-all btn-press">
+      <span class="material-symbols-outlined text-[24px]">mic</span>
+      <span>Grabar</span>
+    </button>
+    <button id="m-nav-studio" class="flex flex-col items-center gap-1 py-1 px-3 text-on-surface-variant hover:text-primary font-headline font-medium text-[10px] transition-all btn-press">
+      <span class="material-symbols-outlined text-[24px]">dashboard_customize</span>
+      <span>Estudio</span>
+    </button>
+    <button id="m-nav-materials" class="flex flex-col items-center gap-1 py-1 px-3 text-on-surface-variant hover:text-primary font-headline font-medium text-[10px] transition-all btn-press">
+      <span class="material-symbols-outlined text-[24px]">auto_stories</span>
+      <span>Entregables</span>
+    </button>
+    <button id="m-nav-install" class="flex flex-col items-center gap-1 py-1 px-3 text-on-surface-variant hover:text-primary font-headline font-medium text-[10px] transition-all btn-press">
+      <span class="material-symbols-outlined text-[24px]">install_mobile</span>
+      <span>App Móvil</span>
+    </button>
+  </nav>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL INSTALADOR PWA APP MÓVIL (ANDROID / IOS / TABLET) -->
+  <!-- ========================================================================= -->
+  <div id="pwa-install-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-surface-container-lowest/80 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="relative w-full max-w-md rounded-3xl bg-surface-container-low border border-border-glow p-6 sm:p-8 shadow-[0_25px_60px_rgba(0,0,0,0.9)] space-y-6">
+      
+      <!-- Close button -->
+      <button id="close-pwa-modal-btn" class="absolute top-4 right-4 p-2 rounded-full bg-surface-container-high hover:bg-surface-bright text-on-surface-variant hover:text-primary transition-colors btn-press">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
+
+      <!-- Icon & Brand Header -->
+      <div class="text-center space-y-3 pt-2">
+        <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-tr from-primary-container to-primary-fixed-dim flex items-center justify-center text-on-primary shadow-[0_0_25px_rgba(0,242,254,0.4)]">
+          <span class="material-symbols-outlined text-[34px]">phone_iphone</span>
+        </div>
+        <div>
+          <h3 class="font-headline font-extrabold text-xl text-primary">Instalar OFG.ai Studio App</h3>
+          <p class="text-xs text-on-surface-variant mt-1">Tu copiloto de clases y exámenes de Bachillerato en tu smartphone o tablet</p>
+        </div>
+      </div>
+
+      <!-- Feature Badges -->
+      <div class="grid grid-cols-1 gap-2.5 text-xs">
+        <div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-high/60 border border-outline-variant/30">
+          <span class="material-symbols-outlined text-primary-container text-[20px]">fullscreen</span>
+          <div>
+            <p class="font-bold text-on-surface">Experiencia a Pantalla Completa</p>
+            <p class="text-[11px] text-on-surface-variant">Sin barras de navegador, diseñada específicamente para el pulgar.</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-high/60 border border-outline-variant/30">
+          <span class="material-symbols-outlined text-tertiary-fixed-dim text-[20px]">offline_bolt</span>
+          <div>
+            <p class="font-bold text-on-surface">Acceso Instantáneo Offline</p>
+            <p class="text-[11px] text-on-surface-variant">Consulta tus resúmenes y flashcards aunque no tengas datos o cobertura.</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-high/60 border border-outline-variant/30">
+          <span class="material-symbols-outlined text-emerald-400 text-[20px]">mic</span>
+          <div>
+            <p class="font-bold text-on-surface">Grabación Continua de Clases</p>
+            <p class="text-[11px] text-on-surface-variant">Captura notas de voz largas de 1 hora o importa audios directamente.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Android Native Prompt Container -->
+      <div id="pwa-android-actions" class="space-y-3">
+        <button id="pwa-modal-install-btn" class="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-primary-container to-primary-fixed-dim text-on-primary-container font-headline font-extrabold text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(0,242,254,0.35)] hover:shadow-[0_0_30px_rgba(0,242,254,0.5)] transition-all hover-lift btn-press">
+          <span class="material-symbols-outlined text-[18px]">download_for_offline</span>
+          <span>Añadir a Pantalla de Inicio</span>
+        </button>
+      </div>
+
+      <!-- iOS Safari Instructions Container -->
+      <div id="pwa-ios-instructions" class="p-4 rounded-2xl bg-surface-container-high/80 border border-primary-container/30 space-y-2.5">
+        <div class="flex items-center gap-2 text-primary-container font-headline font-bold text-xs">
+          <span class="material-symbols-outlined text-[18px]">apple</span>
+          <span>Instrucciones para iPhone / iPad (Safari)</span>
+        </div>
+        <ol class="text-xs text-on-surface-variant space-y-2 pl-4 list-decimal">
+          <li>Toca el botón <strong>Compartir</strong> <span class="material-symbols-outlined text-[14px] align-middle">ios_share</span> en la barra inferior de Safari.</li>
+          <li>Desplázate hacia abajo y selecciona <strong>"Añadir a pantalla de inicio"</strong> <span class="material-symbols-outlined text-[14px] align-middle">add_box</span>.</li>
+          <li>Pulsa <strong>"Añadir"</strong> arriba a la derecha. ¡Ya tendrás la app en tu móvil!</li>
+        </ol>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
   <!-- 5. JAVASCRIPT: LOGIC & COMPLETE 8-TOOL ENGINE -->
   <!-- ========================================================================= -->
   <script>
@@ -1117,6 +1210,8 @@
     let elapsedSeconds = 0;
     let speechRecognition = null;
     let animFrameId = null;
+    let sessionBaseTranscript = "";
+    let currentSessionFinal = "";
     let finalTranscript = "";
 
     const recordToggleBtn = document.getElementById("record-toggle-btn");
@@ -1148,7 +1243,7 @@
       wordCount.textContent = `${count} palabras recogidas`;
     }
 
-    // Init Speech Recognition sin duplicación (gestión rigurosa de isFinal vs interim)
+    // Init Speech Recognition sin duplicación (gestión rigurosa por barrido completo 0..length)
     const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (SpeechRec) {
       speechRecognition = new SpeechRec();
@@ -1157,18 +1252,22 @@
       speechRecognition.interimResults = true;
 
       speechRecognition.onresult = (event) => {
-        let interimTranscript = "";
-        for (let i = event.resultIndex; i < event.results.length; ++i) {
+        let interimText = "";
+        let finalSweep = "";
+        for (let i = 0; i < event.results.length; ++i) {
           const item = event.results[i];
-          const text = item[0].transcript;
+          const text = item[0] ? item[0].transcript.trim() : "";
+          if (!text) continue;
           if (item.isFinal) {
-            finalTranscript += (finalTranscript ? " " : "") + text.trim();
+            finalSweep += (finalSweep ? " " : "") + text;
           } else {
-            interimTranscript += (interimTranscript ? " " : "") + text.trim();
+            interimText += (interimText ? " " : "") + text;
           }
         }
-        // Mostramos el texto definitivo acumulado más el texto provisional sin concatenar en bucle
-        const fullDisplay = (finalTranscript + (interimTranscript ? " " + interimTranscript : "")).trim();
+        currentSessionFinal = finalSweep;
+        const totalFinal = [sessionBaseTranscript, currentSessionFinal].filter(Boolean).join(" ");
+        finalTranscript = totalFinal;
+        const fullDisplay = [totalFinal, interimText].filter(Boolean).join(" ");
         liveTranscript.value = fullDisplay;
         updateWordCount();
       };
@@ -1181,6 +1280,11 @@
       };
 
       speechRecognition.onend = () => {
+        if (currentSessionFinal) {
+          sessionBaseTranscript = [sessionBaseTranscript, currentSessionFinal].filter(Boolean).join(" ");
+          currentSessionFinal = "";
+          finalTranscript = sessionBaseTranscript;
+        }
         if (recordingState === "recording") {
           try { speechRecognition.start(); } catch (err) {}
         }
@@ -1188,11 +1292,15 @@
     }
 
     liveTranscript.addEventListener("input", () => {
+      sessionBaseTranscript = liveTranscript.value;
+      currentSessionFinal = "";
       finalTranscript = liveTranscript.value;
       updateWordCount();
     });
 
     document.getElementById("clear-transcript-btn").addEventListener("click", () => {
+      sessionBaseTranscript = "";
+      currentSessionFinal = "";
       finalTranscript = "";
       liveTranscript.value = "";
       updateWordCount();
@@ -1273,6 +1381,11 @@
       if (speechRecognition) {
         try { speechRecognition.stop(); } catch (err) {}
       }
+      if (currentSessionFinal) {
+        sessionBaseTranscript = [sessionBaseTranscript, currentSessionFinal].filter(Boolean).join(" ");
+        currentSessionFinal = "";
+        finalTranscript = sessionBaseTranscript;
+      }
 
       recordRing.classList.add("hidden");
       recordPauseBtn.disabled = true;
@@ -1325,6 +1438,11 @@
       if (speechRecognition) {
         try { speechRecognition.stop(); } catch (err) {}
       }
+      if (currentSessionFinal) {
+        sessionBaseTranscript = [sessionBaseTranscript, currentSessionFinal].filter(Boolean).join(" ");
+        currentSessionFinal = "";
+        finalTranscript = sessionBaseTranscript;
+      }
 
       if (mediaStream) {
         mediaStream.getTracks().forEach(t => t.stop());
@@ -1365,6 +1483,8 @@
       recordingState = "idle";
       elapsedSeconds = 0;
       updateTimerDisplay();
+      sessionBaseTranscript = "";
+      currentSessionFinal = "";
       finalTranscript = "";
       liveTranscript.value = "";
       updateWordCount();
@@ -1446,6 +1566,8 @@
 
         // Poblamos el contenido para enviar al motor de NotebookLM
         finalTranscript = `[Audio de aula importado: "${file.name}" (${sizeMb} MB)]. Grabación completa de la clase para transcribir e indexar en Google NotebookLM.`;
+        sessionBaseTranscript = finalTranscript;
+        currentSessionFinal = "";
         liveTranscript.value = finalTranscript;
         updateWordCount();
 
@@ -1538,21 +1660,19 @@ La molécula de ADN es una doble hélice antiparalela compuesta por nucleótidos
 El dogma central describe el flujo de la información genética: replicación del ADN, transcripción del ADN a ARN mensajero en el núcleo, y traducción del ARNm a proteínas en los ribosomas del citoplasma.`
     };
 
-    document.getElementById("preset-historia").addEventListener("click", () => {
-      liveTranscript.value = presets.historia;
+    function applyPreset(text) {
+      sessionBaseTranscript = text;
+      currentSessionFinal = "";
+      finalTranscript = text;
+      liveTranscript.value = text;
       updateWordCount();
-    });
-    document.getElementById("preset-filosofia").addEventListener("click", () => {
-      liveTranscript.value = presets.filosofia;
-      updateWordCount();
-    });
-    document.getElementById("preset-biologia").addEventListener("click", () => {
-      liveTranscript.value = presets.biologia;
-      updateWordCount();
-    });
+    }
 
-    liveTranscript.value = presets.historia;
-    updateWordCount();
+    document.getElementById("preset-historia").addEventListener("click", () => applyPreset(presets.historia));
+    document.getElementById("preset-filosofia").addEventListener("click", () => applyPreset(presets.filosofia));
+    document.getElementById("preset-biologia").addEventListener("click", () => applyPreset(presets.biologia));
+
+    applyPreset(presets.historia);
 
     // -------------------------------------------------------------
     // E. PROCESADOR AUTOMÁTICO DE LOS 8 ENTREGABLES CON MODAL POP-UP
@@ -1740,17 +1860,19 @@ El dogma central describe el flujo de la información genética: replicación de
           setTimeout(() => {
             successToast.classList.add("hidden");
           }, 4500);
-          resultsHub.scrollIntoView({ behavior: "smooth" });
+          const top = resultsHub.getBoundingClientRect().top + window.pageYOffset - 80;
+          window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+          triggerHaptic("success");
         };
 
         modalViewResultsBtn.onclick = goToResults;
 
-        // Auto redirección tras 2.2s si el alumno no hace clic
+        // Auto redirección tras 1.2s para acceder de inmediato a los materiales generados
         setTimeout(() => {
           if (!generationModal.classList.contains("hidden")) {
             goToResults();
           }
-        }, 2200);
+        }, 1200);
 
       }, 4300);
     });
@@ -2807,7 +2929,10 @@ El dogma central describe el flujo de la información genética: replicación de
       mNavRecord.addEventListener("click", () => {
         setMobileActiveNav(mNavRecord);
         const sec = document.getElementById("recorder-section");
-        if (sec) sec.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (sec) {
+          const top = sec.getBoundingClientRect().top + window.pageYOffset - 80;
+          window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+        }
       });
     }
 
@@ -2815,7 +2940,10 @@ El dogma central describe el flujo de la información genética: replicación de
       mNavStudio.addEventListener("click", () => {
         setMobileActiveNav(mNavStudio);
         const sec = document.getElementById("studio-options-section");
-        if (sec) sec.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (sec) {
+          const top = sec.getBoundingClientRect().top + window.pageYOffset - 80;
+          window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+        }
       });
     }
 
@@ -2823,7 +2951,10 @@ El dogma central describe el flujo de la información genética: replicación de
       mNavMaterials.addEventListener("click", () => {
         setMobileActiveNav(mNavMaterials);
         const sec = document.getElementById("results-hub");
-        if (sec) sec.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (sec) {
+          const top = sec.getBoundingClientRect().top + window.pageYOffset - 80;
+          window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+        }
       });
     }
 
@@ -2841,98 +2972,5 @@ El dogma central describe el flujo de la información genética: replicación de
       alert("¡OFG.ai Studio se ha instalado con éxito! Ya puedes abrirla desde tu pantalla de inicio.");
     });
   </script>
-
-  <!-- ========================================================================= -->
-  <!-- MOBILE STICKY BOTTOM DOCK (OPTIMIZADO PARA EL PULGAR EN SMARTPHONES) -->
-  <!-- ========================================================================= -->
-  <nav id="mobile-bottom-dock" class="sm:hidden fixed bottom-0 inset-x-0 z-40 bg-surface-container-lowest/95 backdrop-blur-2xl border-t border-surface-container-high/80 px-2 pt-2 pb-[max(0.6rem,env(safe-area-inset-bottom))] shadow-[0_-12px_32px_rgba(0,0,0,0.8)] flex items-center justify-around select-none">
-    <button id="m-nav-record" class="flex flex-col items-center gap-1 py-1 px-3 text-primary-container font-headline font-bold text-[10px] transition-all btn-press">
-      <span class="material-symbols-outlined text-[24px]">mic</span>
-      <span>Grabar</span>
-    </button>
-    <button id="m-nav-studio" class="flex flex-col items-center gap-1 py-1 px-3 text-on-surface-variant hover:text-primary font-headline font-medium text-[10px] transition-all btn-press">
-      <span class="material-symbols-outlined text-[24px]">dashboard_customize</span>
-      <span>Estudio</span>
-    </button>
-    <button id="m-nav-materials" class="flex flex-col items-center gap-1 py-1 px-3 text-on-surface-variant hover:text-primary font-headline font-medium text-[10px] transition-all btn-press">
-      <span class="material-symbols-outlined text-[24px]">auto_stories</span>
-      <span>Entregables</span>
-    </button>
-    <button id="m-nav-install" class="flex flex-col items-center gap-1 py-1 px-3 text-on-surface-variant hover:text-primary font-headline font-medium text-[10px] transition-all btn-press">
-      <span class="material-symbols-outlined text-[24px]">install_mobile</span>
-      <span>App Móvil</span>
-    </button>
-  </nav>
-
-  <!-- ========================================================================= -->
-  <!-- MODAL INSTALADOR PWA APP MÓVIL (ANDROID / IOS / TABLET) -->
-  <!-- ========================================================================= -->
-  <div id="pwa-install-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-surface-container-lowest/80 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
-    <div class="relative w-full max-w-md rounded-3xl bg-surface-container-low border border-border-glow p-6 sm:p-8 shadow-[0_25px_60px_rgba(0,0,0,0.9)] space-y-6">
-      
-      <!-- Close button -->
-      <button id="close-pwa-modal-btn" class="absolute top-4 right-4 p-2 rounded-full bg-surface-container-high hover:bg-surface-bright text-on-surface-variant hover:text-primary transition-colors btn-press">
-        <span class="material-symbols-outlined text-[18px]">close</span>
-      </button>
-
-      <!-- Icon & Brand Header -->
-      <div class="text-center space-y-3 pt-2">
-        <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-tr from-primary-container to-primary-fixed-dim flex items-center justify-center text-on-primary shadow-[0_0_25px_rgba(0,242,254,0.4)]">
-          <span class="material-symbols-outlined text-[34px]">phone_iphone</span>
-        </div>
-        <div>
-          <h3 class="font-headline font-extrabold text-xl text-primary">Instalar OFG.ai Studio App</h3>
-          <p class="text-xs text-on-surface-variant mt-1">Tu copiloto de clases y exámenes de Bachillerato en tu smartphone o tablet</p>
-        </div>
-      </div>
-
-      <!-- Feature Badges -->
-      <div class="grid grid-cols-1 gap-2.5 text-xs">
-        <div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-high/60 border border-outline-variant/30">
-          <span class="material-symbols-outlined text-primary-container text-[20px]">fullscreen</span>
-          <div>
-            <p class="font-bold text-on-surface">Experiencia a Pantalla Completa</p>
-            <p class="text-[11px] text-on-surface-variant">Sin barras de navegador, diseñada específicamente para el pulgar.</p>
-          </div>
-        </div>
-        <div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-high/60 border border-outline-variant/30">
-          <span class="material-symbols-outlined text-tertiary-fixed-dim text-[20px]">offline_bolt</span>
-          <div>
-            <p class="font-bold text-on-surface">Acceso Instantáneo Offline</p>
-            <p class="text-[11px] text-on-surface-variant">Consulta tus resúmenes y flashcards aunque no tengas datos o cobertura.</p>
-          </div>
-        </div>
-        <div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-high/60 border border-outline-variant/30">
-          <span class="material-symbols-outlined text-emerald-400 text-[20px]">mic</span>
-          <div>
-            <p class="font-bold text-on-surface">Grabación Continua de Clases</p>
-            <p class="text-[11px] text-on-surface-variant">Captura notas de voz largas de 1 hora o importa audios directamente.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Android Native Prompt Container -->
-      <div id="pwa-android-actions" class="space-y-3">
-        <button id="pwa-modal-install-btn" class="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-primary-container to-primary-fixed-dim text-on-primary-container font-headline font-extrabold text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(0,242,254,0.35)] hover:shadow-[0_0_30px_rgba(0,242,254,0.5)] transition-all hover-lift btn-press">
-          <span class="material-symbols-outlined text-[18px]">download_for_offline</span>
-          <span>Añadir a Pantalla de Inicio</span>
-        </button>
-      </div>
-
-      <!-- iOS Safari Instructions Container -->
-      <div id="pwa-ios-instructions" class="p-4 rounded-2xl bg-surface-container-high/80 border border-primary-container/30 space-y-2.5">
-        <div class="flex items-center gap-2 text-primary-container font-headline font-bold text-xs">
-          <span class="material-symbols-outlined text-[18px]">apple</span>
-          <span>Instrucciones para iPhone / iPad (Safari)</span>
-        </div>
-        <ol class="text-xs text-on-surface-variant space-y-2 pl-4 list-decimal">
-          <li>Toca el botón <strong>Compartir</strong> <span class="material-symbols-outlined text-[14px] align-middle">ios_share</span> en la barra inferior de Safari.</li>
-          <li>Desplázate hacia abajo y selecciona <strong>"Añadir a pantalla de inicio"</strong> <span class="material-symbols-outlined text-[14px] align-middle">add_box</span>.</li>
-          <li>Pulsa <strong>"Añadir"</strong> arriba a la derecha. ¡Ya tendrás la app en tu móvil!</li>
-        </ol>
-      </div>
-
-    </div>
-  </div>
 </body>
 </html>
