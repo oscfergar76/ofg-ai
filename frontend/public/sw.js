@@ -1,8 +1,6 @@
-// OFG.ai Studio Service Worker (PWA Mobile Shell & Cache)
-const CACHE_NAME = "ofg-studio-cache-v1";
+// OFG.ai Studio Service Worker (PWA Mobile Shell & Cache v6)
+const CACHE_NAME = "ofg-studio-cache-v6";
 const ASSETS_TO_CACHE = [
-  "/",
-  "/index.html",
   "/manifest.webmanifest",
   "/icons/icon.svg",
   "/icons/icon-192.png",
@@ -10,10 +8,9 @@ const ASSETS_TO_CACHE = [
 ];
 
 self.addEventListener("install", (event) => {
+  self.skipWaiting();
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
-    }).then(() => self.skipWaiting())
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS_TO_CACHE))
   );
 });
 
@@ -21,11 +18,7 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
-        cacheNames.map((name) => {
-          if (name !== CACHE_NAME) {
-            return caches.delete(name);
-          }
-        })
+        cacheNames.map((name) => caches.delete(name))
       );
     }).then(() => self.clients.claim())
   );
@@ -39,31 +32,23 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  // NAVEGACIÓN Y HTML: NETWORK FIRST (siempre la versión más fresca)
+  if (event.request.mode === "navigate" || event.request.headers.get("accept")?.includes("text/html")) {
+    event.respondWith(
+      fetch(event.request)
+        .then((networkResponse) => {
+          return networkResponse;
+        })
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
+
+  // OTROS RECURSOS ESTÁTICOS
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(event.request).then((networkResponse) => {
-        // Cachear peticiones exitosas de recursos estáticos del mismo origen
-        if (
-          networkResponse &&
-          networkResponse.status === 200 &&
-          event.request.method === "GET" &&
-          (url.origin === self.location.origin)
-        ) {
-          const responseToCache = networkResponse.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseToCache);
-          });
-        }
-        return networkResponse;
-      }).catch(() => {
-        // Fallback offline a index.html
-        if (event.request.headers.get("accept")?.includes("text/html")) {
-          return caches.match("/index.html");
-        }
-      });
+      if (cachedResponse) return cachedResponse;
+      return fetch(event.request);
     })
   );
 });

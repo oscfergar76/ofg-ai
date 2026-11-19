@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { requestLoginCode, verifyLoginCode, authenticateSession, AuthEnv } from "./services/auth";
-import { analyzeClassContent, AIEnv } from "./services/ai";
+import { analyzeClassContent, generateNotebookLMPackage, AIEnv } from "./services/ai";
 
 export interface Env extends AuthEnv, AIEnv {
   ENVIRONMENT: string;
@@ -237,29 +237,23 @@ app.get("/api/audit/stats", async (c) => {
 app.post("/api/engine/generate", async (c) => {
   try {
     const { text, selectedKeys, title } = await c.req.json();
-    const rawText = text || "";
-    const isCadiz = rawText.toLowerCase().includes("cádiz") || rawText.toLowerCase().includes("pepa") || rawText.toLowerCase().includes("1812");
-    
-    let resolvedTitle = title || (isCadiz ? "Historia de España: Las Cortes de Cádiz y La Pepa (1812)" : "Clase Registrada");
-    let topic = isCadiz ? "Historia de España (PAU)" : "General";
-
+    const rawText = (text || "").trim();
+    if (!rawText) {
+      return c.json({ error: "El contenido de la clase a procesar está vacío." }, 400);
+    }
+    const keys = Array.isArray(selectedKeys) && selectedKeys.length > 0 ? selectedKeys : ["podcast", "pdf", "flashcards"];
+    const pkg = await generateNotebookLMPackage(c.env, "student_session", rawText, keys, title);
     return c.json({
       success: true,
-      title: resolvedTitle,
-      topic,
-      source: "Google NotebookLM Engine (Gemini 2.5 + Grounded Sources)",
-      podcast: {
-        audioUrl: "/audio/podcast-notebooklm.m4a",
-        duration: "16:48",
-        fileSize: "19.3 MB",
-        hosts: [
-          { name: "Clara", role: "Locutora Pedagógica" },
-          { name: "Álex", role: "Especialista en Análisis" }
-        ],
+      title: pkg.title,
+      topic: pkg.topic,
+      source: pkg.source,
+      podcast: pkg.deliverables.podcast ? {
+        ...pkg.deliverables.podcast,
         ready: true
-      },
-      selectedKeys: selectedKeys || ["podcast", "pdf", "flashcards"],
-      timestamp: Date.now()
+      } : undefined,
+      selectedKeys: pkg.selectedKeys,
+      deliverables: pkg.deliverables
     });
   } catch (err: any) {
     return c.json({ error: err.message || "Error en motor NotebookLM" }, 500);

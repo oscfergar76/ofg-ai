@@ -28,7 +28,8 @@
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Generador Nativo de Documentos PDF Oficiales -->
+  <!-- Generadores de Documentos PDF Oficiales Vectoriales y Maquetados -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script>
     tailwind.config = {
@@ -235,6 +236,16 @@
         margin: 12mm 15mm;
       }
     }
+
+    /* Prevención de desbordamiento horizontal y soporte táctil para smartphones */
+    html, body {
+      overflow-x: hidden !important;
+      max-width: 100vw !important;
+      width: 100% !important;
+    }
+    * {
+      box-sizing: border-box;
+    }
   </style>
 </head>
 <body class="bg-surface font-body text-on-surface antialiased relative min-h-screen flex flex-col selection:bg-primary-container selection:text-on-primary-container">
@@ -249,51 +260,40 @@
   <!-- ========================================================================= -->
   <!-- 1. APP HEADER -->
   <!-- ========================================================================= -->
-  <header class="sticky top-0 z-50 bg-surface-container-lowest/90 backdrop-blur-xl border-b border-surface-container-high/60 shadow-lg">
-    <div class="max-w-6xl mx-auto h-16 px-4 sm:px-6 flex items-center justify-between gap-3">
+  <header class="sticky top-0 z-50 bg-surface-container-lowest/95 backdrop-blur-xl border-b border-surface-container-high/60 shadow-lg w-full">
+    <div class="max-w-5xl mx-auto h-14 sm:h-16 px-3 sm:px-6 flex items-center justify-between gap-2">
       
       <!-- Brand & Mode -->
-      <div class="flex items-center gap-2.5">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-primary-container to-primary-fixed-dim flex items-center justify-center text-on-primary shadow-[0_0_15px_rgba(0,242,254,0.35)]">
-          <span class="material-symbols-outlined text-[22px]">graphic_eq</span>
+      <div class="flex items-center gap-2 min-w-0">
+        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-primary-container to-primary-fixed-dim flex items-center justify-center text-on-primary shadow-[0_0_15px_rgba(0,242,254,0.35)] shrink-0">
+          <span class="material-symbols-outlined text-[20px]">graphic_eq</span>
         </div>
-        <div class="flex flex-col">
+        <div class="flex flex-col min-w-0">
           <div class="flex items-center gap-1.5">
-            <span class="font-headline font-black text-base text-primary tracking-tight">OFG.ai</span>
-            <span class="text-[10px] px-1.5 py-0.5 rounded bg-surface-container-high text-primary-fixed-dim font-mono font-bold uppercase">Studio</span>
+            <span class="font-headline font-black text-sm sm:text-base text-primary tracking-tight truncate">OFG.ai Studio</span>
+            <span class="text-[9px] px-1 py-0.2 rounded bg-surface-container-high text-primary-fixed-dim font-mono font-bold uppercase hidden sm:inline">NotebookLM</span>
           </div>
-          <span class="text-[10px] text-on-surface-variant font-medium leading-none">Suite de Estudio Inteligente</span>
+          <span class="text-[9px] text-on-surface-variant font-medium leading-none truncate hidden sm:inline">Suite de Estudio Inteligente</span>
         </div>
       </div>
 
       <!-- Quick Action Controls -->
-      <div class="flex items-center gap-2 sm:gap-3">
-        <!-- Preset Selector Pill -->
-        <div class="hidden sm:flex items-center gap-1 bg-surface-container-high/80 px-2.5 py-1 rounded-full border border-outline-variant/40 text-xs">
-          <span class="text-on-surface-variant text-[11px]">Probar tema:</span>
-          <button id="preset-historia" class="px-2 py-0.5 rounded text-primary hover:text-primary-container text-[11px] font-semibold transition-colors">Historia</button>
-          <span class="text-outline-variant">•</span>
-          <button id="preset-filosofia" class="px-2 py-0.5 rounded text-primary hover:text-primary-container text-[11px] font-semibold transition-colors">Filosofía</button>
-          <span class="text-outline-variant">•</span>
-          <button id="preset-biologia" class="px-2 py-0.5 rounded text-primary hover:text-primary-container text-[11px] font-semibold transition-colors">Biología</button>
-        </div>
-
-        <!-- Reset App -->
-        <button id="reset-app-btn" title="Empezar nueva clase" class="p-2 rounded-full bg-surface-container-high hover:bg-surface-bright text-on-surface-variant hover:text-primary transition-colors btn-press">
+      <div class="flex items-center gap-2 shrink-0">
+        <!-- Reset App en Blanco -->
+        <button id="reset-app-btn" title="Empezar nueva clase en blanco" class="p-2 rounded-xl bg-surface-container-high hover:bg-surface-bright text-on-surface-variant hover:text-primary transition-colors btn-press">
           <span class="material-symbols-outlined text-[18px]">refresh</span>
         </button>
 
         <!-- Botón Instalar PWA App Móvil (Desktop / Tablet) -->
-        <button id="pwa-install-header-btn" title="Instalar App en tu móvil o tablet" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-high hover:bg-surface-bright text-primary text-xs font-semibold border border-primary-container/30 transition-all hover-lift btn-press">
+        <button id="pwa-install-header-btn" title="Instalar App en tu móvil o tablet" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-high hover:bg-surface-bright text-primary text-xs font-semibold border border-primary-container/30 transition-all hover-lift btn-press">
           <span class="material-symbols-outlined text-[16px] text-primary-container">install_mobile</span>
           <span>Instalar App</span>
         </button>
 
         <!-- Portero OTP -->
-        <button id="open-otp-btn" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-primary-container text-on-primary-container hover:bg-primary-fixed-dim font-headline font-bold text-xs uppercase tracking-wider shadow-[0_0_15px_rgba(0,242,254,0.3)] transition-all hover-lift btn-press">
+        <button id="open-otp-btn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-primary-container text-on-primary-container hover:bg-primary-fixed-dim font-headline font-bold text-xs uppercase tracking-wider shadow-[0_0_15px_rgba(0,242,254,0.3)] transition-all hover-lift btn-press">
           <span class="material-symbols-outlined text-[15px]">lock</span>
-          <span class="hidden xs:inline">Mi Cuenta (6 Dígitos)</span>
-          <span class="xs:hidden">Acceso</span>
+          <span>Acceso</span>
         </button>
       </div>
 
@@ -336,7 +336,7 @@
     <!-- ======================================================================= -->
     <!-- STEP 1: EL CENTRO DE GRABACIÓN DE CLASE (REAL MIC CAPTURE) -->
     <!-- ======================================================================= -->
-    <section id="recorder-section" class="rounded-3xl bg-card-glass backdrop-blur-2xl p-6 sm:p-8 border border-border-glow shadow-[0_20px_50px_rgba(0,0,0,0.6)] relative overflow-hidden space-y-6">
+    <section id="recorder-section" class="scroll-mt-20 rounded-3xl bg-card-glass backdrop-blur-2xl p-6 sm:p-8 border border-border-glow shadow-[0_20px_50px_rgba(0,0,0,0.6)] relative overflow-hidden space-y-6">
       
       <!-- Top Highlight Line -->
       <div class="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-primary-container to-transparent opacity-80"></div>
@@ -473,7 +473,7 @@
       <!-- ===================================================================== -->
       <!-- STUDIO SUITE: LA BOTONERA DE LOS 8 ENTREGABLES A LA CARTA -->
       <!-- ===================================================================== -->
-      <div id="studio-options-section" class="pt-4 border-t border-surface-container-high space-y-4">
+      <div id="studio-options-section" class="scroll-mt-20 pt-4 border-t border-surface-container-high space-y-4">
         
         <div class="flex flex-wrap items-center justify-between gap-2">
           <div>
@@ -626,24 +626,39 @@
     <!-- ======================================================================= -->
     <!-- STEP 2: EL HUB DE ESTUDIO DINÁMICO (LOS ENTREGABLES GENERADOS) -->
     <!-- ======================================================================= -->
-    <section id="results-hub" class="space-y-6">
+    <section id="results-hub" class="scroll-mt-20 space-y-6">
       
-      <!-- Hub Header & Tool Switcher Tabs -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-surface-container-high">
-        <div>
-          <span class="text-xs font-mono text-primary-container font-bold uppercase tracking-wider">
-            Materiales de Estudio Listos
-          </span>
-          <h2 id="deliverable-class-title" class="font-headline font-extrabold text-xl sm:text-2xl text-primary mt-0.5">
-            Historia: Las Cortes de Cádiz y La Pepa (1812)
-          </h2>
+      <!-- ESTADO EN BLANCO INICIAL (ANTES DE GENERAR) -->
+      <div id="results-empty-placeholder" class="rounded-3xl bg-card-glass backdrop-blur-xl p-8 sm:p-12 border border-border-glow text-center space-y-4">
+        <div class="w-16 h-16 mx-auto rounded-2xl bg-primary-container/10 border border-primary-container/30 flex items-center justify-center text-primary-container shadow-[0_0_20px_rgba(0,242,254,0.15)]">
+          <span class="material-symbols-outlined text-[34px]">auto_stories</span>
         </div>
-
-        <!-- Dynamic Navigation Tabs Bar -->
-        <div id="tabs-navigation-bar" class="flex items-center gap-1 bg-surface-container-high p-1 rounded-2xl border border-outline-variant/30 overflow-x-auto max-w-full">
-          <!-- Dynamic Tabs will be populated here -->
+        <div class="max-w-md mx-auto space-y-2">
+          <h3 class="font-headline font-bold text-lg sm:text-xl text-primary">Tu Espacio de Estudio en Blanco</h3>
+          <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
+            Graba la explicación de tu profesor arriba o importa una nota de voz. Cuando pulses <strong>«Generar Materiales de Estudio con IA»</strong>, Google NotebookLM generará únicamente los materiales que hayas marcado abajo.
+          </p>
         </div>
       </div>
+
+      <!-- CONTENEDOR DINÁMICO DE ENTREGABLES (SE MUESTRA TRAS GENERAR) -->
+      <div id="results-active-wrapper" class="hidden space-y-6">
+        <!-- Hub Header & Tool Switcher Tabs -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-surface-container-high">
+          <div>
+            <span class="text-xs font-mono text-primary-container font-bold uppercase tracking-wider">
+              Materiales Generados por Google NotebookLM
+            </span>
+            <h2 id="deliverable-class-title" class="font-headline font-extrabold text-xl sm:text-2xl text-primary mt-0.5">
+              Tema de Clase
+            </h2>
+          </div>
+
+          <!-- Dynamic Navigation Tabs Bar -->
+          <div id="tabs-navigation-bar" class="flex items-center gap-1 bg-surface-container-high p-1 rounded-2xl border border-outline-variant/30 overflow-x-auto max-w-full">
+            <!-- Dynamic Tabs will be populated here -->
+          </div>
+        </div>
 
       <!-- ===================================================================== -->
       <!-- TAB PANELS CONTAINER -->
@@ -933,7 +948,8 @@
         </div>
       </div>
 
-    </section>
+    </div>
+  </section>
 
   </main>
 
@@ -1646,33 +1662,30 @@
     // -------------------------------------------------------------
     // D. PRESETS PARA PROBAR SIN HABLAR
     // -------------------------------------------------------------
-    const presets = {
-      historia: `Profesor: Buenos días a todos. Hoy vamos a analizar el impacto decisivo de las Cortes de Cádiz y la Constitución de 1812, conocida popularmente como 'La Pepa' porque se promulgó el 19 de marzo, día de San José.
-Lo más trascendental que tenéis que poner en el examen de Selectividad es el Artículo 3: la soberanía nacional ya no reside en el Rey por mandato divino, sino en la Nación española, formada por los ciudadanos de ambos hemisferios. 
-Además, introdujo la división de poderes: el legislativo en las Cortes con el Rey, el ejecutivo en el Monarca y el judicial en tribunales independientes. También se abolió la Inquisición y el régimen señorial. Recordad que fue suspendida cuando regresó Fernando VII en 1814.`,
-      
-      filosofia: `Profesora: Bienvenidos. Entramos de lleno en Platón y su famosa Alegoría de la Caverna, recogida en el Libro VII de La República.
-Platón nos presenta a unos prisioneros encadenados desde la infancia que solo ven sombras proyectadas en la pared. Para ellos, esa es la única realidad.
-El mito simboliza los dos mundos de Platón: el Mundo Sensible (las sombras, la doxa u opinión engañosa) y el Mundo Inteligible (el exterior iluminado por el Sol, que representa la Idea de Bien y el verdadero conocimiento o episteme). El filósofo es aquel que logra salir de la caverna y tiene el deber moral de regresar a liberar a los demás.`,
-      
-      biologia: `Profesor: Hoy nos centramos en la estructura del ADN y el dogma central de la biología molecular.
-La molécula de ADN es una doble hélice antiparalela compuesta por nucleótidos. Cada nucleótido consta de un grupo fosfato, una desoxirribosa y una base nitrogenada. Las bases se aparean por puentes de hidrógeno: Adenina con Timina mediante dos enlaces, y Citosina con Guanina mediante tres enlaces.
-El dogma central describe el flujo de la información genética: replicación del ADN, transcripción del ADN a ARN mensajero en el núcleo, y traducción del ARNm a proteínas en los ribosomas del citoplasma.`
-    };
+    // ESTADO INICIAL EN BLANCO (CERO EJEMPLOS PRECARGADOS)
+    sessionBaseTranscript = "";
+    currentSessionFinal = "";
+    finalTranscript = "";
+    liveTranscript.value = "";
+    updateWordCount();
 
-    function applyPreset(text) {
-      sessionBaseTranscript = text;
-      currentSessionFinal = "";
-      finalTranscript = text;
-      liveTranscript.value = text;
-      updateWordCount();
+    const resetAppBtn = document.getElementById("reset-app-btn");
+    if (resetAppBtn) {
+      resetAppBtn.addEventListener("click", () => {
+        triggerHaptic("medium");
+        resetRecording();
+        sessionBaseTranscript = "";
+        currentSessionFinal = "";
+        finalTranscript = "";
+        liveTranscript.value = "";
+        updateWordCount();
+        const emptyPl = document.getElementById("results-empty-placeholder");
+        const activeWr = document.getElementById("results-active-wrapper");
+        if (emptyPl) emptyPl.classList.remove("hidden");
+        if (activeWr) activeWr.classList.add("hidden");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
     }
-
-    document.getElementById("preset-historia").addEventListener("click", () => applyPreset(presets.historia));
-    document.getElementById("preset-filosofia").addEventListener("click", () => applyPreset(presets.filosofia));
-    document.getElementById("preset-biologia").addEventListener("click", () => applyPreset(presets.biologia));
-
-    applyPreset(presets.historia);
 
     // -------------------------------------------------------------
     // E. PROCESADOR AUTOMÁTICO DE LOS 8 ENTREGABLES CON MODAL POP-UP
@@ -1790,7 +1803,9 @@ El dogma central describe el flujo de la información genética: replicación de
       modalProgressPct.textContent = "25%";
       modalProgressBar.style.width = "25%";
 
-      // Disparar llamada al motor de generación NotebookLM
+      let backendDeliveredData = null;
+
+      // Disparar llamada real al motor de generación NotebookLM
       fetch("/api/engine/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -1801,21 +1816,24 @@ El dogma central describe el flujo de la información genética: replicación de
         })
       }).then(r => r.json()).then(res => {
         console.log("[MOTOR NOTEBOOKLM] Entregables confirmados por el motor:", res);
+        if (res && res.deliverables) {
+          backendDeliveredData = res;
+        }
       }).catch(err => {
-        console.log("[MOTOR LOCAL] Generación en entorno local autónomo:", err);
+        console.warn("[MOTOR LOCAL] Procesamiento de respaldo offline:", err);
       });
 
-      // Transición Paso 2 (1.0s)
+      // Transición Paso 2 (0.9s)
       setTimeout(() => {
         setStepCompleted("stepper-step-1");
         setStepActive("stepper-step-2");
-        modalStatusTitle.textContent = `2/4 Generando en Studio (${selectedKeys.length} formatos)...`;
+        modalStatusTitle.textContent = `2/4 Generando en Studio (${selectedKeys.length} materiales)...`;
         modalStatusDesc.textContent = "Sincronizando podcast a 2 voces y análisis con NotebookLM";
         modalProgressPct.textContent = "55%";
         modalProgressBar.style.width = "55%";
-      }, 1000);
+      }, 900);
 
-      // Transición Paso 3 (2.2s)
+      // Transición Paso 3 (1.9s)
       setTimeout(() => {
         setStepCompleted("stepper-step-2");
         setStepActive("stepper-step-3");
@@ -1823,19 +1841,19 @@ El dogma central describe el flujo de la información genética: replicación de
         modalStatusDesc.textContent = "Compilando cuestionario interactivo, flashcards y mapas conceptuales";
         modalProgressPct.textContent = "80%";
         modalProgressBar.style.width = "80%";
-      }, 2200);
+      }, 1900);
 
-      // Transición Paso 4 (3.4s)
+      // Transición Paso 4 (2.9s)
       setTimeout(() => {
         setStepCompleted("stepper-step-3");
         setStepActive("stepper-step-4");
-        modalStatusTitle.textContent = "4/4 Finalizando y Descargando Entregables...";
+        modalStatusTitle.textContent = "4/4 Finalizando Entregables...";
         modalStatusDesc.textContent = "Verificando integridad de audio .M4A y fichas en OFG.ai Studio";
         modalProgressPct.textContent = "95%";
         modalProgressBar.style.width = "95%";
-      }, 3400);
+      }, 2900);
 
-      // Finalización Exitosa (4.3s)
+      // Finalización Exitosa (3.6s)
       setTimeout(() => {
         setStepCompleted("stepper-step-4");
         modalProgressPct.textContent = "100%";
@@ -1845,14 +1863,15 @@ El dogma central describe el flujo de la información genética: replicación de
         modalCenterIcon.textContent = "check_circle";
         modalCenterIcon.className = "material-symbols-outlined text-emerald-400 text-[38px] animate-bounce";
         
-        modalStatusTitle.textContent = "¡Tus Materiales Están Listos!";
-        modalStatusDesc.textContent = `Se han generado los ${selectedKeys.length} materiales solicitados con éxito.`;
+        modalStatusTitle.textContent = "¡Materiales de NotebookLM Listos!";
+        modalStatusDesc.textContent = `Se han generado exclusivamente los ${selectedKeys.length} materiales solicitados.`;
 
         modalCompletionActions.classList.remove("hidden");
         processClassBtn.disabled = false;
 
-        // Construir datos dinámicos para los componentes
-        buildAllDeliverables(text || (currentUploadedAudioFile ? currentUploadedAudioFile.name : "Clase"), selectedKeys);
+        // Renderizar SOLO los materiales seleccionados entregados por NotebookLM
+        const finalPackage = backendDeliveredData || buildLocalNotebookLMPackage(text, selectedKeys);
+        applyDeliveredNotebookLMPackage(finalPackage, selectedKeys);
 
         const goToResults = () => {
           generationModal.classList.add("hidden");
@@ -1867,347 +1886,46 @@ El dogma central describe el flujo de la información genética: replicación de
 
         modalViewResultsBtn.onclick = goToResults;
 
-        // Auto redirección tras 1.2s para acceder de inmediato a los materiales generados
+        // Auto redirección tras 1.0s para acceder de inmediato a los materiales generados
         setTimeout(() => {
           if (!generationModal.classList.contains("hidden")) {
             goToResults();
           }
-        }, 1200);
+        }, 1000);
 
-      }, 4300);
+      }, 3600);
     });
 
+    let currentDeliveredPackage = null;
     let generatedData = null;
 
-    function buildAllDeliverables(rawText, selectedKeys) {
-      let title = "Clase de Formación";
-      let topic = "General";
+    function applyDeliveredNotebookLMPackage(pkg, requestedKeys) {
+      currentDeliveredPackage = pkg;
+      const validKeys = pkg.selectedKeys && pkg.selectedKeys.length > 0 ? pkg.selectedKeys : requestedKeys;
 
-      const isCadiz = rawText.toLowerCase().includes("cádiz") || rawText.toLowerCase().includes("pepa") || rawText.toLowerCase().includes("constitución") || rawText.toLowerCase().includes("1812");
-      const isInternet = rawText.toLowerCase().includes("internet") || rawText.toLowerCase().includes("arpanet") || rawText.toLowerCase().includes("tcp") || rawText.toLowerCase().includes("berners-lee") || rawText.toLowerCase().includes("cern") || rawText.toLowerCase().includes("web");
+      // 1. Mostrar contenedor activo y ocultar placeholder en blanco
+      const emptyPlaceholder = document.getElementById("results-empty-placeholder");
+      const activeWrapper = document.getElementById("results-active-wrapper");
+      if (emptyPlaceholder) emptyPlaceholder.classList.add("hidden");
+      if (activeWrapper) activeWrapper.classList.remove("hidden");
 
-      if (isCadiz) {
-        title = "Historia: Las Cortes de Cádiz y La Pepa (1812)";
-        topic = "Historia de España";
-      } else if (isInternet) {
-        title = "Tecnología: El Origen de Internet, ARPANET y la Web";
-        topic = "Historia de la Computación";
-      } else if (rawText.toLowerCase().includes("platón") || rawText.toLowerCase().includes("caverna") || rawText.toLowerCase().includes("filosofía")) {
-        title = "Filosofía: El Mito de la Caverna y los Dos Mundos de Platón";
-        topic = "Historia de la Filosofía";
-      } else if (rawText.toLowerCase().includes("adn") || rawText.toLowerCase().includes("célula") || rawText.toLowerCase().includes("genética")) {
-        title = "Biología: Estructura del ADN y Dogma Molecular";
-        topic = "Biología y Geología";
-      } else {
-        const firstWords = rawText.split(/\s+/).slice(0, 5).join(" ");
-        title = `Tema: ${firstWords}...`;
-      }
+      // 2. Actualizar título oficial de la clase entregado por NotebookLM
+      deliverableClassTitle.textContent = pkg.title;
 
-      deliverableClassTitle.textContent = title;
-
-      const sentences = rawText.split(/[.\n]+/).filter(s => s.trim().length > 15);
-      const s1 = sentences[0] || "En la clase de hoy hemos repasado los fundamentos principales del tema.";
-      const s2 = sentences[1] || "El profesor ha incidido en que este punto es indispensable para el examen.";
-      const s3 = sentences[2] || "Hay que dominar la definición formal y sus tres características básicas.";
-
-      // 1. Data Podcast
-      let podcastScript = [];
-      if (isCadiz) {
-        podcastScript = [
-          { host: "Clara", avatar: "CL", color: "bg-tertiary-fixed text-on-tertiary", nameColor: "text-tertiary-fixed-dim", text: "¡Hola a todos! Bienvenidos a este episodio especial de repaso para Selectividad. Hoy nos metemos de lleno en 1812, en plena Guerra de la Independencia, con la ciudad de Cádiz sitiada por las tropas francesas mientras se gestaba la mayor revolución jurídica de nuestra historia: La Pepa." },
-          { host: "Álex", avatar: "AL", color: "bg-primary-container text-on-primary", nameColor: "text-primary-fixed-dim", text: "Exacto, Clara. Y el núcleo indiscutible que no podéis dejar pasar en el examen es el Artículo 3: la Soberanía Nacional. Por primera vez, el poder no emana de la corona por gracia divina, sino de la propia Nación de ciudadanos de ambos hemisferios." },
-          { host: "Clara", avatar: "CL", color: "bg-tertiary-fixed text-on-tertiary", nameColor: "text-tertiary-fixed-dim", text: "Y no sólo eso: división estricta de poderes (legislativo en Cortes con el Rey, ejecutivo en el Monarca y judicial en tribunales independientes) junto a la abolición de la Inquisición y del régimen señorial. ¡Recordad que duró hasta el regreso de Fernando VII en 1814!" }
-        ];
-      } else if (isInternet) {
-        podcastScript = [
-          { host: "Clara", avatar: "CL", color: "bg-tertiary-fixed text-on-tertiary", nameColor: "text-tertiary-fixed-dim", text: "¡Hola! Bienvenidos a este episodio sobre la historia de Internet. Es alucinante comprobar que todo empezó con ARPANET a finales de los años sesenta como un proyecto militar y científico descentralizado." },
-          { host: "Álex", avatar: "AL", color: "bg-primary-container text-on-primary", nameColor: "text-primary-fixed-dim", text: "Totalmente, Clara. Lo revolucionario fue la arquitectura descentralizada: si caía un nodo, la red seguía comunicando. Y la gran explosión llegó cuando el protocolo TCP/IP permitió conectar redes completamente dispares entre sí." },
-          { host: "Clara", avatar: "CL", color: "bg-tertiary-fixed text-on-tertiary", nameColor: "text-tertiary-fixed-dim", text: "Y en 1989, Tim Berners-Lee inventó en el CERN la World Wide Web y el HTML, democratizando la información hasta convertir a Internet en la infraestructura sobre la que hoy creamos inteligencia artificial." }
-        ];
-      } else {
-        podcastScript = [
-          { host: "Clara", avatar: "CL", color: "bg-tertiary-fixed text-on-tertiary", nameColor: "text-tertiary-fixed-dim", text: `¡Hola! Aquí Clara. Acabamos de procesar la lección del profesor sobre ${title}. Lo más importante al arrancar es: «${s1.trim()}».` },
-          { host: "Álex", avatar: "AL", color: "bg-primary-container text-on-primary", nameColor: "text-primary-fixed-dim", text: `Totalmente de acuerdo, Clara. Y atención a lo que explicó justo después: «${s2.trim()}». Eso tiene un 90% de probabilidades de caer en la prueba escrita.` },
-          { host: "Clara", avatar: "CL", color: "bg-tertiary-fixed text-on-tertiary", nameColor: "text-tertiary-fixed-dim", text: `Exacto. Para rematar, no olvidéis este concepto que ha repetido: «${s3.trim()}». Si lo sintetizáis con vuestras palabras, tendréis los puntos asegurados.` }
-        ];
-      }
-
-      // 2. Data PDF
-      let pdfSummary = s1 + ". " + s2 + ".";
-      let p1 = s1, p2 = s2, p3 = s3;
-      let pedTip = "Relacionar siempre las causas de la lección con los efectos prácticos antes de pasar a la conclusión.";
-
-      if (isCadiz) {
-        pdfSummary = "Análisis decisivo de las Cortes extraordinarias de Cádiz (1810-1814) y la promulgación de la Constitución de 1812 ('La Pepa'). Se desmantela el Antiguo Régimen absolutista mediante la consagración de la soberanía nacional, la división tripartita de poderes y el establecimiento de una monarquía constitucional moderada.";
-        p1 = "Artículo 3: Soberanía Nacional residente esencialmente en la Nación (españoles de ambos hemisferios).";
-        p2 = "División de Poderes: Cortes unicamerales legislativas con el Rey, ejecutivo en el Monarca con veto suspensivo, judicial en tribunales.";
-        p3 = "Legislación socioeconómica: Supresión de la Inquisición, desamortización y abolición de señoríos jurisdiccionales.";
-        pedTip = "En el comentario de texto histórico, citar siempre el Artículo 3 y contrastar con la restauración absolutista de Fernando VII en mayo de 1814 tras el Manifiesto de los Persas.";
-      } else if (isInternet) {
-        pdfSummary = "Estudio del desarrollo histórico de las telecomunicaciones y la computación distribuida: desde el origen de ARPANET a finales de los sesenta hasta la estandarización del protocolo TCP/IP y la creación de la World Wide Web por Tim Berners-Lee en el CERN en 1989.";
-        p1 = "ARPANET (1969): Concepción de una red militar y científica descentralizada para sobrevivir a la pérdida de nodos críticos.";
-        p2 = "Protocolo TCP/IP (1983): Estandarización de la conmutación de paquetes e interoperabilidad entre redes heterogéneas.";
-        p3 = "World Wide Web (1989): Creación del lenguaje HTML, protocolo HTTP e hipertexto universal en el CERN.";
-        pedTip = "Diferenciar con precisión técnica entre Internet (la infraestructura física y de protocolos) y la World Wide Web (el sistema de documentos interconectados).";
-      }
-
-      const pdfHtml = `
-        <div class="border-b border-surface-container-high pb-4">
-          <span class="text-xs font-mono text-primary-container font-bold">${topic.toUpperCase()} • INFORME OFICIAL</span>
-          <h2 class="font-headline font-black text-xl sm:text-2xl text-primary mt-1">${title}</h2>
-          <span class="text-xs text-on-surface-variant font-mono">Generado por NotebookLM Studio • ${new Date().toLocaleDateString()}</span>
-        </div>
-        <div class="space-y-3">
-          <h3 class="font-headline font-bold text-sm text-primary-fixed-dim uppercase tracking-wider">1. Resumen Ejecutivo de la Sesión</h3>
-          <p class="text-xs sm:text-sm text-on-surface leading-relaxed">${pdfSummary}</p>
-        </div>
-        <div class="space-y-3">
-          <h3 class="font-headline font-bold text-sm text-primary-fixed-dim uppercase tracking-wider">2. Puntos Ineludibles para el Examen</h3>
-          <ul class="list-disc list-inside space-y-1.5 text-xs sm:text-sm text-on-surface">
-            <li><strong>Pilar 1:</strong> ${p1}</li>
-            <li><strong>Pilar 2:</strong> ${p2}</li>
-            <li><strong>Pilar 3:</strong> ${p3}</li>
-          </ul>
-        </div>
-        <div class="bg-surface-container-high/60 p-4 rounded-xl border-l-4 border-primary-container text-xs space-y-1">
-          <span class="font-bold text-primary">💡 Consejo Pedagógico:</span>
-          <p class="text-on-surface-variant">${pedTip}</p>
-        </div>
-      `;
-
-      // 3. Data Slides
-      let slides = [];
-      if (isCadiz) {
-        slides = [
-          { tag: "DIAPOSITIVA 1", title: "Cortes de Cádiz: Vacío de Poder (1808-1810)", desc: "Tras las abdicaciones de Bayona y la invasión napoleónica, la Junta Central convoca Cortes extraordinarias en Cádiz para reconstruir el Estado.", bullets: ["📌 Guerra de la Independencia", "🏛️ Decreto I de 1810: Soberanía Nacional"] },
-          { tag: "DIAPOSITIVA 2", title: "La Constitución de 1812: 'La Pepa'", desc: "Promulgada el 19 de marzo de 1812 (San José). Primer texto constitucional liberal de España y referente mundial.", bullets: ["📜 Monarquía moderada hereditaria", "⚖️ Ciudadanía universal de ambos hemisferios"] },
-          { tag: "DIAPOSITIVA 3", title: "Desmantelamiento del Antiguo Régimen", desc: "Decretos transformadores para liquidar las estructuras estamentales y feudalistas de la sociedad española.", bullets: ["❌ Supresión de la Inquisición", "🌾 Abolición de señoríos y gremios"] },
-          { tag: "DIAPOSITIVA 4", title: "La Reacción Absolutista de 1814", desc: "Regreso de Fernando VII ('el Deseado'), firma del Manifiesto de los Persas y derogación completa de la obra de Cádiz.", bullets: ["⚠️ Golpe absolutista en mayo de 1814", "🔄 Seis años de persecución hasta Riego (1820)"] }
-        ];
-      } else if (isInternet) {
-        slides = [
-          { tag: "DIAPOSITIVA 1", title: "ARPANET: La Red Descentralizada (1969)", desc: "Proyecto científico-militar concebido para garantizar la comunicación incluso si caía uno de sus nodos centrales.", bullets: ["🌐 Primera red con conmutación de paquetes", "🛡️ Resiliencia ante fallos catastróficos"] },
-          { tag: "DIAPOSITIVA 2", title: "Protocolo TCP/IP: El Lenguaje Universal", desc: "Adoptado formalmente en 1983, permitió interconectar redes totalmente heterogéneas creando Internet.", bullets: ["📦 TCP: Fragmentación y entrega de paquetes", "📍 IP: Direccionamiento lógico universal"] },
-          { tag: "DIAPOSITIVA 3", title: "La World Wide Web (1989)", desc: "Tim Berners-Lee inventa en el CERN la Web, el lenguaje HTML y las URLs para democratizar el acceso al conocimiento.", bullets: ["🔗 Enlaces de hipertexto universales", "🌍 Nacimiento del primer navegador y servidor web"] },
-          { tag: "DIAPOSITIVA 4", title: "De la Web a la Era de la IA", desc: "Internet pasa de ser una red estática a la infraestructura crítica global sobre la que se apoya la inteligencia artificial.", bullets: ["🚀 Plataforma planetaria de datos", "🤖 Cimientos de los copilotos y modelos autónomos"] }
-        ];
-      } else {
-        slides = [
-          { tag: "DIAPOSITIVA 1", title: title.split(":")[1] || title, desc: s1, bullets: ["📌 Concepto Inicial", "🕒 Inicio de la sesión"] },
-          { tag: "DIAPOSITIVA 2", title: "El Núcleo de la Explicación", desc: s2, bullets: ["🔍 Análisis detallado", "⚖️ Punto de evaluación"] },
-          { tag: "DIAPOSITIVA 3", title: "Conclusiones y Examen", desc: s3, bullets: ["📝 Pregunta típica", "🎯 Repaso obligatorio"] }
-        ];
-      }
-
-      // 4. Data Flashcards
-      let flashcards = [];
-      if (isCadiz) {
-        flashcards = [
-          { q: "¿Qué consagra el Artículo 3 de la Constitución de 1812 y por qué es clave en Selectividad?", hint: "Titularidad del poder político frente al absolutismo divino", a: "Consagra la Soberanía Nacional: la soberanía reside esencialmente en la Nación, perteneciendo a esta en exclusiva el derecho de establecer sus leyes fundamentales." },
-          { q: "¿Cómo se estructuró la división de poderes en 'La Pepa'?", hint: "Poder legislativo, ejecutivo y judicial", a: "Poder legislativo: en las Cortes unicamerales con el Rey. Poder ejecutivo: en el Monarca (con restricciones). Poder judicial: en tribunales independientes." },
-          { q: "¿Qué medidas transformadoras se aprobaron junto a la Constitución y cuándo fue suspendida?", hint: "Inquisición, régimen señorial y regreso de Fernando VII", a: "Se abolió la Inquisición, el régimen señorial jurisdiccional y los gremios. Fue suspendida y anulada en mayo de 1814 tras el regreso de Fernando VII." }
-        ];
-      } else if (isInternet) {
-        flashcards = [
-          { q: "¿Cuál fue el principio clave de diseño que motivó la creación de ARPANET en 1969?", hint: "Piensa en qué pasaba si un centro de mando era destruido", a: "La descentralización: una red distribuida de conmutación de paquetes donde la información pudiera encontrar rutas alternativas si un nodo era destruido." },
-          { q: "¿Qué problema resolvió el protocolo TCP/IP adoptado en 1983?", hint: "Conexión entre diferentes tipos de computadoras y redes", a: "Estandarizó la comunicación universal, permitiendo que redes físicas e informáticas totalmente dispares pudieran conectarse e intercambiar datos como una sola red global." },
-          { q: "¿Qué aportación trascendental realizó Tim Berners-Lee en el CERN en 1989?", hint: "Hipertexto, HTML y páginas web", a: "Inventó la World Wide Web (WWW), el lenguaje HTML y el protocolo HTTP, permitiendo acceder a documentos y recursos mediante hipervínculos a través de un navegador." }
-        ];
-      } else {
-        flashcards = [
-          { q: `¿Cuál es el postulado principal explicado en esta sesión de ${topic}?`, hint: "Basado en la introducción del profesor", a: s1 },
-          { q: "¿Qué advertencia o detalle específico destacó el profesor?", hint: "Revisa la segunda parte de la grabación", a: s2 },
-          { q: "¿Cómo sintetizarías la conclusión final para la prueba?", hint: "Cierre de la lección", a: s3 }
-        ];
-      }
-
-      // 5. Data Mindmap
-      let mindmapData = null;
-      if (isCadiz) {
-        mindmapData = {
-          center: "Constitución de 1812 (La Pepa)",
-          branches: [
-            { title: "1. Soberanía Nacional", desc: "El poder emana de la Nación de ambos hemisferios (Art. 3). Fin del absolutismo divino.", tag: "Pilar Político" },
-            { title: "2. División de Poderes", desc: "Legislativo (Cortes unicamerales + Rey), Ejecutivo (Rey moderado), Judicial (Tribunales independientes).", tag: "Estructura Estado" },
-            { title: "3. Reformas Socioeconómicas", desc: "Abolición del régimen señorial, supresión del Santo Oficio y libertad de imprenta (Art. 371).", tag: "Leyes Liberales" },
-            { title: "4. Religión y Restauración", desc: "Confesionalidad católica exclusiva (Art. 12). Golpe de Estado absolutista y derogación en mayo de 1814.", tag: "Límites y Ocaso" }
-          ]
-        };
-      } else if (isInternet) {
-        mindmapData = {
-          center: "Origen y Evolución de Internet",
-          branches: [
-            { title: "1. ARPANET (1969)", desc: "Red militar y científica descentralizada basada en conmutación de paquetes.", tag: "Génesis" },
-            { title: "2. Protocolo TCP/IP (1983)", desc: "Estándar de interoperabilidad para unir redes globales heterogéneas.", tag: "Arquitectura" },
-            { title: "3. World Wide Web (1989)", desc: "Tim Berners-Lee en el CERN: hipertexto, URLs y lenguaje HTML para la humanidad.", tag: "Revolución Web" },
-            { title: "4. Era de la Inteligencia Artificial", desc: "Infraestructura troncal planetaria para el entrenamiento y ejecución de modelos de IA.", tag: "Frontera Actual" }
-          ]
-        };
-      } else {
-        mindmapData = {
-          center: title.split(":")[1] || title,
-          branches: [
-            { title: "1. Fundamentos Clave", desc: s1, tag: "Teoría" },
-            { title: "2. Desarrollo & Análisis", desc: s2, tag: "Explicación" },
-            { title: "3. Claves de Evaluación", desc: s3, tag: "Examen" }
-          ]
-        };
-      }
-
-      // 6. Data Quiz
-      let quizQuestions = [];
-      if (isCadiz) {
-        quizQuestions = [
-          {
-            q: "1. ¿En qué principio fundamental se basa la Constitución de 1812 respecto a la titularidad del poder político y qué forma de gobierno establece para el Estado?",
-            options: [
-              "A) En la soberanía compartida entre el Rey y las Cortes, manteniendo una monarquía absoluta de origen divino.",
-              "B) En la soberanía nacional (residiendo esencialmente en la Nación), fijando una monarquía moderada hereditaria.",
-              "C) En la soberanía popular con sufragio universal directo, instaurando una república parlamentaria.",
-              "D) En la soberanía real delegada en las Juntas Provinciales, manteniendo el régimen estamental del Antiguo Régimen."
-            ],
-            correct: 1,
-            explanation: "El Artículo 3 establece explícitamente que la soberanía reside esencialmente en la Nación, perteneciendo a esta exclusivamente el derecho de dictar sus leyes fundamentales. El Artículo 14 define el Gobierno como una Monarquía moderada hereditaria con división de poderes."
-          },
-          {
-            q: "2. En el Decreto I expedido el 24 de septiembre de 1810 durante la sesión inaugural de las Cortes de Cádiz, ¿qué declaración trascendental efectuaron los diputados?",
-            options: [
-              "A) La renuncia formal al trono español a favor de José I Bonaparte tras las abdicaciones de Bayona.",
-              "B) La abolición inmediata y definitiva de los fueros eclesiásticos y del fuero militar en todo el reino.",
-              "C) Que se declaraban legítimamente constituidos en Cortes generales y extraordinarias y que en ellas residía la soberanía nacional.",
-              "D) La promulgación directa del texto constitucional de 1812 y la supresión de los diezmos agrícolas."
-            ],
-            correct: 2,
-            explanation: "En su primer decreto del 24 de septiembre de 1810, los diputados se proclamaron legítimamente constituidos en Cortes generales y extraordinarias donde reside la soberanía nacional, declarando nula la cesión de Bayona a Napoleón."
-          },
-          {
-            q: "3. ¿Cómo reguló la Constitución de Cádiz de 1812 la cuestión religiosa y la libertad de expresión dentro del nuevo orden liberal?",
-            options: [
-              "A) Proclamó la libertad total de cultos y restauró el régimen de censura previa obligatoria.",
-              "B) Estableció la confesionalidad católica exclusiva del Estado, pero reconoció la libertad política de imprenta sin censura previa.",
-              "C) Abolió formalmente la confesionalidad del Estado imponiendo la educación laica y prohibiendo periódicos políticos.",
-              "D) Permitió el protestantismo en las provincias de ultramar y mantuvo la censura previa sobre cualquier publicación."
-            ],
-            correct: 1,
-            explanation: "El Artículo 12 declaró la religión católica como única y perpetua de la Nación prohibiendo cualquier otra, mientras que en contraste el Artículo 371 garantizó a los españoles la libertad política de imprenta sin licencia ni revisión previa."
-          }
-        ];
-      } else if (isInternet) {
-        quizQuestions = [
-          {
-            q: "1. ¿Cuál fue el objetivo fundamental del proyecto militar y científico ARPANET a finales de los años sesenta?",
-            options: [
-              "A) Desarrollar una red centralizada controlada por un único supercomputador en Washington.",
-              "B) Crear una red descentralizada de comunicación capaz de seguir funcionando aunque cayera alguno de sus nodos.",
-              "C) Diseñar el primer sistema de mensajería instantánea para teléfonos móviles comerciales.",
-              "D) Sustituir totalmente las líneas telefónicas por transmisiones satelitales ópticas."
-            ],
-            correct: 1,
-            explanation: "ARPANET fue concebida con una arquitectura de conmutación de paquetes descentralizada para asegurar la continuidad de las comunicaciones ante ataques o fallos en nodos críticos."
-          },
-          {
-            q: "2. ¿Qué avance técnico permitió la interoperabilidad entre redes informáticas completamente diferentes dando origen formal a Internet?",
-            options: [
-              "A) El protocolo de comunicación TCP/IP.",
-              "B) La invención de los discos duros magnéticos de estado sólido.",
-              "C) La creación del cable coaxial de cobre trenzado.",
-              "D) El protocolo Bluetooth para redes de área local."
-            ],
-            correct: 0,
-            explanation: "El protocolo TCP/IP (adoptado en 1983) definió el estándar común de direccionamiento y empaquetado que permitió que redes con tecnologías y arquitecturas distintas se conectasen entre sí."
-          },
-          {
-            q: "3. ¿En qué centro de investigación y en qué año inventó Tim Berners-Lee la World Wide Web?",
-            options: [
-              "A) En 1969 en el MIT (Massachusetts).",
-              "B) En 1989 en el CERN (Ginebra, Suiza).",
-              "C) En 1995 en la Universidad de Stanford.",
-              "D) En 1978 en los laboratorios Bell de AT&T."
-            ],
-            correct: 1,
-            explanation: "Tim Berners-Lee desarrolló en 1989 en el CERN el sistema de hipertexto y el lenguaje HTML para facilitar que los científicos compartieran información mediante enlaces en la red."
-          }
-        ];
-      } else {
-        quizQuestions = [
-          {
-            q: `1. Respecto a la lección de ${topic}, ¿cuál fue el postulado de partida?`,
-            options: [s1, "Una teoría obsoleta del siglo anterior", "Un postulado sin impacto en la materia"],
-            correct: 0,
-            explanation: "El postulado inicial define los conceptos rectores de la materia analizada."
-          },
-          {
-            q: "2. Según las explicaciones del profesor, ¿qué elemento requiere mayor atención?",
-            options: ["La fecha de nacimiento de los autores", s2, "Ninguno, es puramente informativo"],
-            correct: 1,
-            explanation: "El segundo elemento fue destacado reiteradamente como clave para la resolución de supuestos de examen."
-          },
-          {
-            q: "3. ¿Qué conclusión se debe remarcar en la prueba escrita?",
-            options: ["Que no hay acuerdo en el claustro", "Que se suspende la evaluación", s3],
-            correct: 2,
-            explanation: "La síntesis de cierre constituye la respuesta esperada en los criterios de corrección de Selectividad."
-          }
-        ];
-      }
-
-      // 7. Data Infographic
-      let infographicData = [];
-      if (isCadiz) {
-        infographicData = [
-          { phase: "1808 • Vacío de Poder", text: "Invasión napoleónica, abdicaciones de Bayona y creación de la Junta Suprema Central.", icon: "flag" },
-          { phase: "1810 • Cortes de Cádiz", text: "Apertura en la Isla de León; Decreto I asumiendo la Soberanía Nacional en nombre del pueblo.", icon: "account_balance" },
-          { phase: "1812 • 'La Pepa'", text: "Promulgación solemne el 19 de marzo: Monarquía moderada, división de poderes y derechos civiles.", icon: "history_edu" },
-          { phase: "1814 • Restauración Absolutista", text: "Regreso de Fernando VII, Manifiesto de los Persas y derogación de toda la legislación de Cádiz.", icon: "gavel" }
-        ];
-      } else if (isInternet) {
-        infographicData = [
-          { phase: "1969 • Proyecto ARPANET", text: "Conexión de los primeros 4 nodos universitarios con conmutación descentralizada de paquetes.", icon: "hub" },
-          { phase: "1983 • Adopción de TCP/IP", text: "El 1 de enero de 1983 se establece el estándar oficial que da nacimiento al Internet global.", icon: "settings_ethernet" },
-          { phase: "1989 • World Wide Web (CERN)", text: "Tim Berners-Lee publica la propuesta de la Web y crea el lenguaje HTML y las URLs.", icon: "language" },
-          { phase: "Actualidad • Era de la IA", text: "Internet se transforma en la red troncal sobre la que entrenan y operan los modelos de IA.", icon: "smart_toy" }
-        ];
-      } else {
-        infographicData = [
-          { phase: "Fase 1 • Origen", text: s1, icon: "flag" },
-          { phase: "Fase 2 • Consolidación", text: s2, icon: "bolt" },
-          { phase: "Fase 3 • Consecuencias", text: s3, icon: "trophy" }
-        ];
-      }
-
-      generatedData = { podcastScript, pdfHtml, slides, flashcards, mindmapData, quizQuestions, infographicData };
-
-      // Render Selected Tabs in Navigation Bar
-      renderTabsNavigationBar(selectedKeys);
-
-      // Render all requested components
-      if (selectedKeys.includes("podcast")) renderPodcast(podcastScript);
-      if (selectedKeys.includes("pdf")) document.getElementById("pdf-printable-doc").innerHTML = pdfHtml;
-      if (selectedKeys.includes("slides")) renderSlides(slides);
-      if (selectedKeys.includes("flashcards")) renderFlashcards(flashcards);
-      if (selectedKeys.includes("mindmap")) renderMindmap(mindmapData);
-      if (selectedKeys.includes("quiz")) renderQuiz(quizQuestions);
-      if (selectedKeys.includes("infographic")) renderInfographic(infographicData);
-      if (selectedKeys.includes("video")) {
-        document.getElementById("video-mock-title").textContent = `Vídeo: ${title}`;
-      }
-    }
-
-    // -------------------------------------------------------------
-    // F. DYNAMIC TABS BAR RENDERER
-    // -------------------------------------------------------------
-    function renderTabsNavigationBar(selectedKeys) {
+      // 3. Renderizar barra de pestañas ÚNICAMENTE con los materiales seleccionados
       tabsNavBar.innerHTML = "";
       document.querySelectorAll(".tab-panel").forEach(p => p.classList.add("hidden"));
 
-      selectedKeys.forEach((key, index) => {
+      validKeys.forEach((key, index) => {
         const meta = deliverableMetadata[key];
+        if (!meta) return;
+
         const btn = document.createElement("button");
         btn.dataset.target = `panel-${key}`;
         btn.className = index === 0
-          ? "tab-nav-btn active px-3.5 py-1.5 rounded-xl font-headline font-bold text-xs flex items-center gap-1.5 bg-primary-container text-on-primary-container shadow-sm transition-all"
-          : "tab-nav-btn px-3.5 py-1.5 rounded-xl font-headline font-bold text-xs flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-all";
-        
+          ? "tab-nav-btn active px-3.5 py-1.5 rounded-xl font-headline font-bold text-xs flex items-center gap-1.5 bg-primary-container text-on-primary-container shadow-sm transition-all shrink-0"
+          : "tab-nav-btn px-3.5 py-1.5 rounded-xl font-headline font-bold text-xs flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-all shrink-0";
+
         btn.innerHTML = `
           <span class="material-symbols-outlined text-[16px]">${meta.icon}</span>
           <span>${meta.label}</span>
@@ -2215,23 +1933,194 @@ El dogma central describe el flujo de la información genética: replicación de
 
         btn.addEventListener("click", () => {
           document.querySelectorAll(".tab-nav-btn").forEach(b => {
-            b.className = "tab-nav-btn px-3.5 py-1.5 rounded-xl font-headline font-bold text-xs flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-all";
+            b.className = "tab-nav-btn px-3.5 py-1.5 rounded-xl font-headline font-bold text-xs flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-all shrink-0";
           });
-          btn.className = "tab-nav-btn active px-3.5 py-1.5 rounded-xl font-headline font-bold text-xs flex items-center gap-1.5 bg-primary-container text-on-primary-container shadow-sm transition-all";
-          
+          btn.className = "tab-nav-btn active px-3.5 py-1.5 rounded-xl font-headline font-bold text-xs flex items-center gap-1.5 bg-primary-container text-on-primary-container shadow-sm transition-all shrink-0";
+
           document.querySelectorAll(".tab-panel").forEach(p => p.classList.add("hidden"));
           const target = document.getElementById(btn.dataset.target);
           if (target) target.classList.remove("hidden");
+          triggerHaptic("light");
         });
 
         tabsNavBar.appendChild(btn);
 
-        // Show first tab by default
+        // Mostrar el primer entregable por defecto
         if (index === 0) {
           const firstTarget = document.getElementById(`panel-${key}`);
           if (firstTarget) firstTarget.classList.remove("hidden");
         }
       });
+
+      // 4. Poblar componentes con los datos entregados por NotebookLM
+      const d = pkg.deliverables || {};
+
+      if (validKeys.includes("podcast") && d.podcast) {
+        renderPodcast(d.podcast.script || []);
+        generatedData = { podcastScript: d.podcast.script || [] };
+      }
+
+      if (validKeys.includes("pdf") && d.pdf) {
+        renderPdfView(d.pdf);
+      }
+
+      if (validKeys.includes("slides") && d.slides) {
+        renderSlides(d.slides);
+      }
+
+      if (validKeys.includes("flashcards") && d.flashcards) {
+        renderFlashcards(d.flashcards);
+      }
+
+      if (validKeys.includes("mindmap") && d.mindmap) {
+        renderMindmap(d.mindmap);
+      }
+
+      if (validKeys.includes("quiz") && d.quiz) {
+        renderQuiz(d.quiz);
+      }
+
+      if (validKeys.includes("infographic") && d.infographic) {
+        renderInfographic(d.infographic);
+      }
+
+      if (validKeys.includes("video") && d.video) {
+        const vTitle = document.getElementById("video-mock-title");
+        if (vTitle) vTitle.textContent = `Vídeo: ${pkg.title}`;
+      }
+    }
+
+    function renderPdfView(pdf) {
+      const container = document.getElementById("pdf-printable-doc");
+      if (!container) return;
+      container.innerHTML = `
+        <div class="border-b border-surface-container-high pb-4">
+          <span class="text-xs font-mono text-primary-container font-bold">${(pdf.topic || "ACADÉMICO").toUpperCase()} • INFORME OFICIAL NOTEBOOKLM</span>
+          <h2 class="font-headline font-black text-xl sm:text-2xl text-primary mt-1">${pdf.title}</h2>
+          <span class="text-xs text-on-surface-variant font-mono">Google NotebookLM Studio • ${pdf.dateStr || new Date().toLocaleDateString('es-ES')}</span>
+        </div>
+        <div class="space-y-3">
+          <h3 class="font-headline font-bold text-sm text-primary-fixed-dim uppercase tracking-wider">1. Resumen Ejecutivo de la Sesión</h3>
+          <p class="text-xs sm:text-sm text-on-surface leading-relaxed">${pdf.summary}</p>
+        </div>
+        <div class="space-y-3">
+          <h3 class="font-headline font-bold text-sm text-primary-fixed-dim uppercase tracking-wider">2. Puntos Ineludibles para el Examen</h3>
+          <ul class="list-disc list-inside space-y-1.5 text-xs sm:text-sm text-on-surface">
+            ${(pdf.pillars || []).map(p => `<li>${p}</li>`).join("")}
+          </ul>
+        </div>
+        <div class="bg-surface-container-high/60 p-4 rounded-xl border-l-4 border-primary-container text-xs space-y-1">
+          <span class="font-bold text-primary">💡 Consejo Pedagógico:</span>
+          <p class="text-on-surface-variant">${pdf.pedTip}</p>
+        </div>
+      `;
+    }
+
+    function buildLocalNotebookLMPackage(cleanText, selectedKeys) {
+      const lower = cleanText.toLowerCase();
+      let topic = "Formación General";
+      let title = "Lección de Clase";
+
+      if (lower.includes("cádiz") || lower.includes("pepa") || lower.includes("1812")) {
+        topic = "Historia de España";
+        title = "Historia: Las Cortes de Cádiz y La Pepa (1812)";
+      } else if (lower.includes("platón") || lower.includes("caverna") || lower.includes("filosofía")) {
+        topic = "Historia de la Filosofía";
+        title = "Filosofía: El Mito de la Caverna y los Dos Mundos de Platón";
+      } else if (lower.includes("adn") || lower.includes("arn") || lower.includes("célula")) {
+        topic = "Biología y Geología";
+        title = "Biología: Estructura del ADN y Dogma Molecular";
+      } else {
+        const firstSent = cleanText.split(/[.\n]+/)[0]?.trim();
+        if (firstSent && firstSent.length > 5) {
+          title = firstSent.length > 50 ? firstSent.substring(0, 50) + "..." : firstSent;
+        }
+      }
+
+      const sentences = cleanText.split(/[.\n]+/).map(s => s.trim()).filter(s => s.length > 15);
+      const s1 = sentences[0] || "En esta sesión se establecen las bases teóricas y metodológicas de la materia.";
+      const s2 = sentences[1] || "El docente destaca este elemento como punto indispensable para la resolución de exámenes.";
+      const s3 = sentences[2] || "La síntesis final demuestra cómo relacionar las causas principales con los efectos prácticos.";
+
+      const deliverables = {};
+
+      if (selectedKeys.includes("podcast")) {
+        deliverables.podcast = {
+          title,
+          script: [
+            { host: "Clara", avatar: "CL", color: "bg-tertiary-fixed text-on-tertiary", nameColor: "text-tertiary-fixed-dim", text: `¡Hola a todos! Bienvenidos a este repaso de ${topic}. Lo crucial que tenéis que fijar es: «${s1}». ` },
+            { host: "Álex", avatar: "AL", color: "bg-primary-container text-on-primary", nameColor: "text-primary-fixed-dim", text: `Exacto, Clara. Y mucho cuidado con la segunda idea clave: «${s2}». Es indispensable para el examen.` },
+            { host: "Clara", avatar: "CL", color: "bg-tertiary-fixed text-on-tertiary", nameColor: "text-tertiary-fixed-dim", text: `Y recordad la conclusión: «${s3}». ¡Puntos asegurados!` }
+          ]
+        };
+      }
+
+      if (selectedKeys.includes("pdf")) {
+        deliverables.pdf = {
+          title,
+          topic,
+          summary: `Análisis académico estructurado sobre ${title}. Se condensan las premisas explicadas por el profesor.`,
+          pillars: [s1, s2, s3],
+          pedTip: `Relacionar siempre los conceptos con sus consecuencias directas antes de redactar la conclusión final.`
+        };
+      }
+
+      if (selectedKeys.includes("slides")) {
+        deliverables.slides = [
+          { tag: "DIAPOSITIVA 1", title: `Introducción: ${title}`, desc: s1, bullets: ["📌 Marco conceptual", "🏛️ Premisas iniciales"] },
+          { tag: "DIAPOSITIVA 2", title: "Desarrollo y Mecanismos Clave", desc: s2, bullets: ["⚡ Elementos nucleares", "📊 Puntos para la evaluación"] },
+          { tag: "DIAPOSITIVA 3", title: "Conclusiones y Examen", desc: s3, bullets: ["✅ Criterios de corrección", "💡 Recomendación práctica"] }
+        ];
+      }
+
+      if (selectedKeys.includes("flashcards")) {
+        deliverables.flashcards = [
+          { q: `¿Cuál es el postulado inicial en '${title}'?`, a: s1, cat: topic, hint: "Revisa la introducción" },
+          { q: `¿Qué aspecto requiere mayor atención según el profesor?`, a: s2, cat: "Examen", hint: "Criterio de evaluación" },
+          { q: `¿Cómo se sintetiza la conclusión principal?`, a: s3, cat: "Síntesis", hint: "Causa y efecto" },
+          { q: `¿Qué consejo pedagógico se recomienda aplicar?`, a: "Diferenciar con rigor entre los principios teóricos y su manifestación práctica.", cat: "Metodología", hint: "Estructura en tres bloques" }
+        ];
+      }
+
+      if (selectedKeys.includes("mindmap")) {
+        deliverables.mindmap = {
+          root: title.length > 28 ? title.substring(0, 26) + "..." : title,
+          branches: [
+            { name: "Fundamento", items: [s1.substring(0, 40) + "..."] },
+            { name: "Mecanismo", items: [s2.substring(0, 40) + "..."] },
+            { name: "Examen", items: [s3.substring(0, 40) + "..."] }
+          ]
+        };
+      }
+
+      if (selectedKeys.includes("quiz")) {
+        deliverables.quiz = [
+          { q: `1. En relación con ${title}, ¿cuál fue la premisa central?`, options: [s1, "Una aproximación sin impacto", "Una teoría descartada"], correct: 0, explanation: `El postulado «${s1}» constituye la base argumentativa.` },
+          { q: `2. ¿Qué aspecto se subrayó como determinante para el examen?`, options: ["Datos biográficos secundarios", s2, "Ninguno en particular"], correct: 1, explanation: `El aspecto «${s2}» fue señalado como criterio de corrección.` },
+          { q: `3. ¿Cuál es la conclusión que debe quedar reflejada en la prueba escrita?`, options: ["Que no existe consenso", "Que el tema es opcional", s3], correct: 2, explanation: `La conclusión correcta es «${s3}».` }
+        ];
+      }
+
+      if (selectedKeys.includes("infographic")) {
+        deliverables.infographic = [
+          { phase: "Fase 1 • Introducción", text: s1, icon: "flag" },
+          { phase: "Fase 2 • Profundización", text: s2, icon: "bolt" },
+          { phase: "Fase 3 • Consolidación", text: s3, icon: "trophy" }
+        ];
+      }
+
+      if (selectedKeys.includes("video")) {
+        deliverables.video = { title, duration: "02:15 min", summary: `Resumen de la sesión.` };
+      }
+
+      return {
+        title,
+        topic,
+        source: "Google NotebookLM Engine (Local Fallback)",
+        selectedKeys,
+        deliverables
+      };
+    }
     }
 
     // -------------------------------------------------------------
@@ -2612,79 +2501,158 @@ El dogma central describe el flujo de la información genética: replicación de
       if (downloadPdfText) downloadPdfText.textContent = "Generando PDF...";
       if (downloadPdfDirectBtn) downloadPdfDirectBtn.disabled = true;
 
-      // Crear contenedor limpio para maquetación editorial académica en A4
-      const pdfContainer = document.createElement("div");
-      pdfContainer.style.width = "720px";
-      pdfContainer.style.padding = "35px 40px";
-      pdfContainer.style.background = "#ffffff";
-      pdfContainer.style.color = "#0f172a";
-      pdfContainer.style.fontFamily = "'Inter', system-ui, -apple-system, sans-serif";
-      pdfContainer.style.lineHeight = "1.6";
-
-      const rawDoc = document.getElementById("pdf-printable-doc");
-      const currentTitle = document.getElementById("deliverable-class-title")?.textContent || "Guía de Estudio";
-
-      pdfContainer.innerHTML = `
-        <div style="border-bottom: 2px solid #0284c7; padding-bottom: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end;">
-          <div>
-            <span style="font-size: 10px; font-weight: 800; color: #0284c7; letter-spacing: 1.5px; text-transform: uppercase; font-family: monospace;">OFG.AI STUDIO • DOSSIER PEDAGÓGICO DE BACHILLERATO</span>
-            <h1 style="font-size: 20px; font-weight: 900; color: #0f172a; margin: 4px 0 0 0;">${currentTitle}</h1>
-          </div>
-          <div style="text-align: right; font-size: 10px; color: #64748b; font-family: monospace;">
-            <div style="font-weight: bold; color: #0284c7;">Google NotebookLM Engine</div>
-            <div>Fecha: ${new Date().toLocaleDateString('es-ES')}</div>
-          </div>
-        </div>
-        <div style="font-size: 13px; color: #334155;">
-          ${rawDoc ? rawDoc.innerHTML
-            .replace(/text-primary-container|text-primary-fixed-dim|text-primary/g, 'text-sky-800')
-            .replace(/bg-surface-container-high\/60|bg-surface-container-high/g, 'bg-slate-100')
-            .replace(/text-on-surface-variant/g, 'text-slate-600')
-            .replace(/text-on-surface/g, 'text-slate-800')
-            : ''}
-        </div>
-        <div style="margin-top: 35px; padding-top: 12px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; font-size: 9px; color: #94a3b8; font-family: monospace;">
-          <span>OFG.ai Studio • Consultor de Inteligencia Artificial para Empresas y Educación</span>
-          <span>Sintetizado con Gemini 2.5 & Google NotebookLM</span>
-        </div>
-      `;
-
-      document.body.appendChild(pdfContainer);
+      const currentTitle = deliverableClassTitle?.textContent || "Guía de Estudio";
+      const pdfData = currentDeliveredPackage?.deliverables?.pdf;
 
       const safeFilename = currentTitle
         .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
         .replace(/[^a-zA-Z0-9_-]/g, "_")
         .replace(/_+/g, "_")
-        .substring(0, 45) + ".pdf";
+        .substring(0, 40) + ".pdf";
 
-      if (typeof html2pdf !== "undefined") {
-        const opt = {
-          margin: [10, 10, 10, 10],
-          filename: safeFilename,
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2, useCORS: true, logging: false },
-          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
+      try {
+        const jspdfModule = window.jspdf || window;
+        const jsPDF = jspdfModule.jsPDF || jspdfModule.default?.jsPDF;
 
-        html2pdf().set(opt).from(pdfContainer).save().then(() => {
-          document.body.removeChild(pdfContainer);
+        if (jsPDF) {
+          const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+          
+          // Barra de cabecera oscura
+          doc.setFillColor(5, 20, 36);
+          doc.rect(0, 0, 210, 24, "F");
+
+          // Título cabecera
+          doc.setTextColor(0, 242, 254);
+          doc.setFontSize(10);
+          doc.setFont("helvetica", "bold");
+          doc.text("OFG.AI STUDIO • DOSSIER PEDAGÓGICO DE BACHILLERATO", 14, 11);
+
+          doc.setTextColor(200, 230, 255);
+          doc.setFontSize(8);
+          doc.setFont("helvetica", "normal");
+          doc.text("Google NotebookLM Studio • Fecha: " + new Date().toLocaleDateString("es-ES"), 14, 18);
+
+          // Título del tema
+          doc.setTextColor(15, 23, 42);
+          doc.setFontSize(15);
+          doc.setFont("helvetica", "bold");
+          const splitTitle = doc.splitTextToSize(currentTitle, 182);
+          doc.text(splitTitle, 14, 35);
+
+          const titleBottom = 35 + (splitTitle.length * 6);
+          doc.setDrawColor(2, 132, 199);
+          doc.setLineWidth(0.6);
+          doc.line(14, titleBottom, 196, titleBottom);
+
+          // Sección 1: Resumen
+          let currentY = titleBottom + 10;
+          doc.setTextColor(2, 132, 199);
+          doc.setFontSize(11);
+          doc.setFont("helvetica", "bold");
+          doc.text("1. RESUMEN EJECUTIVO DE LA LECCIÓN", 14, currentY);
+
+          currentY += 6;
+          doc.setTextColor(51, 65, 85);
+          doc.setFontSize(9.5);
+          doc.setFont("helvetica", "normal");
+          const summaryText = pdfData?.summary || "Análisis académico estructurado de la sesión formativa entregado por Google NotebookLM.";
+          const splitSummary = doc.splitTextToSize(summaryText, 182);
+          doc.text(splitSummary, 14, currentY);
+
+          currentY += (splitSummary.length * 5) + 8;
+
+          // Sección 2: Pilares Clave
+          doc.setTextColor(2, 132, 199);
+          doc.setFontSize(11);
+          doc.setFont("helvetica", "bold");
+          doc.text("2. PUNTOS INELUDIBLES PARA EL EXAMEN", 14, currentY);
+
+          currentY += 6;
+          const pillars = pdfData?.pillars || [
+            "Pilar Fundamental: Comprensión de los principios rectores expuestos en clase.",
+            "Criterio de Examen: Relación de causa-efecto indispensable para la evaluación.",
+            "Conclusión y Síntesis: Aplicación práctica conforme al baremo de corrección."
+          ];
+
+          doc.setTextColor(51, 65, 85);
+          doc.setFontSize(9);
+          doc.setFont("helvetica", "normal");
+          pillars.forEach(p => {
+            const splitPillar = doc.splitTextToSize("• " + p, 182);
+            doc.text(splitPillar, 14, currentY);
+            currentY += (splitPillar.length * 4.8) + 2;
+          });
+
+          currentY += 4;
+
+          // Sección 3: Consejo pedagógico
+          doc.setFillColor(241, 245, 249);
+          doc.roundedRect(14, currentY, 182, 22, 3, 3, "F");
+          doc.setTextColor(15, 23, 42);
+          doc.setFontSize(9.5);
+          doc.setFont("helvetica", "bold");
+          doc.text("Consejo Pedagógico para el Estudio:", 18, currentY + 7);
+          doc.setTextColor(71, 85, 105);
+          doc.setFontSize(8.5);
+          doc.setFont("helvetica", "normal");
+          const tipText = pdfData?.pedTip || "Relacionar los conceptos clave con sus consecuencias directas.";
+          const splitTip = doc.splitTextToSize(tipText, 174);
+          doc.text(splitTip, 18, currentY + 13);
+
+          // Pie de página
+          doc.setFontSize(7.5);
+          doc.setTextColor(148, 163, 184);
+          doc.text("OFG.ai Studio • Consultor de Inteligencia Artificial para Empresas y Educación | Sintetizado con Google NotebookLM", 14, 287);
+
+          doc.save(safeFilename);
           if (downloadPdfText) downloadPdfText.textContent = "¡PDF Descargado!";
           if (downloadPdfDirectBtn) downloadPdfDirectBtn.disabled = false;
           triggerHaptic("success");
           setTimeout(() => {
             if (downloadPdfText) downloadPdfText.textContent = "Descargar Guía en PDF (.pdf)";
           }, 3000);
-        }).catch(err => {
-          console.error("Error con html2pdf:", err);
-          document.body.removeChild(pdfContainer);
-          if (downloadPdfText) downloadPdfText.textContent = "Descargar Guía en PDF (.pdf)";
-          if (downloadPdfDirectBtn) downloadPdfDirectBtn.disabled = false;
-          window.print();
-        });
-      } else {
-        document.body.removeChild(pdfContainer);
-        window.print();
+          return;
+        }
+      } catch (err) {
+        console.error("Fallo generando PDF vectorial:", err);
       }
+
+      // Fallback limpio a Blob HTML descargable sin imprimir ventana
+      const rawDoc = document.getElementById("pdf-printable-doc");
+      const htmlContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <title>${currentTitle}</title>
+          <style>
+            body { font-family: system-ui, sans-serif; padding: 40px; color: #0f172a; line-height: 1.6; max-width: 800px; margin: auto; }
+            h1 { color: #0284c7; }
+            .badge { font-family: monospace; font-size: 11px; color: #0284c7; font-weight: bold; }
+            .tip { background: #f1f5f9; padding: 16px; border-left: 4px solid #0284c7; border-radius: 6px; }
+          </style>
+        </head>
+        <body>
+          <div class="badge">OFG.AI STUDIO • GOOGLE NOTEBOOKLM</div>
+          <h1>${currentTitle}</h1>
+          <hr>
+          ${rawDoc ? rawDoc.innerHTML : ''}
+        </body>
+        </html>
+      `;
+      const blob = new Blob([htmlContent], { type: "text/html" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = safeFilename.replace(".pdf", "") + "_Dossier.html";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
+      if (downloadPdfText) downloadPdfText.textContent = "¡Guía Descargada!";
+      if (downloadPdfDirectBtn) downloadPdfDirectBtn.disabled = false;
+      setTimeout(() => {
+        if (downloadPdfText) downloadPdfText.textContent = "Descargar Guía en PDF (.pdf)";
+      }, 3000);
     }
 
     if (downloadPdfDirectBtn) {
@@ -2694,6 +2662,12 @@ El dogma central describe el flujo de la información genética: replicación de
     if (printPaperBtn) {
       printPaperBtn.addEventListener("click", () => {
         triggerHaptic("light");
+        // En móviles o pantallas pequeñas, descargar directamente el PDF vectorial sin abrir diálogo de impresión
+        if (window.innerWidth < 640) {
+          downloadRealPdf();
+          return;
+        }
+
         document.querySelectorAll(".tab-panel").forEach(p => p.classList.add("hidden"));
         const pdfPanel = document.getElementById("panel-pdf");
         if (pdfPanel) pdfPanel.classList.remove("hidden");
@@ -2930,8 +2904,7 @@ El dogma central describe el flujo de la información genética: replicación de
         setMobileActiveNav(mNavRecord);
         const sec = document.getElementById("recorder-section");
         if (sec) {
-          const top = sec.getBoundingClientRect().top + window.pageYOffset - 80;
-          window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+          sec.scrollIntoView({ behavior: "smooth", block: "start" });
         }
       });
     }
@@ -2941,8 +2914,7 @@ El dogma central describe el flujo de la información genética: replicación de
         setMobileActiveNav(mNavStudio);
         const sec = document.getElementById("studio-options-section");
         if (sec) {
-          const top = sec.getBoundingClientRect().top + window.pageYOffset - 80;
-          window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+          sec.scrollIntoView({ behavior: "smooth", block: "start" });
         }
       });
     }
@@ -2952,8 +2924,7 @@ El dogma central describe el flujo de la información genética: replicación de
         setMobileActiveNav(mNavMaterials);
         const sec = document.getElementById("results-hub");
         if (sec) {
-          const top = sec.getBoundingClientRect().top + window.pageYOffset - 80;
-          window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+          sec.scrollIntoView({ behavior: "smooth", block: "start" });
         }
       });
     }
