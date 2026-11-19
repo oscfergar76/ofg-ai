@@ -7,7 +7,7 @@ compatibility_flags = ["nodejs_compat"]
 [[d1_databases]]
 binding = "DB"
 database_name = "ofg-ai-db"
-database_id = "ofg-ai-db-local"
+database_id = "5a42e817-23ca-40df-941c-12c6746ee18f"
 
 # Vars públicas no sensibles
 [vars]
