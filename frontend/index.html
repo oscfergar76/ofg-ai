@@ -1228,13 +1228,6 @@
         recordBadge.className = "px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-primary-container/20 text-primary-container border border-primary-container/30 uppercase tracking-wider";
         recordBadge.textContent = "Audio Cargado";
         recordPrompt.textContent = `Grabación "${file.name}" lista para procesar en NotebookLM`;
-
-        // Auto-seleccionar podcast y PDF para la ingesta de audio
-        const podCb = document.querySelector('.studio-option-card[data-key="podcast"] .studio-checkbox');
-        const pdfCb = document.querySelector('.studio-option-card[data-key="pdf"] .studio-checkbox');
-        if (podCb) podCb.checked = true;
-        if (pdfCb) pdfCb.checked = true;
-        updateSelectedCount();
       });
 
       removeImportedAudio.addEventListener("click", () => {
@@ -1248,59 +1241,8 @@
     }
 
     // -------------------------------------------------------------
-    // C. STUDIO SUITE SELECTION MANAGEMENT
+    // D. ESTADO INICIAL EN BLANCO (CERO EJEMPLOS PRECARGADOS)
     // -------------------------------------------------------------
-    const studioCards = document.querySelectorAll(".studio-option-card");
-    const selectedCountLabel = document.getElementById("selected-count-label");
-
-    function updateSelectedCount() {
-      const checked = document.querySelectorAll(".studio-checkbox:checked");
-      selectedCountLabel.textContent = `${checked.length} materiales seleccionados`;
-
-      studioCards.forEach(card => {
-        const cb = card.querySelector(".studio-checkbox");
-        if (cb.checked) {
-          card.classList.add("border-primary-container", "bg-surface-container/90");
-          card.classList.remove("border-outline-variant/40", "bg-surface-container-lowest/90");
-        } else {
-          card.classList.remove("border-primary-container", "bg-surface-container/90");
-          card.classList.add("border-outline-variant/40", "bg-surface-container-lowest/90");
-        }
-      });
-    }
-
-    studioCards.forEach(card => {
-      const cb = card.querySelector(".studio-checkbox");
-      card.addEventListener("click", (e) => {
-        if (e.target !== cb) {
-          cb.checked = !cb.checked;
-        }
-        updateSelectedCount();
-      });
-    });
-
-    document.getElementById("select-essential-btn").addEventListener("click", () => {
-      studioCards.forEach(card => {
-        const key = card.dataset.key;
-        const cb = card.querySelector(".studio-checkbox");
-        cb.checked = (key === "podcast" || key === "pdf" || key === "flashcards");
-      });
-      updateSelectedCount();
-    });
-
-    document.getElementById("select-all-btn").addEventListener("click", () => {
-      studioCards.forEach(card => {
-        card.querySelector(".studio-checkbox").checked = true;
-      });
-      updateSelectedCount();
-    });
-
-    updateSelectedCount();
-
-    // -------------------------------------------------------------
-    // D. PRESETS PARA PROBAR SIN HABLAR
-    // -------------------------------------------------------------
-    // ESTADO INICIAL EN BLANCO (CERO EJEMPLOS PRECARGADOS)
     sessionBaseTranscript = "";
     currentSessionFinal = "";
     finalTranscript = "";
@@ -1317,10 +1259,6 @@
         finalTranscript = "";
         liveTranscript.value = "";
         updateWordCount();
-        const emptyPl = document.getElementById("results-empty-placeholder");
-        const activeWr = document.getElementById("results-active-wrapper");
-        if (emptyPl) emptyPl.classList.remove("hidden");
-        if (activeWr) activeWr.classList.add("hidden");
         window.scrollTo({ top: 0, behavior: "smooth" });
       });
     }
