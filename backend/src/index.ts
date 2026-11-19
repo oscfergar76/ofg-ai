@@ -243,11 +243,33 @@ app.post("/api/engine/generate", async (c) => {
     }
     const keys = Array.isArray(selectedKeys) && selectedKeys.length > 0 ? selectedKeys : ["podcast", "pdf", "flashcards"];
     const pkg = await generateNotebookLMPackage(c.env, undefined, rawText, keys, title);
+    
+    // Generación del documento académico estructurado para inyectar en NotebookLM
+    const bridgeSource = `# 📚 APUNTES Y FUENTE DE CLASE: ${pkg.title}
+**Fecha:** ${new Date().toLocaleDateString("es-ES")} | **Materia:** Bachillerato | **Fuente:** OFG.ai Studio Bridge
+
+## 1. Resumen de la Lección
+${pkg.deliverables?.pdf?.summary || rawText.substring(0, 280) + "..."}
+
+## 2. Transcripción Completa Grabada
+${rawText}
+
+## 3. Instrucción Pedagógica para NotebookLM Studio
+A partir de esta lección grabada en clase, genera en la sección Studio:
+- 🎙️ **Audio Overview**: Conversación a 2 voces (podcast de estudio) analizando con rigor la explicación del profesor.
+- 📑 **Guía de Estudio**: Esquema y conceptos esenciales para el examen.
+- ❓ **Cuestionario**: Preguntas tipo test para autoevaluación.
+- 💡 **Preguntas Frecuentes y Tarjetas de Repaso**.
+
+---
+*Generado por OFG.ai Studio • Puente Inteligente de Grabación y Estudio para Google NotebookLM*`;
+
     return c.json({
       success: true,
       title: pkg.title,
       topic: pkg.topic,
       source: pkg.source,
+      bridgeSource,
       podcast: pkg.deliverables.podcast ? {
         ...pkg.deliverables.podcast,
         ready: true

@@ -628,7 +628,7 @@
     <!-- ======================================================================= -->
     <section id="results-hub" class="scroll-mt-20 space-y-6">
       
-      <!-- ESTADO EN BLANCO INICIAL (ANTES DE GENERAR) -->
+      <!-- ESTADO EN BLANCO INICIAL (ANTES DE PREPARAR) -->
       <div id="results-empty-placeholder" class="rounded-3xl bg-card-glass backdrop-blur-xl p-8 sm:p-12 border border-border-glow text-center space-y-4">
         <div class="w-16 h-16 mx-auto rounded-2xl bg-primary-container/10 border border-primary-container/30 flex items-center justify-center text-primary-container shadow-[0_0_20px_rgba(0,242,254,0.15)]">
           <span class="material-symbols-outlined text-[34px]">auto_stories</span>
@@ -636,320 +636,131 @@
         <div class="max-w-md mx-auto space-y-2">
           <h3 class="font-headline font-bold text-lg sm:text-xl text-primary">Tu Espacio de Estudio en Blanco</h3>
           <p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
-            Graba la explicación de tu profesor arriba o importa una nota de voz. Cuando pulses <strong>«Generar Materiales de Estudio con IA»</strong>, Google NotebookLM generará únicamente los materiales que hayas marcado abajo.
+            Graba la explicación de tu profesor arriba o importa una nota de voz del móvil. Al pulsar <strong>«Preparar e Inyectar en Google NotebookLM»</strong>, la lección quedará copiada en tu portapapeles y se activará el enlace a tu cuaderno.
           </p>
         </div>
       </div>
 
-      <!-- CONTENEDOR DINÁMICO DE ENTREGABLES (SE MUESTRA TRAS GENERAR) -->
+      <!-- PANEL ACTIVO DEL PUENTE NOTEBOOKLM (TRAS GENERAR) -->
       <div id="results-active-wrapper" class="hidden space-y-6">
-        <!-- Hub Header & Tool Switcher Tabs -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-surface-container-high">
-          <div>
-            <span class="text-xs font-mono text-primary-container font-bold uppercase tracking-wider">
-              Materiales Generados por Google NotebookLM
-            </span>
-            <h2 id="deliverable-class-title" class="font-headline font-extrabold text-xl sm:text-2xl text-primary mt-0.5">
-              Tema de Clase
-            </h2>
-          </div>
-
-          <!-- Dynamic Navigation Tabs Bar -->
-          <div id="tabs-navigation-bar" class="flex items-center gap-1 bg-surface-container-high p-1 rounded-2xl border border-outline-variant/30 overflow-x-auto max-w-full">
-            <!-- Dynamic Tabs will be populated here -->
-          </div>
-        </div>
-
-      <!-- ===================================================================== -->
-      <!-- TAB PANELS CONTAINER -->
-      <!-- ===================================================================== -->
-
-      <!-- 1. PODCAST PANEL -->
-      <div id="panel-podcast" class="tab-panel space-y-6">
-        <div class="rounded-3xl bg-card-glass backdrop-blur-xl p-6 sm:p-7 border border-border-glow shadow-xl space-y-6">
-          <div class="flex flex-wrap items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-              <div class="w-12 h-12 rounded-2xl bg-primary-container/20 flex items-center justify-center text-primary-container shadow-[0_0_20px_rgba(0,242,254,0.25)]">
-                <span class="material-symbols-outlined text-[26px]">headphones</span>
+        
+        <!-- Header del Puente -->
+        <div class="rounded-3xl bg-card-glass backdrop-blur-xl p-6 sm:p-8 border border-border-glow shadow-xl space-y-6">
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-surface-container-high">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-mono text-primary-container font-bold uppercase tracking-wider">
+                  Fuente Académica para Google NotebookLM
+                </span>
+                <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-mono text-[10px] font-bold">
+                  ✓ Copiado al portapapeles
+                </span>
               </div>
-              <div>
-                <h3 class="font-headline font-bold text-lg text-primary">Podcast a 2 Voces (Audio Overview)</h3>
-                <p class="text-xs text-on-surface-variant">Generado automáticamente por el motor de NotebookLM (19.3 MB • .m4a)</p>
-              </div>
+              <h2 id="deliverable-class-title" class="font-headline font-extrabold text-xl sm:text-2xl text-primary mt-1">
+                Tema de Clase
+              </h2>
+              <p id="bridge-stats-info" class="text-xs text-on-surface-variant font-mono mt-0.5">
+                0 palabras • Formato oficial Markdown
+              </p>
             </div>
-            <div class="flex items-center gap-2">
-              <a href="audio/podcast-notebooklm.m4a" download="Podcast_Cortes_de_Cadiz_1812.m4a" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-surface-container-high hover:bg-surface-bright text-xs font-semibold text-primary transition-all border border-outline-variant/40 btn-press">
-                <span class="material-symbols-outlined text-[16px] text-primary-container">download</span>
-                <span>Descargar Audio .M4A</span>
-              </a>
-            </div>
+
+            <!-- Botón Principal: Abrir Google NotebookLM -->
+            <a id="open-notebooklm-btn" href="https://notebooklm.google.com/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-primary-container to-primary-fixed-dim text-on-primary-container font-headline font-bold text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(0,242,254,0.4)] hover:shadow-[0_0_30px_rgba(0,242,254,0.6)] transition-all hover-lift btn-press cursor-pointer">
+              <span class="material-symbols-outlined text-[18px]">open_in_new</span>
+              <span id="open-notebook-btn-text">Abrir Google NotebookLM ↗</span>
+            </a>
           </div>
 
-          <!-- Reproductor de Audio HTML5 Oficial Estilizado Cybernetic -->
-          <div class="p-4 sm:p-5 rounded-2xl bg-surface-container-lowest/90 border border-surface-container-high space-y-3">
-            <audio id="real-podcast-audio" src="audio/podcast-notebooklm.m4a" preload="metadata"></audio>
+          <!-- Botones de Acción Secundaria (Copiar de nuevo / Descargar .txt) -->
+          <div class="flex flex-wrap items-center gap-3">
+            <button id="recopy-source-btn" type="button" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-bright text-xs font-semibold text-primary transition-all border border-outline-variant/40 hover-lift btn-press cursor-pointer">
+              <span class="material-symbols-outlined text-[16px]">content_copy</span>
+              <span id="recopy-btn-text">Copiar texto de nuevo</span>
+            </button>
+
+            <button id="download-source-btn" type="button" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-bright text-xs font-semibold text-primary transition-all border border-outline-variant/40 hover-lift btn-press cursor-pointer">
+              <span class="material-symbols-outlined text-[16px]">download</span>
+              <span>Descargar archivo (.txt)</span>
+            </button>
+          </div>
+
+          <!-- Guía Visual de 3 Pasos en NotebookLM -->
+          <div class="pt-4 border-t border-surface-container-high space-y-3">
+            <h4 class="font-headline font-bold text-xs sm:text-sm text-primary uppercase tracking-wider">
+              Cómo generar tu Podcast y Guía en 3 sencillos pasos:
+            </h4>
             
-            <div class="flex items-center justify-between text-xs font-mono text-on-surface-variant">
-              <div class="flex items-center gap-2">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span class="text-primary font-bold">Audio Oficial NotebookLM</span>
-                <span class="text-on-surface-variant hidden sm:inline">• 2 Locutores IA (Resumen de Audio)</span>
-              </div>
-              <div>
-                <span id="audio-current-time">00:00</span> / <span id="audio-total-time">--:--</span>
-              </div>
-            </div>
-
-            <!-- Scrubber barra de progreso -->
-            <div class="relative w-full h-2.5 bg-surface-container-highest rounded-full overflow-hidden cursor-pointer" id="audio-progress-container">
-              <div id="audio-progress-bar" class="h-full bg-gradient-to-r from-primary-container to-primary-fixed-dim w-0 transition-all duration-75"></div>
-            </div>
-
-            <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
-              <div class="flex items-center gap-2">
-                <button id="real-audio-play-btn" class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-primary-container text-on-primary-container font-headline font-bold text-xs uppercase tracking-wider shadow-[0_0_15px_rgba(0,242,254,0.3)] hover:bg-primary-fixed-dim transition-all btn-press">
-                  <span id="real-audio-play-icon" class="material-symbols-outlined text-[18px]">play_arrow</span>
-                  <span id="real-audio-play-text">Reproducir Podcast</span>
-                </button>
-                <button id="real-audio-rewind" class="p-2 rounded-full bg-surface-container-high hover:bg-surface-bright text-on-surface transition-colors" title="Retroceder 10s">
-                  <span class="material-symbols-outlined text-[18px]">replay_10</span>
-                </button>
-                <button id="real-audio-forward" class="p-2 rounded-full bg-surface-container-high hover:bg-surface-bright text-on-surface transition-colors" title="Avanzar 10s">
-                  <span class="material-symbols-outlined text-[18px]">forward_10</span>
-                </button>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <!-- Paso 1 -->
+              <div class="p-4 rounded-2xl bg-surface-container-lowest/90 border border-outline-variant/30 space-y-2">
+                <div class="w-7 h-7 rounded-lg bg-primary-container/20 text-primary-container flex items-center justify-center font-bold text-xs">
+                  1
+                </div>
+                <h5 class="font-headline font-bold text-xs text-primary">En NotebookLM: Añadir Fuente</h5>
+                <p class="text-[11px] text-on-surface-variant leading-relaxed">
+                  Pulsa el botón <strong>«+ Añadir fuente»</strong> y selecciona la opción <strong>«Texto copiado»</strong>.
+                </p>
               </div>
 
-              <!-- Selector de velocidad -->
-              <div class="flex items-center gap-1 bg-surface-container-high/80 p-1 rounded-xl text-xs font-mono">
-                <span class="text-[10px] text-on-surface-variant px-1.5">Velocidad:</span>
-                <button class="audio-speed-btn px-2 py-0.5 rounded-lg bg-primary-container text-on-primary-container font-bold" data-speed="1">1x</button>
-                <button class="audio-speed-btn px-2 py-0.5 rounded-lg text-on-surface-variant hover:text-primary" data-speed="1.25">1.25x</button>
-                <button class="audio-speed-btn px-2 py-0.5 rounded-lg text-on-surface-variant hover:text-primary" data-speed="1.5">1.5x</button>
+              <!-- Paso 2 -->
+              <div class="p-4 rounded-2xl bg-surface-container-lowest/90 border border-outline-variant/30 space-y-2">
+                <div class="w-7 h-7 rounded-lg bg-primary-container/20 text-primary-container flex items-center justify-center font-bold text-xs">
+                  2
+                </div>
+                <h5 class="font-headline font-bold text-xs text-primary">Pegar con Ctrl+V e Insertar</h5>
+                <p class="text-[11px] text-on-surface-variant leading-relaxed">
+                  Pega el texto que ya tienes en el portapapeles (<kbd class="px-1 py-0.5 rounded bg-surface-container-high font-mono text-[9px]">Ctrl+V</kbd> o mantener pulsado en móvil) y pulsa <strong>Insertar</strong>.
+                </p>
+              </div>
+
+              <!-- Paso 3 -->
+              <div class="p-4 rounded-2xl bg-surface-container-lowest/90 border border-outline-variant/30 space-y-2">
+                <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs">
+                  3
+                </div>
+                <h5 class="font-headline font-bold text-xs text-emerald-300">Studio: Generar Podcast y Guía</h5>
+                <p class="text-[11px] text-on-surface-variant leading-relaxed">
+                  En el panel derecho (<strong>Studio</strong>), haz clic en <strong>«Audio Overview»</strong> para el podcast a 2 voces, <strong>«Guía de estudio»</strong> o <strong>«Cuestionario»</strong>.
+                </p>
               </div>
             </div>
           </div>
 
-          <div class="space-y-2">
-            <div class="flex items-center justify-between">
-              <h4 class="font-headline font-bold text-xs uppercase tracking-wider text-primary-fixed-dim">Guion y Conversación Sintetizada</h4>
-              <div class="flex items-center gap-2">
-                <button id="play-full-podcast-btn" class="inline-flex items-center gap-1 text-[11px] font-mono text-primary-container hover:underline">
-                  <span id="podcast-play-icon" class="material-symbols-outlined text-[14px]">volume_up</span>
-                  <span id="podcast-play-text">Lectura sintética por voz</span>
-                </button>
-                <button id="stop-podcast-btn" class="text-on-surface-variant hover:text-error text-xs" title="Detener voz sintética">
-                  <span class="material-symbols-outlined text-[14px]">stop</span>
-                </button>
-              </div>
-            </div>
-            <div id="podcast-dialog-stream" class="space-y-3 pt-2 max-h-[320px] overflow-y-auto pr-2"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 2. INFORME / PDF PANEL -->
-      <div id="panel-pdf" class="tab-panel space-y-4 hidden">
-        <div class="rounded-3xl bg-card-glass backdrop-blur-xl p-6 sm:p-8 border border-border-glow shadow-xl space-y-6">
-          <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-surface-container-high">
-            <div>
-              <h3 class="font-headline font-bold text-lg text-primary">Informe & Guía de Examen</h3>
-              <p class="text-xs text-on-surface-variant">Documento académico oficial listo para descargar directamente en .PDF</p>
+          <!-- Configurador de Cuaderno Personal -->
+          <div class="p-4 rounded-2xl bg-surface-container-lowest border border-primary-container/20 space-y-2">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs font-headline font-bold text-primary flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[16px] text-primary-container">bookmark</span>
+                <span>Fijar Enlace a tu Cuaderno de Bachillerato (Opcional):</span>
+              </span>
+              <span class="text-[10px] text-on-surface-variant font-mono">Para abrir siempre tu cuaderno directo</span>
             </div>
             <div class="flex items-center gap-2">
-              <button id="download-pdf-direct-btn" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary-container via-primary-fixed-dim to-tertiary-fixed text-on-primary-container font-headline font-bold text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(0,242,254,0.35)] hover:shadow-[0_0_30px_rgba(0,242,254,0.55)] transition-all hover-lift btn-press">
-                <span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
-                <span id="download-pdf-text">Descargar Guía en PDF (.pdf)</span>
-              </button>
-              <button id="print-paper-btn" class="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-bright text-xs font-semibold text-on-surface-variant hover:text-primary transition-all border border-outline-variant/40 btn-press" title="Imprimir copia física en papel">
-                <span class="material-symbols-outlined text-[16px]">print</span>
-                <span class="hidden sm:inline">Imprimir Papel</span>
+              <input id="custom-notebook-url-input" type="url" placeholder="https://notebooklm.google.com/notebook/tu-cuaderno-id" class="flex-1 p-2.5 rounded-xl bg-surface-container-high border border-outline-variant/40 text-xs text-primary placeholder:text-outline outline-none focus:border-primary-container font-mono" />
+              <button id="save-notebook-url-btn" type="button" class="px-3.5 py-2.5 rounded-xl bg-primary-container text-on-primary-container font-headline font-bold text-xs shrink-0 btn-press cursor-pointer">
+                Guardar
               </button>
             </div>
           </div>
-          <div id="pdf-printable-doc" class="bg-[#030d17] p-6 sm:p-8 rounded-2xl border border-surface-container-high space-y-6 text-sm text-on-surface leading-relaxed"></div>
+
+          <!-- Previsualizador Desplegable de la Fuente Formateada -->
+          <details class="rounded-2xl bg-surface-container-lowest/80 p-4 border border-outline-variant/30 text-xs group">
+            <summary class="cursor-pointer font-headline font-bold text-primary flex items-center justify-between select-none">
+              <span class="flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[16px] text-primary-container">visibility</span>
+                <span>Previsualizar texto académico preparado para NotebookLM</span>
+              </span>
+              <span class="material-symbols-outlined text-[16px] text-on-surface-variant transition-transform group-open:rotate-180">expand_more</span>
+            </summary>
+            <pre id="source-preview-box" class="mt-3 p-3.5 rounded-xl bg-surface-container-low font-mono text-[11px] text-on-surface-variant overflow-x-auto whitespace-pre-wrap leading-relaxed max-h-72 overflow-y-auto border border-outline-variant/30"></pre>
+          </details>
+
         </div>
+
       </div>
 
-      <!-- 3. PRESENTACIÓN (SLIDES) PANEL -->
-      <div id="panel-slides" class="tab-panel space-y-4 hidden">
-        <div class="rounded-3xl bg-card-glass backdrop-blur-xl p-6 sm:p-8 border border-border-glow shadow-xl space-y-6">
-          <div class="flex items-center justify-between">
-            <div>
-              <h3 class="font-headline font-bold text-lg text-primary">Diapositivas de Repaso Express</h3>
-              <p class="text-xs text-on-surface-variant">Resumen visual de clase para revisar antes del examen</p>
-            </div>
-            <div class="flex items-center gap-2 bg-surface-container-high rounded-full px-3 py-1 border border-outline-variant/40">
-              <button id="app-slide-prev" class="w-7 h-7 rounded-full hover:bg-surface-bright flex items-center justify-center text-primary transition-colors">
-                <span class="material-symbols-outlined text-[18px]">chevron_left</span>
-              </button>
-              <span id="app-slide-counter" class="text-xs font-mono font-bold text-primary-container px-2">1/4</span>
-              <button id="app-slide-next" class="w-7 h-7 rounded-full hover:bg-surface-bright flex items-center justify-center text-primary transition-colors">
-                <span class="material-symbols-outlined text-[18px]">chevron_right</span>
-              </button>
-            </div>
-          </div>
-          <div class="relative w-full aspect-[16/9] sm:aspect-[16/8] bg-gradient-to-br from-surface-container-low to-surface-container-lowest rounded-2xl p-6 sm:p-8 border border-surface-container-high flex flex-col justify-between shadow-2xl">
-            <div class="flex items-center justify-between text-xs font-mono text-on-surface-variant">
-              <span id="app-slide-tag" class="px-2.5 py-1 rounded bg-primary-container/20 text-primary-container font-bold">SLIDE 1</span>
-              <span class="text-primary-fixed-dim">OFG.ai Studio</span>
-            </div>
-            <div class="my-auto space-y-3">
-              <h4 id="app-slide-title" class="font-headline font-black text-xl sm:text-3xl text-primary leading-tight">Título</h4>
-              <p id="app-slide-desc" class="text-xs sm:text-base text-on-surface-variant leading-relaxed max-w-2xl">Descripción</p>
-              <div id="app-slide-bullets" class="flex flex-wrap gap-2 pt-2"></div>
-            </div>
-            <div class="flex items-center justify-center gap-2 pt-2">
-              <div id="app-slide-dots" class="flex items-center gap-1.5"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 4. FLASHCARDS 3D PANEL -->
-      <div id="panel-flashcards" class="tab-panel space-y-4 hidden">
-        <div class="rounded-3xl bg-card-glass backdrop-blur-xl p-6 sm:p-8 border border-border-glow shadow-xl space-y-6">
-          <div class="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <h3 class="font-headline font-bold text-lg text-primary">Flashcards de Autoevaluación 3D</h3>
-              <p class="text-xs text-on-surface-variant">Toca la tarjeta para voltearla y comprobar tus conocimientos</p>
-            </div>
-            <span id="flashcard-counter" class="px-2.5 py-1 rounded-full bg-surface-container-high text-primary-container font-bold text-xs font-mono">
-              Tarjeta 1 de 3
-            </span>
-          </div>
-          <div class="perspective-1000 w-full max-w-xl mx-auto aspect-[16/10] sm:aspect-[16/9] cursor-pointer" id="app-flashcard-box">
-            <div id="app-flashcard-inner" class="relative w-full h-full transform-style-3d transition-transform duration-500 rounded-2xl">
-              <!-- Front -->
-              <div class="absolute inset-0 backface-hidden rounded-2xl bg-gradient-to-br from-surface-container to-surface-container-high p-6 sm:p-8 border border-primary-container/30 flex flex-col justify-between shadow-xl">
-                <div class="flex items-center justify-between text-xs font-mono font-bold text-primary-container">
-                  <span>PREGUNTA DE EXAMEN</span>
-                  <span class="material-symbols-outlined text-[20px]">touch_app</span>
-                </div>
-                <div class="text-center my-auto px-2">
-                  <p id="flashcard-question" class="font-headline font-bold text-lg sm:text-2xl text-primary leading-snug">Pregunta</p>
-                  <p class="text-xs text-on-surface-variant mt-3 italic">(Haz clic para voltear)</p>
-                </div>
-                <div class="text-center text-[11px] text-on-surface-variant" id="flashcard-hint">Pista</div>
-              </div>
-              <!-- Back -->
-              <div class="absolute inset-0 backface-hidden rotate-y-180 rounded-2xl bg-gradient-to-br from-surface-container-high to-surface-container-highest p-6 sm:p-8 border border-tertiary-fixed-dim/40 flex flex-col justify-between shadow-2xl">
-                <div class="flex items-center justify-between text-xs font-mono font-bold text-tertiary-fixed-dim">
-                  <span>RESPUESTA OFICIAL</span>
-                  <span class="material-symbols-outlined text-[20px]">check_circle</span>
-                </div>
-                <div class="my-auto px-2 space-y-2">
-                  <p id="flashcard-answer" class="font-headline font-bold text-base sm:text-xl text-primary leading-relaxed">Respuesta</p>
-                </div>
-                <div class="text-center text-xs text-on-surface-variant">Toca de nuevo para volver a la pregunta</div>
-              </div>
-            </div>
-          </div>
-          <div class="flex items-center justify-center gap-4 pt-2">
-            <button id="fc-prev-btn" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-surface-container-high hover:bg-surface-bright text-xs font-semibold text-on-surface transition-colors btn-press">
-              <span class="material-symbols-outlined text-[16px]">arrow_back</span>
-              <span>Anterior</span>
-            </button>
-            <button id="fc-next-btn" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary-container text-on-primary-container font-headline font-bold text-xs uppercase tracking-wider transition-colors btn-press shadow-md">
-              <span>Siguiente Tarjeta</span>
-              <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 5. MAPA MENTAL (MIND MAP) PANEL -->
-      <div id="panel-mindmap" class="tab-panel space-y-4 hidden">
-        <div class="rounded-3xl bg-card-glass backdrop-blur-xl p-6 sm:p-8 border border-border-glow shadow-xl space-y-6">
-          <div class="flex items-center justify-between">
-            <div>
-              <h3 class="font-headline font-bold text-lg text-primary">Mapa Mental Conceptual</h3>
-              <p class="text-xs text-on-surface-variant">Estructura jerárquica con ramas y conexiones clave</p>
-            </div>
-            <span class="px-2.5 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/30 text-xs font-mono text-cyan-300">
-              Esquema Interactivo
-            </span>
-          </div>
-
-          <!-- Interactive Node Graph Canvas -->
-          <div class="w-full bg-[#020b14] rounded-2xl p-6 sm:p-8 border border-surface-container-high space-y-8 relative overflow-hidden">
-            <!-- Center Node -->
-            <div class="text-center">
-              <div id="mindmap-center-node" class="inline-block px-6 py-3 rounded-2xl bg-gradient-to-r from-primary-container to-primary-fixed text-on-primary-container font-headline font-extrabold text-base shadow-[0_0_25px_rgba(0,242,254,0.35)]">
-                Tema Central
-              </div>
-            </div>
-
-            <!-- Branches -->
-            <div id="mindmap-branches" class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
-              <!-- Injected via JS -->
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 6. CUESTIONARIO / TEST DE EXAMEN PANEL -->
-      <div id="panel-quiz" class="tab-panel space-y-4 hidden">
-        <div class="rounded-3xl bg-card-glass backdrop-blur-xl p-6 sm:p-8 border border-border-glow shadow-xl space-y-6">
-          <div class="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <h3 class="font-headline font-bold text-lg text-primary">Cuestionario Tipo Test</h3>
-              <p class="text-xs text-on-surface-variant">Preguntas estilo Selectividad / PAU para autoevaluarte</p>
-            </div>
-            <div id="quiz-score-badge" class="px-3 py-1 rounded-full bg-emerald-950/60 border border-emerald-500/30 text-xs font-mono font-bold text-emerald-400">
-              Puntuación: 0 / 3
-            </div>
-          </div>
-
-          <div id="quiz-questions-container" class="space-y-6">
-            <!-- Injected via JS -->
-          </div>
-        </div>
-      </div>
-
-      <!-- 7. INFOGRAFÍA / CRONOLOGÍA PANEL -->
-      <div id="panel-infographic" class="tab-panel space-y-4 hidden">
-        <div class="rounded-3xl bg-card-glass backdrop-blur-xl p-6 sm:p-8 border border-border-glow shadow-xl space-y-6">
-          <div class="flex items-center justify-between">
-            <div>
-              <h3 class="font-headline font-bold text-lg text-primary">Infografía & Línea Temporal</h3>
-              <p class="text-xs text-on-surface-variant">Hitos, cifras y conceptos visualmente desglosados</p>
-            </div>
-            <span class="px-2.5 py-1 rounded-full bg-amber-950/60 border border-amber-500/30 text-xs font-mono text-amber-300">
-              Resumen Gráfico
-            </span>
-          </div>
-
-          <div id="infographic-container" class="space-y-6">
-            <!-- Injected via JS -->
-          </div>
-        </div>
-      </div>
-
-      <!-- 8. RESUMEN DE VÍDEO PANEL -->
-      <div id="panel-video" class="tab-panel space-y-4 hidden">
-        <div class="rounded-3xl bg-card-glass backdrop-blur-xl p-6 sm:p-8 border border-border-glow shadow-xl space-y-6">
-          <div class="flex items-center justify-between">
-            <div>
-              <h3 class="font-headline font-bold text-lg text-primary">Resumen en Vídeo (Micro-cápsula)</h3>
-              <p class="text-xs text-on-surface-variant">Explicación visual de 2 minutos generada por IA</p>
-            </div>
-            <span class="px-2.5 py-1 rounded-full bg-indigo-950/60 border border-indigo-500/30 text-xs font-mono text-indigo-300">
-              Vídeo HD
-            </span>
-          </div>
-
-          <div class="relative w-full aspect-video bg-surface-container-lowest rounded-2xl overflow-hidden border border-surface-container-high flex flex-col items-center justify-center p-6 text-center space-y-3">
-            <div class="w-16 h-16 rounded-full bg-primary-container/20 border border-primary-container/40 flex items-center justify-center text-primary-container shadow-lg">
-              <span class="material-symbols-outlined text-[36px]">play_circle</span>
-            </div>
-            <h4 id="video-mock-title" class="font-headline font-bold text-lg text-primary">Micro-cápsula de la Sesión</h4>
-            <p class="text-xs text-on-surface-variant max-w-md">Vídeo sintetizado con locución y diapositivas automáticas preparado para el móvil.</p>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
+    </section>
 
   </main>
 
@@ -1111,12 +922,12 @@
       <span>Grabar</span>
     </button>
     <button id="m-nav-studio" type="button" class="cursor-pointer flex flex-col items-center gap-1 py-1 px-3 text-on-surface-variant hover:text-primary font-headline font-medium text-[10px] transition-all btn-press">
-      <span class="material-symbols-outlined text-[24px]">dashboard_customize</span>
-      <span>Estudio</span>
+      <span class="material-symbols-outlined text-[24px]">auto_awesome</span>
+      <span>Inyectar</span>
     </button>
     <button id="m-nav-materials" type="button" class="cursor-pointer flex flex-col items-center gap-1 py-1 px-3 text-on-surface-variant hover:text-primary font-headline font-medium text-[10px] transition-all btn-press">
       <span class="material-symbols-outlined text-[24px]">auto_stories</span>
-      <span>Entregables</span>
+      <span>NotebookLM</span>
     </button>
     <button id="m-nav-install" type="button" class="cursor-pointer flex flex-col items-center gap-1 py-1 px-3 text-on-surface-variant hover:text-primary font-headline font-medium text-[10px] transition-all btn-press">
       <span class="material-symbols-outlined text-[24px]">install_mobile</span>
@@ -1707,1002 +1518,320 @@
       });
     }
 
-    // -------------------------------------------------------------
-    // E. PROCESADOR AUTOMÁTICO DE LOS 8 ENTREGABLES CON MODAL POP-UP
-    // -------------------------------------------------------------
+    // =============================================================
+    // GOOGLE NOTEBOOKLM BRIDGE CONTROLLER
+    // =============================================================
     const processClassBtn = document.getElementById("process-class-btn");
     const generationModal = document.getElementById("generation-modal");
     const modalStatusTitle = document.getElementById("modal-status-title");
     const modalStatusDesc = document.getElementById("modal-status-desc");
-    const modalProgressPct = document.getElementById("modal-progress-pct");
     const modalProgressBar = document.getElementById("modal-progress-bar");
+    const modalProgressPct = document.getElementById("modal-progress-pct");
     const modalSpinner = document.getElementById("modal-spinner");
     const modalCenterIcon = document.getElementById("modal-center-icon");
     const modalCompletionActions = document.getElementById("modal-completion-actions");
     const modalViewResultsBtn = document.getElementById("modal-view-results-btn");
-    const successToast = document.getElementById("success-toast");
-    const closeToastBtn = document.getElementById("close-toast-btn");
+
     const resultsHub = document.getElementById("results-hub");
+    const resultsEmptyPlaceholder = document.getElementById("results-empty-placeholder");
+    const resultsActiveWrapper = document.getElementById("results-active-wrapper");
     const deliverableClassTitle = document.getElementById("deliverable-class-title");
-    const tabsNavBar = document.getElementById("tabs-navigation-bar");
+    const bridgeStatsInfo = document.getElementById("bridge-stats-info");
+    const openNotebooklmBtn = document.getElementById("open-notebooklm-btn");
+    const recopySourceBtn = document.getElementById("recopy-source-btn");
+    const recopyBtnText = document.getElementById("recopy-btn-text");
+    const downloadSourceBtn = document.getElementById("download-source-btn");
+    const customNotebookUrlInput = document.getElementById("custom-notebook-url-input");
+    const saveNotebookUrlBtn = document.getElementById("save-notebook-url-btn");
+    const sourcePreviewBox = document.getElementById("source-preview-box");
 
-    if (closeToastBtn) {
-      closeToastBtn.addEventListener("click", () => {
-        successToast.classList.add("hidden");
-      });
+    let currentPreparedBridgeSource = "";
+    let currentPreparedTitle = "";
+
+    // Cargar cuaderno fijado por el usuario de la sesión actual
+    const savedNotebookUrl = sessionStorage.getItem("ofg_saved_notebook_url");
+    if (savedNotebookUrl) {
+      if (customNotebookUrlInput) customNotebookUrlInput.value = savedNotebookUrl;
+      if (openNotebooklmBtn) openNotebooklmBtn.href = savedNotebookUrl;
     }
 
-    const deliverableMetadata = {
-      podcast: { label: "Podcast (2 Voces)", icon: "podcasts" },
-      pdf: { label: "Guía PDF", icon: "description" },
-      slides: { label: "Diapositivas", icon: "slideshow" },
-      flashcards: { label: "Flashcards 3D", icon: "style" },
-      mindmap: { label: "Mapa Mental", icon: "account_tree" },
-      quiz: { label: "Cuestionario", icon: "quiz" },
-      infographic: { label: "Infografía", icon: "insights" },
-      video: { label: "Vídeo-Cápsula", icon: "smart_display" }
-    };
-
-    processClassBtn.addEventListener("click", () => {
-      const text = liveTranscript.value.trim();
-      if (!text && !currentUploadedAudioFile) {
-        alert("Por favor, graba algo de audio con el micrófono o importa un archivo de audio (.m4a/.mp3) antes de generar.");
-        return;
-      }
-
-      if (recordingState === "recording") stopRecording();
-
-      const selectedKeys = [];
-      document.querySelectorAll(".studio-option-card").forEach(c => {
-        if (c.querySelector(".studio-checkbox").checked) {
-          selectedKeys.push(c.dataset.key);
-        }
-      });
-
-      if (selectedKeys.length === 0) {
-        selectedKeys.push("podcast", "pdf", "flashcards");
-        const podCb = document.querySelector('.studio-option-card[data-key="podcast"] .studio-checkbox');
-        const pdfCb = document.querySelector('.studio-option-card[data-key="pdf"] .studio-checkbox');
-        const fcCb = document.querySelector('.studio-option-card[data-key="flashcards"] .studio-checkbox');
-        if (podCb) podCb.checked = true;
-        if (pdfCb) pdfCb.checked = true;
-        if (fcCb) fcCb.checked = true;
-        updateSelectedCount();
-      }
-
-      // 1. ABRIR EL MODAL POP-UP EN PRIMER PLANO CON EFECTO BLUR
-      generationModal.classList.remove("hidden");
-      modalCompletionActions.classList.add("hidden");
-      modalSpinner.classList.remove("hidden");
-      modalCenterIcon.textContent = "auto_awesome";
-      modalCenterIcon.className = "material-symbols-outlined text-primary-container text-[28px] animate-pulse";
-      processClassBtn.disabled = true;
-
-      // Resetear visualización de los 4 pasos
-      const resetStep = (id, num, isFirst = false) => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        el.className = isFirst ? "flex items-center gap-3 text-xs transition-all" : "flex items-center gap-3 text-xs opacity-50 transition-all";
-        el.querySelector(".step-icon").className = isFirst 
-          ? "step-icon w-6 h-6 rounded-full bg-primary-container/20 text-primary-container flex items-center justify-center font-bold text-[11px] shrink-0"
-          : "step-icon w-6 h-6 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold text-[11px] shrink-0";
-        el.querySelector(".step-icon").innerHTML = isFirst ? '<span class="material-symbols-outlined text-[15px] animate-spin">sync</span>' : `${num}`;
-        el.querySelector(".step-status").className = isFirst ? "step-status text-[11px] font-mono font-bold text-primary-container" : "step-status text-[11px] font-mono text-outline";
-        el.querySelector(".step-status").textContent = isFirst ? "En curso" : "En espera";
-      };
-
-      const setStepCompleted = (id) => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        el.className = "flex items-center gap-3 text-xs transition-all";
-        el.querySelector(".step-icon").className = "step-icon w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-[11px] shrink-0";
-        el.querySelector(".step-icon").innerHTML = '<span class="material-symbols-outlined text-[15px]">check</span>';
-        el.querySelector(".step-status").className = "step-status text-[11px] font-mono font-bold text-emerald-400";
-        el.querySelector(".step-status").textContent = "Listo";
-      };
-
-      const setStepActive = (id) => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        el.className = "flex items-center gap-3 text-xs transition-all scale-[1.02]";
-        el.querySelector(".step-icon").className = "step-icon w-6 h-6 rounded-full bg-primary-container/20 text-primary-container flex items-center justify-center font-bold text-[11px] shrink-0 shadow-[0_0_10px_rgba(0,242,254,0.4)]";
-        el.querySelector(".step-icon").innerHTML = '<span class="material-symbols-outlined text-[15px] animate-spin">sync</span>';
-        el.querySelector(".step-status").className = "step-status text-[11px] font-mono font-bold text-primary-container";
-        el.querySelector(".step-status").textContent = "En curso";
-      };
-
-      resetStep("stepper-step-1", 1, true);
-      resetStep("stepper-step-2", 2);
-      resetStep("stepper-step-3", 3);
-      resetStep("stepper-step-4", 4);
-
-      modalStatusTitle.textContent = "1/4 Subiendo a Google NotebookLM...";
-      modalStatusDesc.textContent = currentUploadedAudioFile 
-        ? `Transmitiendo archivo de audio "${currentUploadedAudioFile.name}" a NotebookLM`
-        : "Inyectando transcripción de clase en el cuaderno de estudio";
-      modalProgressPct.textContent = "25%";
-      modalProgressBar.style.width = "25%";
-
-      let backendDeliveredData = null;
-
-      // Disparar llamada real al motor de generación NotebookLM
-      const apiEndpoint = "https://ofg-ai-backend.oscfergar.workers.dev/api/engine/generate";
-      fetch(apiEndpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          text: text,
-          selectedKeys: selectedKeys,
-          title: currentUploadedAudioFile ? currentUploadedAudioFile.name : undefined
-        })
-      }).then(r => r.json()).then(res => {
-        console.log("[MOTOR NOTEBOOKLM] Entregables confirmados por el motor:", res);
-        if (res && res.deliverables) {
-          backendDeliveredData = res;
-        }
-      }).catch(err => {
-        console.warn("[MOTOR LOCAL] Procesamiento de respaldo offline:", err);
-      });
-
-      // Transición Paso 2 (0.9s)
-      setTimeout(() => {
-        setStepCompleted("stepper-step-1");
-        setStepActive("stepper-step-2");
-        modalStatusTitle.textContent = `2/4 Generando en Studio (${selectedKeys.length} materiales)...`;
-        modalStatusDesc.textContent = "Sincronizando podcast a 2 voces y análisis con NotebookLM";
-        modalProgressPct.textContent = "55%";
-        modalProgressBar.style.width = "55%";
-      }, 900);
-
-      // Transición Paso 3 (1.9s)
-      setTimeout(() => {
-        setStepCompleted("stepper-step-2");
-        setStepActive("stepper-step-3");
-        modalStatusTitle.textContent = "3/4 Estructuración Pedagógica con IA...";
-        modalStatusDesc.textContent = "Compilando cuestionario interactivo, flashcards y mapas conceptuales";
-        modalProgressPct.textContent = "80%";
-        modalProgressBar.style.width = "80%";
-      }, 1900);
-
-      // Transición Paso 4 (2.9s)
-      setTimeout(() => {
-        setStepCompleted("stepper-step-3");
-        setStepActive("stepper-step-4");
-        modalStatusTitle.textContent = "4/4 Finalizando Entregables...";
-        modalStatusDesc.textContent = "Verificando integridad de audio .M4A y fichas en OFG.ai Studio";
-        modalProgressPct.textContent = "95%";
-        modalProgressBar.style.width = "95%";
-      }, 2900);
-
-      // Finalización Exitosa (3.6s)
-      setTimeout(() => {
-        setStepCompleted("stepper-step-4");
-        modalProgressPct.textContent = "100%";
-        modalProgressBar.style.width = "100%";
-
-        modalSpinner.classList.add("hidden");
-        modalCenterIcon.textContent = "check_circle";
-        modalCenterIcon.className = "material-symbols-outlined text-emerald-400 text-[38px] animate-bounce";
-        
-        modalStatusTitle.textContent = "¡Materiales de NotebookLM Listos!";
-        modalStatusDesc.textContent = `Se han generado exclusivamente los ${selectedKeys.length} materiales solicitados.`;
-
-        modalCompletionActions.classList.remove("hidden");
-        processClassBtn.disabled = false;
-
-        // Renderizar SOLO los materiales seleccionados entregados por NotebookLM
-        const finalPackage = backendDeliveredData || buildLocalNotebookLMPackage(text, selectedKeys);
-        applyDeliveredNotebookLMPackage(finalPackage, selectedKeys);
-
-        const goToResults = () => {
-          generationModal.classList.add("hidden");
-          successToast.classList.remove("hidden");
-          setTimeout(() => {
-            successToast.classList.add("hidden");
-          }, 4500);
-          if (resultsHub) {
-            resultsHub.scrollIntoView({ behavior: "smooth", block: "start" });
-          }
+    if (saveNotebookUrlBtn && customNotebookUrlInput) {
+      saveNotebookUrlBtn.addEventListener("click", () => {
+        const url = customNotebookUrlInput.value.trim();
+        if (url && (url.startsWith("http://") || url.startsWith("https://"))) {
+          sessionStorage.setItem("ofg_saved_notebook_url", url);
+          if (openNotebooklmBtn) openNotebooklmBtn.href = url;
           triggerHaptic("success");
-        };
-
-        modalViewResultsBtn.onclick = goToResults;
-
-        // Auto redirección tras 1.0s para acceder de inmediato a los materiales generados
-        setTimeout(() => {
-          if (!generationModal.classList.contains("hidden")) {
-            goToResults();
-          }
-        }, 1000);
-
-      }, 3600);
-    });
-
-    let currentDeliveredPackage = null;
-    let generatedData = null;
-
-    function applyDeliveredNotebookLMPackage(pkg, requestedKeys) {
-      currentDeliveredPackage = pkg;
-      const validKeys = pkg.selectedKeys && pkg.selectedKeys.length > 0 ? pkg.selectedKeys : requestedKeys;
-
-      // 1. Mostrar contenedor activo y ocultar placeholder en blanco
-      const emptyPlaceholder = document.getElementById("results-empty-placeholder");
-      const activeWrapper = document.getElementById("results-active-wrapper");
-      if (emptyPlaceholder) emptyPlaceholder.classList.add("hidden");
-      if (activeWrapper) activeWrapper.classList.remove("hidden");
-
-      // 2. Actualizar título oficial de la clase entregado por NotebookLM
-      deliverableClassTitle.textContent = pkg.title;
-
-      // 3. Renderizar barra de pestañas ÚNICAMENTE con los materiales seleccionados
-      tabsNavBar.innerHTML = "";
-      document.querySelectorAll(".tab-panel").forEach(p => p.classList.add("hidden"));
-
-      validKeys.forEach((key, index) => {
-        const meta = deliverableMetadata[key];
-        if (!meta) return;
-
-        const btn = document.createElement("button");
-        btn.dataset.target = `panel-${key}`;
-        btn.className = index === 0
-          ? "tab-nav-btn active px-3.5 py-1.5 rounded-xl font-headline font-bold text-xs flex items-center gap-1.5 bg-primary-container text-on-primary-container shadow-sm transition-all shrink-0"
-          : "tab-nav-btn px-3.5 py-1.5 rounded-xl font-headline font-bold text-xs flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-all shrink-0";
-
-        btn.innerHTML = `
-          <span class="material-symbols-outlined text-[16px]">${meta.icon}</span>
-          <span>${meta.label}</span>
-        `;
-
-        btn.addEventListener("click", () => {
-          document.querySelectorAll(".tab-nav-btn").forEach(b => {
-            b.className = "tab-nav-btn px-3.5 py-1.5 rounded-xl font-headline font-bold text-xs flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-all shrink-0";
-          });
-          btn.className = "tab-nav-btn active px-3.5 py-1.5 rounded-xl font-headline font-bold text-xs flex items-center gap-1.5 bg-primary-container text-on-primary-container shadow-sm transition-all shrink-0";
-
-          document.querySelectorAll(".tab-panel").forEach(p => p.classList.add("hidden"));
-          const target = document.getElementById(btn.dataset.target);
-          if (target) target.classList.remove("hidden");
-          triggerHaptic("light");
-        });
-
-        tabsNavBar.appendChild(btn);
-
-        // Mostrar el primer entregable por defecto
-        if (index === 0) {
-          const firstTarget = document.getElementById(`panel-${key}`);
-          if (firstTarget) firstTarget.classList.remove("hidden");
+          alert("✓ Enlace a tu cuaderno guardado para esta sesión.");
+        } else {
+          alert("Por favor, introduce una URL válida (ej: https://notebooklm.google.com/notebook/...)");
         }
       });
-
-      // 4. Poblar componentes con los datos entregados por NotebookLM
-      const d = pkg.deliverables || {};
-
-      if (validKeys.includes("podcast") && d.podcast) {
-        renderPodcast(d.podcast.script || []);
-        generatedData = { podcastScript: d.podcast.script || [] };
-      }
-
-      if (validKeys.includes("pdf") && d.pdf) {
-        renderPdfView(d.pdf);
-      }
-
-      if (validKeys.includes("slides") && d.slides) {
-        renderSlides(d.slides);
-      }
-
-      if (validKeys.includes("flashcards") && d.flashcards) {
-        renderFlashcards(d.flashcards);
-      }
-
-      if (validKeys.includes("mindmap") && d.mindmap) {
-        renderMindmap(d.mindmap);
-      }
-
-      if (validKeys.includes("quiz") && d.quiz) {
-        renderQuiz(d.quiz);
-      }
-
-      if (validKeys.includes("infographic") && d.infographic) {
-        renderInfographic(d.infographic);
-      }
-
-      if (validKeys.includes("video") && d.video) {
-        const vTitle = document.getElementById("video-mock-title");
-        if (vTitle) vTitle.textContent = `Vídeo: ${pkg.title}`;
-      }
     }
 
-    function renderPdfView(pdf) {
-      const container = document.getElementById("pdf-printable-doc");
-      if (!container) return;
-      container.innerHTML = `
-        <div class="border-b border-surface-container-high pb-4">
-          <span class="text-xs font-mono text-primary-container font-bold">${(pdf.topic || "ACADÉMICO").toUpperCase()} • INFORME OFICIAL NOTEBOOKLM</span>
-          <h2 class="font-headline font-black text-xl sm:text-2xl text-primary mt-1">${pdf.title}</h2>
-          <span class="text-xs text-on-surface-variant font-mono">Google NotebookLM Studio • ${pdf.dateStr || new Date().toLocaleDateString('es-ES')}</span>
-        </div>
-        <div class="space-y-3">
-          <h3 class="font-headline font-bold text-sm text-primary-fixed-dim uppercase tracking-wider">1. Resumen Ejecutivo de la Sesión</h3>
-          <p class="text-xs sm:text-sm text-on-surface leading-relaxed">${pdf.summary}</p>
-        </div>
-        <div class="space-y-3">
-          <h3 class="font-headline font-bold text-sm text-primary-fixed-dim uppercase tracking-wider">2. Puntos Ineludibles para el Examen</h3>
-          <ul class="list-disc list-inside space-y-1.5 text-xs sm:text-sm text-on-surface">
-            ${(pdf.pillars || []).map(p => `<li>${p}</li>`).join("")}
-          </ul>
-        </div>
-        <div class="bg-surface-container-high/60 p-4 rounded-xl border-l-4 border-primary-container text-xs space-y-1">
-          <span class="font-bold text-primary">💡 Consejo Pedagógico:</span>
-          <p class="text-on-surface-variant">${pdf.pedTip}</p>
-        </div>
-      `;
-    }
-
-    function buildLocalNotebookLMPackage(cleanText, selectedKeys) {
-      const lower = cleanText.toLowerCase();
-      let topic = "Formación General";
-      let title = "Lección de Clase";
-
-      if (lower.includes("cádiz") || lower.includes("pepa") || lower.includes("1812")) {
-        topic = "Historia de España";
-        title = "Historia: Las Cortes de Cádiz y La Pepa (1812)";
-      } else if (lower.includes("platón") || lower.includes("caverna") || lower.includes("filosofía")) {
-        topic = "Historia de la Filosofía";
-        title = "Filosofía: El Mito de la Caverna y los Dos Mundos de Platón";
-      } else if (lower.includes("adn") || lower.includes("arn") || lower.includes("célula")) {
-        topic = "Biología y Geología";
-        title = "Biología: Estructura del ADN y Dogma Molecular";
-      } else {
-        const firstSent = cleanText.split(/[.\n]+/)[0]?.trim();
-        if (firstSent && firstSent.length > 5) {
-          title = firstSent.length > 50 ? firstSent.substring(0, 50) + "..." : firstSent;
-        }
+    function buildNotebookLMSource(text, customTitle) {
+      const words = text.split(/\s+/).filter(Boolean);
+      let inferredTitle = customTitle;
+      if (!inferredTitle || inferredTitle === "audio_grabacion.m4a") {
+        const firstSentence = text.split(/[.\n]/)[0].trim();
+        inferredTitle = firstSentence.length > 5 ? firstSentence.substring(0, 50) : "Lección de Bachillerato";
       }
 
-      const sentences = cleanText.split(/[.\n]+/).map(s => s.trim()).filter(s => s.length > 15);
-      const s1 = sentences[0] || "En esta sesión se establecen las bases teóricas y metodológicas de la materia.";
-      const s2 = sentences[1] || "El docente destaca este elemento como punto indispensable para la resolución de exámenes.";
-      const s3 = sentences[2] || "La síntesis final demuestra cómo relacionar las causas principales con los efectos prácticos.";
+      const formatted = `# 📚 FUENTE ACADÉMICA DE CLASE: ${inferredTitle}
+**Fecha:** ${new Date().toLocaleDateString("es-ES")} | **Nivel:** Bachillerato | **Fuente:** OFG.ai Studio Mobile Bridge
+**Extensión:** ${words.length} palabras transcriptas directamente de la voz del profesor
 
-      const deliverables = {};
+---
 
-      if (selectedKeys.includes("podcast")) {
-        deliverables.podcast = {
-          title,
-          script: [
-            { host: "Clara", avatar: "CL", color: "bg-tertiary-fixed text-on-tertiary", nameColor: "text-tertiary-fixed-dim", text: `¡Hola a todos! Bienvenidos a este repaso de ${topic}. Lo crucial que tenéis que fijar es: «${s1}». ` },
-            { host: "Álex", avatar: "AL", color: "bg-primary-container text-on-primary", nameColor: "text-primary-fixed-dim", text: `Exacto, Clara. Y mucho cuidado con la segunda idea clave: «${s2}». Es indispensable para el examen.` },
-            { host: "Clara", avatar: "CL", color: "bg-tertiary-fixed text-on-tertiary", nameColor: "text-tertiary-fixed-dim", text: `Y recordad la conclusión: «${s3}». ¡Puntos asegurados!` }
-          ]
-        };
-      }
+## 1. Transcripción Completa y Fidedigna de la Sesión
+${text}
 
-      if (selectedKeys.includes("pdf")) {
-        deliverables.pdf = {
-          title,
-          topic,
-          summary: `Análisis académico estructurado sobre ${title}. Se condensan las premisas explicadas por el profesor.`,
-          pillars: [s1, s2, s3],
-          pedTip: `Relacionar siempre los conceptos con sus consecuencias directas antes de redactar la conclusión final.`
-        };
-      }
+---
 
-      if (selectedKeys.includes("slides")) {
-        deliverables.slides = [
-          { tag: "DIAPOSITIVA 1", title: `Introducción: ${title}`, desc: s1, bullets: ["📌 Marco conceptual", "🏛️ Premisas iniciales"] },
-          { tag: "DIAPOSITIVA 2", title: "Desarrollo y Mecanismos Clave", desc: s2, bullets: ["⚡ Elementos nucleares", "📊 Puntos para la evaluación"] },
-          { tag: "DIAPOSITIVA 3", title: "Conclusiones y Examen", desc: s3, bullets: ["✅ Criterios de corrección", "💡 Recomendación práctica"] }
-        ];
-      }
+## 2. Petición Pedagógica para Google NotebookLM (Studio)
+A partir de la transcripción anterior, por favor genera en las herramientas de Studio:
+1. 🎙️ **Audio Overview**: Un podcast conversacional a dos voces (anfitriona y anfitrión) que sintetice y debata los puntos clave expuestos en clase.
+2. 📑 **Guía de Estudio**: Un informe estructurado con definiciones, causas-efectos y conceptos indispensables para el examen.
+3. ❓ **Cuestionario de Examen**: Preguntas tipo test y preguntas cortas para autoevaluar la asimilación del contenido.
+4. 💡 **Preguntas Frecuentes (FAQ)** y conceptos clave para memorizar.
 
-      if (selectedKeys.includes("flashcards")) {
-        deliverables.flashcards = [
-          { q: `¿Cuál es el postulado inicial en '${title}'?`, a: s1, cat: topic, hint: "Revisa la introducción" },
-          { q: `¿Qué aspecto requiere mayor atención según el profesor?`, a: s2, cat: "Examen", hint: "Criterio de evaluación" },
-          { q: `¿Cómo se sintetiza la conclusión principal?`, a: s3, cat: "Síntesis", hint: "Causa y efecto" },
-          { q: `¿Qué consejo pedagógico se recomienda aplicar?`, a: "Diferenciar con rigor entre los principios teóricos y su manifestación práctica.", cat: "Metodología", hint: "Estructura en tres bloques" }
-        ];
-      }
-
-      if (selectedKeys.includes("mindmap")) {
-        deliverables.mindmap = {
-          root: title.length > 28 ? title.substring(0, 26) + "..." : title,
-          branches: [
-            { name: "Fundamento", items: [s1.substring(0, 40) + "..."] },
-            { name: "Mecanismo", items: [s2.substring(0, 40) + "..."] },
-            { name: "Examen", items: [s3.substring(0, 40) + "..."] }
-          ]
-        };
-      }
-
-      if (selectedKeys.includes("quiz")) {
-        deliverables.quiz = [
-          { q: `1. En relación con ${title}, ¿cuál fue la premisa central?`, options: [s1, "Una aproximación sin impacto", "Una teoría descartada"], correct: 0, explanation: `El postulado «${s1}» constituye la base argumentativa.` },
-          { q: `2. ¿Qué aspecto se subrayó como determinante para el examen?`, options: ["Datos biográficos secundarios", s2, "Ninguno en particular"], correct: 1, explanation: `El aspecto «${s2}» fue señalado como criterio de corrección.` },
-          { q: `3. ¿Cuál es la conclusión que debe quedar reflejada en la prueba escrita?`, options: ["Que no existe consenso", "Que el tema es opcional", s3], correct: 2, explanation: `La conclusión correcta es «${s3}».` }
-        ];
-      }
-
-      if (selectedKeys.includes("infographic")) {
-        deliverables.infographic = [
-          { phase: "Fase 1 • Introducción", text: s1, icon: "flag" },
-          { phase: "Fase 2 • Profundización", text: s2, icon: "bolt" },
-          { phase: "Fase 3 • Consolidación", text: s3, icon: "trophy" }
-        ];
-      }
-
-      if (selectedKeys.includes("video")) {
-        deliverables.video = { title, duration: "02:15 min", summary: `Resumen de la sesión.` };
-      }
+---
+*Preparado e inyectado con OFG.ai Studio • Laboratorio de Grabación Inteligente para Google NotebookLM*`;
 
       return {
-        title,
-        topic,
-        source: "Google NotebookLM Engine (Local Fallback)",
-        selectedKeys,
-        deliverables
+        title: inferredTitle,
+        source: formatted,
+        wordCount: words.length
       };
     }
 
-    // -------------------------------------------------------------
-    // G. COMPONENT RENDERERS
-    // -------------------------------------------------------------
-
-    // 1. Podcast
-    function renderPodcast(script) {
-      document.getElementById("podcast-dialog-stream").innerHTML = script.map(item => `
-        <div class="flex items-start gap-3 bg-surface-container-low/70 p-3.5 rounded-2xl border border-surface-container-high">
-          <div class="w-8 h-8 rounded-full ${item.color} flex items-center justify-center font-bold text-xs shrink-0 shadow">
-            ${item.avatar}
-          </div>
-          <div class="text-xs space-y-1">
-            <span class="font-bold ${item.nameColor} block">${item.host}:</span>
-            <p class="text-on-surface leading-relaxed">${item.text}</p>
-          </div>
-        </div>
-      `).join("");
-    }
-
-    // Podcast Voice Speech
-    let isPodcastSpeaking = false;
-    const playFullPodcastBtn = document.getElementById("play-full-podcast-btn");
-    const stopPodcastBtn = document.getElementById("stop-podcast-btn");
-    const podcastPlayIcon = document.getElementById("podcast-play-icon");
-    const podcastPlayText = document.getElementById("podcast-play-text");
-
-    function speakPodcast() {
-      if (!generatedData || !("speechSynthesis" in window)) {
-        alert("La síntesis de voz no está disponible en este navegador.");
-        return;
-      }
-      window.speechSynthesis.cancel();
-      isPodcastSpeaking = true;
-      podcastPlayIcon.textContent = "pause";
-      podcastPlayText.textContent = "Reproduciendo...";
-
-      const script = generatedData.podcastScript;
-      let currentIndex = 0;
-
-      function speakNext() {
-        if (!isPodcastSpeaking || currentIndex >= script.length) {
-          isPodcastSpeaking = false;
-          podcastPlayIcon.textContent = "play_arrow";
-          podcastPlayText.textContent = "Escuchar Podcast";
-          return;
-        }
-
-        const item = script[currentIndex];
-        const utterance = new SpeechSynthesisUtterance(item.text);
-        utterance.lang = "es-ES";
-        utterance.rate = item.host.includes("Álex") ? 1.05 : 1.0;
-        utterance.pitch = item.host.includes("Álex") ? 0.9 : 1.1;
-
-        utterance.onend = () => {
-          currentIndex++;
-          speakNext();
-        };
-        utterance.onerror = () => {
-          isPodcastSpeaking = false;
-          podcastPlayIcon.textContent = "play_arrow";
-          podcastPlayText.textContent = "Escuchar Podcast";
-        };
-
-        window.speechSynthesis.speak(utterance);
-      }
-      speakNext();
-    }
-
-    playFullPodcastBtn.addEventListener("click", () => {
-      if (!isPodcastSpeaking) speakPodcast();
-      else {
-        window.speechSynthesis.cancel();
-        isPodcastSpeaking = false;
-        podcastPlayIcon.textContent = "play_arrow";
-        podcastPlayText.textContent = "Escuchar Podcast";
-      }
-    });
-
-    stopPodcastBtn.addEventListener("click", () => {
-      window.speechSynthesis.cancel();
-      isPodcastSpeaking = false;
-      podcastPlayIcon.textContent = "play_arrow";
-      podcastPlayText.textContent = "Escuchar Podcast";
-    });
-
-    // 2. Slides
-    let currentAppSlide = 0;
-    const appSlideTag = document.getElementById("app-slide-tag");
-    const appSlideTitle = document.getElementById("app-slide-title");
-    const appSlideDesc = document.getElementById("app-slide-desc");
-    const appSlideBullets = document.getElementById("app-slide-bullets");
-    const appSlideCounter = document.getElementById("app-slide-counter");
-    const appSlideDots = document.getElementById("app-slide-dots");
-
-    function renderSlides(slides) {
-      currentAppSlide = 0;
-      updateSlideView(slides);
-    }
-
-    function updateSlideView(slides) {
-      if (!slides || !slides.length) return;
-      const s = slides[currentAppSlide];
-      appSlideTag.textContent = s.tag;
-      appSlideTitle.textContent = s.title;
-      appSlideDesc.textContent = s.desc;
-      appSlideCounter.textContent = `${currentAppSlide + 1}/${slides.length}`;
-
-      appSlideBullets.innerHTML = s.bullets.map(b => 
-        `<span class="text-xs px-3 py-1 rounded-lg bg-surface-container-high text-primary font-medium">${b}</span>`
-      ).join("");
-
-      appSlideDots.innerHTML = slides.map((_, i) => `
-        <span class="w-2 h-2 rounded-full ${i === currentAppSlide ? 'bg-primary-container' : 'bg-surface-container-highest'} transition-all"></span>
-      `).join("");
-    }
-
-    document.getElementById("app-slide-prev").addEventListener("click", () => {
-      if (!generatedData) return;
-      const len = generatedData.slides.length;
-      currentAppSlide = (currentAppSlide - 1 + len) % len;
-      updateSlideView(generatedData.slides);
-    });
-
-    document.getElementById("app-slide-next").addEventListener("click", () => {
-      if (!generatedData) return;
-      const len = generatedData.slides.length;
-      currentAppSlide = (currentAppSlide + 1) % len;
-      updateSlideView(generatedData.slides);
-    });
-
-    // 3. Flashcards
-    let currentFcIndex = 0;
-    const flashcardBox = document.getElementById("app-flashcard-box");
-    const flashcardInner = document.getElementById("app-flashcard-inner");
-    const flashcardQuestion = document.getElementById("flashcard-question");
-    const flashcardHint = document.getElementById("flashcard-hint");
-    const flashcardAnswer = document.getElementById("flashcard-answer");
-    const flashcardCounter = document.getElementById("flashcard-counter");
-    let isFcCardFlipped = false;
-
-    function renderFlashcards(cards) {
-      currentFcIndex = 0;
-      isFcCardFlipped = false;
-      flashcardInner.classList.remove("rotate-y-180");
-      updateFcView(cards);
-    }
-
-    function updateFcView(cards) {
-      if (!cards || !cards.length) return;
-      const c = cards[currentFcIndex];
-      flashcardQuestion.textContent = c.q;
-      flashcardHint.textContent = `💡 ${c.hint}`;
-      flashcardAnswer.textContent = c.a;
-      flashcardCounter.textContent = `Tarjeta ${currentFcIndex + 1} de ${cards.length}`;
-    }
-
-    flashcardBox.addEventListener("click", () => {
-      isFcCardFlipped = !isFcCardFlipped;
-      if (isFcCardFlipped) flashcardInner.classList.add("rotate-y-180");
-      else flashcardInner.classList.remove("rotate-y-180");
-    });
-
-    document.getElementById("fc-prev-btn").addEventListener("click", () => {
-      if (!generatedData) return;
-      isFcCardFlipped = false;
-      flashcardInner.classList.remove("rotate-y-180");
-      const len = generatedData.flashcards.length;
-      currentFcIndex = (currentFcIndex - 1 + len) % len;
-      updateFcView(generatedData.flashcards);
-    });
-
-    document.getElementById("fc-next-btn").addEventListener("click", () => {
-      if (!generatedData) return;
-      isFcCardFlipped = false;
-      flashcardInner.classList.remove("rotate-y-180");
-      const len = generatedData.flashcards.length;
-      currentFcIndex = (currentFcIndex + 1) % len;
-      updateFcView(generatedData.flashcards);
-    });
-
-    // 4. Mindmap Renderer
-    function renderMindmap(data) {
-      document.getElementById("mindmap-center-node").textContent = data.center;
-      document.getElementById("mindmap-branches").innerHTML = data.branches.map(b => `
-        <div class="p-5 rounded-2xl bg-surface-container/70 border border-primary-container/30 hover-lift space-y-2">
-          <div class="flex items-center justify-between">
-            <span class="text-xs px-2 py-0.5 rounded bg-primary-container/20 text-primary-container font-mono font-bold">${b.tag}</span>
-            <span class="material-symbols-outlined text-primary-fixed-dim text-[18px]">hub</span>
-          </div>
-          <h4 class="font-headline font-bold text-sm text-primary">${b.title}</h4>
-          <p class="text-xs text-on-surface-variant leading-relaxed">${b.desc}</p>
-        </div>
-      `).join("");
-    }
-
-    // 5. Quiz Renderer
-    let userAnswers = {};
-    function renderQuiz(questions) {
-      userAnswers = {};
-      document.getElementById("quiz-score-badge").textContent = `Puntuación: 0 / ${questions.length}`;
-      document.getElementById("quiz-questions-container").innerHTML = questions.map((q, qIndex) => `
-        <div class="p-5 rounded-2xl bg-surface-container-low/70 border border-surface-container-high space-y-3">
-          <p class="font-headline font-bold text-sm text-primary">${q.q}</p>
-          <div class="space-y-2">
-            ${q.options.map((opt, optIndex) => `
-              <button class="quiz-opt-btn w-full text-left p-3 rounded-xl bg-surface-container-lowest border border-outline-variant/40 hover:border-primary-container text-xs text-on-surface transition-all flex items-center justify-between" data-q="${qIndex}" data-opt="${optIndex}">
-                <span>${opt}</span>
-                <span class="quiz-feedback-icon material-symbols-outlined text-[16px] hidden"></span>
-              </button>
-            `).join("")}
-          </div>
-        </div>
-      `).join("");
-
-      document.querySelectorAll(".quiz-opt-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const qIdx = parseInt(btn.dataset.q, 10);
-          const optIdx = parseInt(btn.dataset.opt, 10);
-          const q = questions[qIdx];
-
-          // Disable other buttons for this question
-          const siblingBtns = document.querySelectorAll(`.quiz-opt-btn[data-q="${qIdx}"]`);
-          siblingBtns.forEach(b => b.disabled = true);
-
-          const icon = btn.querySelector(".quiz-feedback-icon");
-          icon.classList.remove("hidden");
-
-          if (optIdx === q.correct) {
-            btn.classList.add("bg-emerald-950/60", "border-emerald-500", "text-emerald-300");
-            icon.textContent = "check_circle";
-            icon.classList.add("text-emerald-400");
-            userAnswers[qIdx] = true;
-          } else {
-            btn.classList.add("bg-error-container/40", "border-error", "text-error");
-            icon.textContent = "cancel";
-            icon.classList.add("text-error");
-            userAnswers[qIdx] = false;
-
-            // Highlight correct one
-            const correctBtn = document.querySelector(`.quiz-opt-btn[data-q="${qIdx}"][data-opt="${q.correct}"]`);
-            if (correctBtn) {
-              correctBtn.classList.add("border-emerald-500", "text-emerald-300");
-            }
-          }
-
-          const score = Object.values(userAnswers).filter(Boolean).length;
-          document.getElementById("quiz-score-badge").textContent = `Puntuación: ${score} / ${questions.length}`;
-
-          // Mostrar justificación académica si está disponible
-          if (q.explanation) {
-            const expl = document.createElement("div");
-            expl.className = "p-3.5 rounded-xl bg-surface-container-high/90 border-l-4 border-primary-container text-xs text-on-surface-variant leading-relaxed mt-2 animate-in fade-in";
-            expl.innerHTML = `<span class="text-primary-container font-mono font-bold block mb-1">💡 Justificación de Selectividad / PAU:</span>${q.explanation}`;
-            btn.parentElement.parentElement.appendChild(expl);
-          }
-        });
-      });
-    }
-
-    // -------------------------------------------------------------
-    // G2. REPRODUCTOR DE AUDIO REAL OFICIAL NOTEBOOKLM
-    // -------------------------------------------------------------
-    const realPodcastAudio = document.getElementById("real-podcast-audio");
-    const realAudioPlayBtn = document.getElementById("real-audio-play-btn");
-    const realAudioPlayIcon = document.getElementById("real-audio-play-icon");
-    const realAudioPlayText = document.getElementById("real-audio-play-text");
-    const realAudioRewind = document.getElementById("real-audio-rewind");
-    const realAudioForward = document.getElementById("real-audio-forward");
-    const audioProgressBar = document.getElementById("audio-progress-bar");
-    const audioProgressContainer = document.getElementById("audio-progress-container");
-    const audioCurrentTime = document.getElementById("audio-current-time");
-    const audioTotalTime = document.getElementById("audio-total-time");
-    const audioSpeedBtns = document.querySelectorAll(".audio-speed-btn");
-
-    function formatAudioSeconds(sec) {
-      if (isNaN(sec) || !isFinite(sec)) return "00:00";
-      const m = Math.floor(sec / 60);
-      const s = Math.floor(sec % 60);
-      return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
-    }
-
-    if (realPodcastAudio) {
-      realPodcastAudio.addEventListener("loadedmetadata", () => {
-        audioTotalTime.textContent = formatAudioSeconds(realPodcastAudio.duration);
-      });
-
-      realPodcastAudio.addEventListener("timeupdate", () => {
-        audioCurrentTime.textContent = formatAudioSeconds(realPodcastAudio.currentTime);
-        if (realPodcastAudio.duration) {
-          const pct = (realPodcastAudio.currentTime / realPodcastAudio.duration) * 100;
-          audioProgressBar.style.width = `${pct}%`;
-        }
-      });
-
-      realPodcastAudio.addEventListener("ended", () => {
-        realAudioPlayIcon.textContent = "play_arrow";
-        realAudioPlayText.textContent = "Reproducir Podcast";
-      });
-
-      realAudioPlayBtn.addEventListener("click", () => {
-        // Pausar síntesis sintética si estuviese activa
-        if (window.speechSynthesis) window.speechSynthesis.cancel();
-        isPodcastSpeaking = false;
-        podcastPlayIcon.textContent = "volume_up";
-        podcastPlayText.textContent = "Lectura sintética por voz";
-
-        if (realPodcastAudio.paused) {
-          realPodcastAudio.play().then(() => {
-            realAudioPlayIcon.textContent = "pause";
-            realAudioPlayText.textContent = "Pausar Podcast";
-          }).catch(err => {
-            console.warn("Autoplay bloqueado:", err);
-          });
-        } else {
-          realPodcastAudio.pause();
-          realAudioPlayIcon.textContent = "play_arrow";
-          realAudioPlayText.textContent = "Reproducir Podcast";
-        }
-      });
-
-      realAudioRewind.addEventListener("click", () => {
-        realPodcastAudio.currentTime = Math.max(0, realPodcastAudio.currentTime - 10);
-      });
-
-      realAudioForward.addEventListener("click", () => {
-        realPodcastAudio.currentTime = Math.min(realPodcastAudio.duration || 0, realPodcastAudio.currentTime + 10);
-      });
-
-      audioProgressContainer.addEventListener("click", (e) => {
-        const rect = audioProgressContainer.getBoundingClientRect();
-        const clickX = e.clientX - rect.left;
-        const width = rect.width;
-        if (realPodcastAudio.duration) {
-          realPodcastAudio.currentTime = (clickX / width) * realPodcastAudio.duration;
-        }
-      });
-
-      audioSpeedBtns.forEach(btn => {
-        btn.addEventListener("click", () => {
-          const speed = parseFloat(btn.dataset.speed);
-          realPodcastAudio.playbackRate = speed;
-          audioSpeedBtns.forEach(b => {
-            b.classList.remove("bg-primary-container", "text-on-primary-container", "font-bold");
-            b.classList.add("text-on-surface-variant");
-          });
-          btn.classList.add("bg-primary-container", "text-on-primary-container", "font-bold");
-          btn.classList.remove("text-on-surface-variant");
-        });
-      });
-    }
-
-    // 6. Infographic Renderer
-    function renderInfographic(items) {
-      document.getElementById("infographic-container").innerHTML = `
-        <div class="relative pl-6 border-l-2 border-primary-container/40 space-y-6">
-          ${items.map(item => `
-            <div class="relative group space-y-1">
-              <span class="absolute -left-[31px] top-0 w-4 h-4 rounded-full bg-primary-container border-4 border-surface shadow-[0_0_10px_rgba(0,242,254,0.5)]"></span>
-              <span class="text-xs font-mono font-bold text-primary-container uppercase">${item.phase}</span>
-              <p class="text-xs sm:text-sm text-on-surface leading-relaxed">${item.text}</p>
-            </div>
-          `).join("")}
-        </div>
-      `;
-    }
-
-    // =============================================================
-    // GENERACIÓN Y DESCARGA DIRECTA DE ARCHIVO .PDF (HTML2PDF)
-    // =============================================================
-    const downloadPdfDirectBtn = document.getElementById("download-pdf-direct-btn");
-    const downloadPdfText = document.getElementById("download-pdf-text");
-    const printPaperBtn = document.getElementById("print-paper-btn");
-
-    function downloadRealPdf() {
-      triggerHaptic("medium");
-      if (downloadPdfText) downloadPdfText.textContent = "Generando PDF...";
-      if (downloadPdfDirectBtn) downloadPdfDirectBtn.disabled = true;
-
-      const currentTitle = deliverableClassTitle?.textContent || "Guía de Estudio";
-      const pdfData = currentDeliveredPackage?.deliverables?.pdf;
-
-      const safeFilename = currentTitle
-        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-        .replace(/[^a-zA-Z0-9_-]/g, "_")
-        .replace(/_+/g, "_")
-        .substring(0, 40) + ".pdf";
-
+    // Copiar al portapapeles con fallback robusto para navegadores móviles
+    async function copyToClipboardSafe(textToCopy) {
       try {
-        const jspdfModule = window.jspdf || window;
-        const jsPDF = jspdfModule.jsPDF || jspdfModule.default?.jsPDF;
-
-        if (jsPDF) {
-          const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-          
-          // Barra de cabecera oscura
-          doc.setFillColor(5, 20, 36);
-          doc.rect(0, 0, 210, 24, "F");
-
-          // Título cabecera
-          doc.setTextColor(0, 242, 254);
-          doc.setFontSize(10);
-          doc.setFont("helvetica", "bold");
-          doc.text("OFG.AI STUDIO • DOSSIER PEDAGÓGICO DE BACHILLERATO", 14, 11);
-
-          doc.setTextColor(200, 230, 255);
-          doc.setFontSize(8);
-          doc.setFont("helvetica", "normal");
-          doc.text("Google NotebookLM Studio • Fecha: " + new Date().toLocaleDateString("es-ES"), 14, 18);
-
-          // Título del tema
-          doc.setTextColor(15, 23, 42);
-          doc.setFontSize(15);
-          doc.setFont("helvetica", "bold");
-          const splitTitle = doc.splitTextToSize(currentTitle, 182);
-          doc.text(splitTitle, 14, 35);
-
-          const titleBottom = 35 + (splitTitle.length * 6);
-          doc.setDrawColor(2, 132, 199);
-          doc.setLineWidth(0.6);
-          doc.line(14, titleBottom, 196, titleBottom);
-
-          // Sección 1: Resumen
-          let currentY = titleBottom + 10;
-          doc.setTextColor(2, 132, 199);
-          doc.setFontSize(11);
-          doc.setFont("helvetica", "bold");
-          doc.text("1. RESUMEN EJECUTIVO DE LA LECCIÓN", 14, currentY);
-
-          currentY += 6;
-          doc.setTextColor(51, 65, 85);
-          doc.setFontSize(9.5);
-          doc.setFont("helvetica", "normal");
-          const summaryText = pdfData?.summary || "Análisis académico estructurado de la sesión formativa entregado por Google NotebookLM.";
-          const splitSummary = doc.splitTextToSize(summaryText, 182);
-          doc.text(splitSummary, 14, currentY);
-
-          currentY += (splitSummary.length * 5) + 8;
-
-          // Sección 2: Pilares Clave
-          doc.setTextColor(2, 132, 199);
-          doc.setFontSize(11);
-          doc.setFont("helvetica", "bold");
-          doc.text("2. PUNTOS INELUDIBLES PARA EL EXAMEN", 14, currentY);
-
-          currentY += 6;
-          const pillars = pdfData?.pillars || [
-            "Pilar Fundamental: Comprensión de los principios rectores expuestos en clase.",
-            "Criterio de Examen: Relación de causa-efecto indispensable para la evaluación.",
-            "Conclusión y Síntesis: Aplicación práctica conforme al baremo de corrección."
-          ];
-
-          doc.setTextColor(51, 65, 85);
-          doc.setFontSize(9);
-          doc.setFont("helvetica", "normal");
-          pillars.forEach(p => {
-            const splitPillar = doc.splitTextToSize("• " + p, 182);
-            doc.text(splitPillar, 14, currentY);
-            currentY += (splitPillar.length * 4.8) + 2;
-          });
-
-          currentY += 4;
-
-          // Sección 3: Consejo pedagógico
-          doc.setFillColor(241, 245, 249);
-          doc.roundedRect(14, currentY, 182, 22, 3, 3, "F");
-          doc.setTextColor(15, 23, 42);
-          doc.setFontSize(9.5);
-          doc.setFont("helvetica", "bold");
-          doc.text("Consejo Pedagógico para el Estudio:", 18, currentY + 7);
-          doc.setTextColor(71, 85, 105);
-          doc.setFontSize(8.5);
-          doc.setFont("helvetica", "normal");
-          const tipText = pdfData?.pedTip || "Relacionar los conceptos clave con sus consecuencias directas.";
-          const splitTip = doc.splitTextToSize(tipText, 174);
-          doc.text(splitTip, 18, currentY + 13);
-
-          // Pie de página
-          doc.setFontSize(7.5);
-          doc.setTextColor(148, 163, 184);
-          doc.text("OFG.ai Studio • Consultor de Inteligencia Artificial para Empresas y Educación | Sintetizado con Google NotebookLM", 14, 287);
-
-          doc.save(safeFilename);
-          if (downloadPdfText) downloadPdfText.textContent = "¡PDF Descargado!";
-          if (downloadPdfDirectBtn) downloadPdfDirectBtn.disabled = false;
-          triggerHaptic("success");
-          setTimeout(() => {
-            if (downloadPdfText) downloadPdfText.textContent = "Descargar Guía en PDF (.pdf)";
-          }, 3000);
-          return;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(textToCopy);
+          return true;
         }
       } catch (err) {
-        console.error("Fallo generando PDF vectorial:", err);
+        console.warn("Clipboard API falló, usando fallback de textarea:", err);
       }
-
-      // Fallback limpio a Blob HTML descargable sin imprimir ventana
-      const rawDoc = document.getElementById("pdf-printable-doc");
-      const htmlContent = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <meta charset="utf-8">
-          <title>${currentTitle}</title>
-          <style>
-            body { font-family: system-ui, sans-serif; padding: 40px; color: #0f172a; line-height: 1.6; max-width: 800px; margin: auto; }
-            h1 { color: #0284c7; }
-            .badge { font-family: monospace; font-size: 11px; color: #0284c7; font-weight: bold; }
-            .tip { background: #f1f5f9; padding: 16px; border-left: 4px solid #0284c7; border-radius: 6px; }
-          </style>
-        </head>
-        <body>
-          <div class="badge">OFG.AI STUDIO • GOOGLE NOTEBOOKLM</div>
-          <h1>${currentTitle}</h1>
-          <hr>
-          ${rawDoc ? rawDoc.innerHTML : ''}
-        </body>
-        </html>
-      `;
-      const blob = new Blob([htmlContent], { type: "text/html" });
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = safeFilename.replace(".pdf", "") + "_Dossier.html";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-
-      if (downloadPdfText) downloadPdfText.textContent = "¡Guía Descargada!";
-      if (downloadPdfDirectBtn) downloadPdfDirectBtn.disabled = false;
-      setTimeout(() => {
-        if (downloadPdfText) downloadPdfText.textContent = "Descargar Guía en PDF (.pdf)";
-      }, 3000);
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = textToCopy;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        const success = document.execCommand("copy");
+        document.body.removeChild(ta);
+        return success;
+      } catch (e) {
+        return false;
+      }
     }
 
-    if (downloadPdfDirectBtn) {
-      downloadPdfDirectBtn.addEventListener("click", downloadRealPdf);
+    if (recopySourceBtn) {
+      recopySourceBtn.addEventListener("click", async () => {
+        if (!currentPreparedBridgeSource) return;
+        triggerHaptic("medium");
+        const ok = await copyToClipboardSafe(currentPreparedBridgeSource);
+        if (recopyBtnText) {
+          recopyBtnText.textContent = ok ? "¡Copiado con éxito!" : "Copiado";
+          setTimeout(() => { recopyBtnText.textContent = "Copiar texto de nuevo"; }, 2500);
+        }
+      });
     }
 
-    if (printPaperBtn) {
-      printPaperBtn.addEventListener("click", () => {
+    if (downloadSourceBtn) {
+      downloadSourceBtn.addEventListener("click", () => {
+        if (!currentPreparedBridgeSource) return;
         triggerHaptic("light");
-        // En móviles o pantallas pequeñas, descargar directamente el PDF vectorial sin abrir diálogo de impresión
-        if (window.innerWidth < 640) {
-          downloadRealPdf();
+        const safeName = (currentPreparedTitle || "Clase_NotebookLM")
+          .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+          .replace(/[^a-zA-Z0-9_-]/g, "_")
+          .substring(0, 35) + "_Fuente_NotebookLM.txt";
+
+        const blob = new Blob([currentPreparedBridgeSource], { type: "text/plain;charset=utf-8" });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = safeName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      });
+    }
+
+    if (processClassBtn) {
+      processClassBtn.addEventListener("click", async () => {
+        const text = liveTranscript.value.trim();
+        if (!text && !currentUploadedAudioFile) {
+          alert("Por favor, graba con el micrófono o importa una nota de voz antes de inyectar en NotebookLM.");
           return;
         }
 
-        document.querySelectorAll(".tab-panel").forEach(p => p.classList.add("hidden"));
-        const pdfPanel = document.getElementById("panel-pdf");
-        if (pdfPanel) pdfPanel.classList.remove("hidden");
+        if (recordingState === "recording") stopRecording();
 
-        document.querySelectorAll(".tab-nav-btn").forEach(b => {
-          b.className = "tab-nav-btn px-3.5 py-1.5 rounded-xl font-headline font-bold text-xs flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-all";
-          if (b.dataset.target === "panel-pdf") {
-            b.className = "tab-nav-btn active px-3.5 py-1.5 rounded-xl font-headline font-bold text-xs flex items-center gap-1.5 bg-primary-container text-on-primary-container shadow-sm transition-all";
+        triggerHaptic("heavy");
+
+        const customTitle = currentUploadedAudioFile ? currentUploadedAudioFile.name : undefined;
+        const bridgeData = buildNotebookLMSource(text || (currentUploadedAudioFile ? `Archivo de audio importado: ${currentUploadedAudioFile.name}` : ""), customTitle);
+        currentPreparedBridgeSource = bridgeData.source;
+        currentPreparedTitle = bridgeData.title;
+
+        // 1. Copiar de inmediato al portapapeles en el gesto táctil del usuario
+        await copyToClipboardSafe(bridgeData.source);
+
+        // 2. Abrir Modal de Estado y Stepper
+        if (generationModal) {
+          generationModal.classList.remove("hidden");
+          modalCompletionActions.classList.add("hidden");
+          modalSpinner.classList.remove("hidden");
+          modalCenterIcon.textContent = "auto_awesome";
+          modalCenterIcon.className = "material-symbols-outlined text-primary-container text-[28px] animate-pulse";
+        }
+        processClassBtn.disabled = true;
+
+        const resetStep = (id, num, isFirst = false) => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          el.className = isFirst ? "flex items-center gap-3 text-xs transition-all" : "flex items-center gap-3 text-xs opacity-50 transition-all";
+          const icon = el.querySelector(".step-icon");
+          if (icon) {
+            icon.className = isFirst ? "step-icon w-6 h-6 rounded-full bg-primary-container/20 text-primary-container flex items-center justify-center font-bold text-[11px] shrink-0" : "step-icon w-6 h-6 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold text-[11px] shrink-0";
+            icon.innerHTML = isFirst ? '<span class="material-symbols-outlined text-[15px] animate-spin">sync</span>' : `${num}`;
           }
-        });
+          const st = el.querySelector(".step-status");
+          if (st) {
+            st.className = isFirst ? "step-status text-[11px] font-mono font-bold text-primary-container" : "step-status text-[11px] font-mono text-outline";
+            st.textContent = isFirst ? "En curso" : "En espera";
+          }
+        };
 
+        const setStepCompleted = (id) => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          el.className = "flex items-center gap-3 text-xs transition-all";
+          const icon = el.querySelector(".step-icon");
+          if (icon) {
+            icon.className = "step-icon w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-[11px] shrink-0";
+            icon.innerHTML = '<span class="material-symbols-outlined text-[15px]">check</span>';
+          }
+          const st = el.querySelector(".step-status");
+          if (st) {
+            st.className = "step-status text-[11px] font-mono font-bold text-emerald-400";
+            st.textContent = "Listo";
+          }
+        };
+
+        const setStepActive = (id) => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          el.className = "flex items-center gap-3 text-xs transition-all scale-[1.02]";
+          const icon = el.querySelector(".step-icon");
+          if (icon) {
+            icon.className = "step-icon w-6 h-6 rounded-full bg-primary-container/20 text-primary-container flex items-center justify-center font-bold text-[11px] shrink-0 shadow-[0_0_10px_rgba(0,242,254,0.4)]";
+            icon.innerHTML = '<span class="material-symbols-outlined text-[15px] animate-spin">sync</span>';
+          }
+          const st = el.querySelector(".step-status");
+          if (st) {
+            st.className = "step-status text-[11px] font-mono font-bold text-primary-container";
+            st.textContent = "En curso";
+          }
+        };
+
+        resetStep("stepper-step-1", 1, true);
+        resetStep("stepper-step-2", 2);
+        resetStep("stepper-step-3", 3);
+        resetStep("stepper-step-4", 4);
+
+        modalStatusTitle.textContent = "1/4 Estructurando lección para NotebookLM...";
+        modalStatusDesc.textContent = "Formateando apuntes académicos, encabezados y peticiones de Studio";
+        modalProgressPct.textContent = "30%";
+        modalProgressBar.style.width = "30%";
+
+        // Registrar auditoría en Cloudflare D1 en segundo plano
+        fetch("https://ofg-ai-backend.oscfergar.workers.dev/api/engine/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            text: text,
+            selectedKeys: ["podcast", "pdf"],
+            title: bridgeData.title
+          })
+        }).then(r => r.json()).then(res => {
+          if (res && res.title) {
+            currentPreparedTitle = res.title;
+            if (deliverableClassTitle) deliverableClassTitle.textContent = res.title;
+          }
+        }).catch(err => console.warn("Auditoría offline notice:", err));
+
+        // Paso 2 (0.7s)
         setTimeout(() => {
-          window.print();
-        }, 150);
+          setStepCompleted("stepper-step-1");
+          setStepActive("stepper-step-2");
+          modalStatusTitle.textContent = "2/4 Copiado al Portapapeles...";
+          modalStatusDesc.textContent = "✓ Texto de clase copiado con éxito para pegar en NotebookLM";
+          modalProgressPct.textContent = "65%";
+          modalProgressBar.style.width = "65%";
+        }, 700);
+
+        // Paso 3 (1.4s)
+        setTimeout(() => {
+          setStepCompleted("stepper-step-2");
+          setStepActive("stepper-step-3");
+          modalStatusTitle.textContent = "3/4 Preparando Enlace a tu Cuaderno...";
+          modalStatusDesc.textContent = "Configurando acceso seguro a Google NotebookLM con tu cuenta de Gmail";
+          modalProgressPct.textContent = "90%";
+          modalProgressBar.style.width = "90%";
+        }, 1400);
+
+        // Paso 4: Finalizado (2.1s)
+        setTimeout(() => {
+          setStepCompleted("stepper-step-3");
+          setStepCompleted("stepper-step-4");
+          modalProgressPct.textContent = "100%";
+          modalProgressBar.style.width = "100%";
+
+          modalSpinner.classList.add("hidden");
+          modalCenterIcon.textContent = "check_circle";
+          modalCenterIcon.className = "material-symbols-outlined text-emerald-400 text-[38px] animate-bounce";
+
+          modalStatusTitle.textContent = "¡Fuente Lista en Portapapeles!";
+          modalStatusDesc.textContent = "Pega el texto en NotebookLM y genera tu Audio Overview en Studio.";
+
+          modalCompletionActions.classList.remove("hidden");
+          processClassBtn.disabled = false;
+
+          // Rellenar panel de resultados
+          if (resultsEmptyPlaceholder) resultsEmptyPlaceholder.classList.add("hidden");
+          if (resultsActiveWrapper) resultsActiveWrapper.classList.remove("hidden");
+          if (deliverableClassTitle) deliverableClassTitle.textContent = currentPreparedTitle;
+          if (bridgeStatsInfo) {
+            const readingMin = Math.max(1, Math.round(bridgeData.wordCount / 180));
+            bridgeStatsInfo.textContent = `${bridgeData.wordCount} palabras transcriptas • ~${readingMin} min de lectura • Formato Markdown Oficial`;
+          }
+          if (sourcePreviewBox) {
+            sourcePreviewBox.textContent = currentPreparedBridgeSource;
+          }
+
+          const goToBridge = () => {
+            generationModal.classList.add("hidden");
+            if (resultsHub) {
+              resultsHub.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+            triggerHaptic("success");
+          };
+
+          modalViewResultsBtn.onclick = goToBridge;
+
+          setTimeout(() => {
+            if (!generationModal.classList.contains("hidden")) {
+              goToBridge();
+            }
+          }, 1200);
+
+        }, 2100);
       });
     }
 
