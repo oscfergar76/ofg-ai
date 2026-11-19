@@ -1,0 +1,6 @@
+﻿# Secretos y credenciales de Backend (NUNCA incluir en git)
+BREVO_API_KEY="xkeysib-tu-clave-aqui"
+BREVO_SENDER_EMAIL="notificaciones@ofg.ai"
+BREVO_SENDER_NAME="OFG.ai Studio"
+AI_API_KEY="tu-clave-gemini-o-groq-aqui"
+JWT_SECRET="clave-secreta-para-firmar-sesiones-de-usuario"

@@ -1,0 +1,49 @@
+{
+  "name": "OFG.ai Studio - Copiloto de Clases & Estudio",
+  "short_name": "OFG Studio",
+  "description": "Herramienta de estudio para Bachillerato: graba o importa tus clases y genera podcasts a 2 voces, guías PDF, flashcards y cuestionarios con IA.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#051424",
+  "theme_color": "#051424",
+  "lang": "es",
+  "categories": ["education", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Grabar Clase",
+      "short_name": "Grabar",
+      "description": "Comenzar a grabar audio de clase",
+      "url": "/#record-section",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Mis Materiales",
+      "short_name": "Materiales",
+      "description": "Consultar podcasts y resúmenes generados",
+      "url": "/#results-hub",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

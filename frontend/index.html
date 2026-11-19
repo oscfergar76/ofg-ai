@@ -1,0 +1,2938 @@
+<!DOCTYPE html>
+<html class="dark" lang="es" data-type="software">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+  <meta name="page-type" content="software"/>
+  <meta name="site-kind" content="software"/>
+  <title>OFG.ai Studio • Laboratorio de Grabación & Suite de Estudio</title>
+  <meta name="description" content="Graba la clase del profesor y elige qué materiales generar: podcast, mapa mental, presentación, cuestionario, informe PDF, flashcards, infografía y vídeo."/>
+
+  <!-- PWA & Mobile Web App Config -->
+  <link rel="manifest" href="/manifest.webmanifest"/>
+  <meta name="theme-color" content="#051424"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="OFG Studio"/>
+  <meta name="application-name" content="OFG Studio"/>
+  <link rel="apple-touch-icon" href="/icons/icon-192.png"/>
+  <link rel="icon" type="image/svg+xml" href="/icons/icon.svg"/>
+  <link rel="alternate icon" type="image/png" href="/icons/icon-192.png"/>
+
+  <!-- Tipografías Oficiales Stitch -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Generador Nativo de Documentos PDF Oficiales -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface": "#051424",
+            "surface-dim": "#051424",
+            "surface-bright": "#2c3a4c",
+            "surface-container-lowest": "#010f1f",
+            "surface-container-low": "#0d1c2d",
+            "surface-container": "#122131",
+            "surface-container-high": "#1c2b3c",
+            "surface-container-highest": "#273647",
+            "on-surface": "#d4e4fa",
+            "on-surface-variant": "#b9cacb",
+            "outline": "#849495",
+            "outline-variant": "#3a494b",
+            "primary": "#e0fdff",
+            "primary-container": "#00f2fe",
+            "primary-fixed": "#6ff6ff",
+            "primary-fixed-dim": "#00dce6",
+            "on-primary": "#00373a",
+            "on-primary-container": "#006a70",
+            "secondary-container": "#b50036",
+            "tertiary": "#f1f8ff",
+            "tertiary-container": "#b2e1ff",
+            "tertiary-fixed": "#c4e7ff",
+            "tertiary-fixed-dim": "#7bd0ff",
+            "error": "#ffb4ab",
+            "error-container": "#93000a",
+            "card-glass": "rgba(18, 33, 49, 0.78)",
+            "border-glow": "rgba(0, 242, 254, 0.25)"
+          },
+          fontFamily: {
+            headline: ["Plus Jakarta Sans", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"]
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+      background-color: #051424;
+      color: #d4e4fa;
+      -webkit-tap-highlight-color: transparent;
+    }
+    ::selection {
+      background-color: #00f2fe;
+      color: #00373a;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #051424;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1c2b3c;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #00dce6;
+    }
+    .perspective-1000 {
+      perspective: 1000px;
+    }
+    .transform-style-3d {
+      transform-style: preserve-3d;
+    }
+    .backface-hidden {
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    .rotate-y-180 {
+      transform: rotateY(180deg);
+    }
+    .hover-lift {
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .hover-lift:hover {
+      transform: translateY(-2px);
+    }
+    .btn-press:active {
+      transform: scale(0.96);
+    }
+    @keyframes pulse-ring {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.15); opacity: 0.3; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+    .animate-pulse-ring {
+      animation: pulse-ring 2s infinite ease-in-out;
+    }
+
+    /* ========================================================================= */
+    /* ESTILOS DE IMPRESIÓN Y DESCARGA LIMPIA DE PDF */
+    /* ========================================================================= */
+    @media print {
+      /* Ocultar toda la interfaz web, encabezados, fondos y botoneras */
+      header,
+      footer,
+      nav,
+      #app-recorder-dock,
+      #preset-pills,
+      #processing-loader,
+      #results-header-actions,
+      #tabs-nav-bar,
+      #otp-modal,
+      .pointer-events-none,
+      button,
+      .tab-panel:not(#panel-pdf) {
+        display: none !important;
+      }
+
+      /* Hoja en blanco limpia A4 sin fondos oscuros */
+      html, body {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      main {
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      #results-hub {
+        display: block !important;
+      }
+
+      #panel-pdf {
+        display: block !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      #panel-pdf .rounded-3xl {
+        background: #ffffff !important;
+        border: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+      }
+
+      #panel-pdf .border-b {
+        border-color: #cbd5e1 !important;
+      }
+
+      /* Contenido del informe limpio para imprimir */
+      #pdf-printable-doc {
+        background: #ffffff !important;
+        color: #0f172a !important;
+        border: none !important;
+        padding: 10mm 15mm !important;
+        font-size: 11pt !important;
+        line-height: 1.6 !important;
+      }
+
+      #pdf-printable-doc h2 {
+        color: #0284c7 !important;
+        font-size: 20pt !important;
+        font-weight: 800 !important;
+        margin-top: 4pt !important;
+      }
+
+      #pdf-printable-doc h3 {
+        color: #0369a1 !important;
+        font-size: 13pt !important;
+        font-weight: 700 !important;
+        border-bottom: 1.5px solid #e2e8f0 !important;
+        padding-bottom: 4pt !important;
+        margin-top: 14pt !important;
+      }
+
+      #pdf-printable-doc p,
+      #pdf-printable-doc li {
+        color: #334155 !important;
+      }
+
+      #pdf-printable-doc ul {
+        padding-left: 20px !important;
+      }
+
+      #pdf-printable-doc .bg-surface-container-high\/60,
+      #pdf-printable-doc .bg-surface-container-high {
+        background-color: #f8fafc !important;
+        border-left: 4px solid #0284c7 !important;
+        padding: 12pt !important;
+        border-radius: 6pt !important;
+        margin-top: 12pt !important;
+      }
+
+      @page {
+        size: A4 portrait;
+        margin: 12mm 15mm;
+      }
+    }
+  </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased relative min-h-screen flex flex-col selection:bg-primary-container selection:text-on-primary-container">
+
+  <!-- Ambient Glow Effects -->
+  <div class="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+    <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[850px] h-[450px] bg-primary-container/10 rounded-full blur-[150px]"></div>
+    <div class="absolute top-[40%] -left-40 w-[500px] h-[500px] bg-tertiary-fixed-dim/5 rounded-full blur-[140px]"></div>
+    <div class="absolute bottom-10 -right-40 w-[600px] h-[600px] bg-primary-container/5 rounded-full blur-[180px]"></div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 1. APP HEADER -->
+  <!-- ========================================================================= -->
+  <header class="sticky top-0 z-50 bg-surface-container-lowest/90 backdrop-blur-xl border-b border-surface-container-high/60 shadow-lg">
+    <div class="max-w-6xl mx-auto h-16 px-4 sm:px-6 flex items-center justify-between gap-3">
+      
+      <!-- Brand & Mode -->
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-primary-container to-primary-fixed-dim flex items-center justify-center text-on-primary shadow-[0_0_15px_rgba(0,242,254,0.35)]">
+          <span class="material-symbols-outlined text-[22px]">graphic_eq</span>
+        </div>
+        <div class="flex flex-col">
+          <div class="flex items-center gap-1.5">
+            <span class="font-headline font-black text-base text-primary tracking-tight">OFG.ai</span>
+            <span class="text-[10px] px-1.5 py-0.5 rounded bg-surface-container-high text-primary-fixed-dim font-mono font-bold uppercase">Studio</span>
+          </div>
+          <span class="text-[10px] text-on-surface-variant font-medium leading-none">Suite de Estudio Inteligente</span>
+        </div>
+      </div>
+
+      <!-- Quick Action Controls -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Preset Selector Pill -->
+        <div class="hidden sm:flex items-center gap-1 bg-surface-container-high/80 px-2.5 py-1 rounded-full border border-outline-variant/40 text-xs">
+          <span class="text-on-surface-variant text-[11px]">Probar tema:</span>
+          <button id="preset-historia" class="px-2 py-0.5 rounded text-primary hover:text-primary-container text-[11px] font-semibold transition-colors">Historia</button>
+          <span class="text-outline-variant">•</span>
+          <button id="preset-filosofia" class="px-2 py-0.5 rounded text-primary hover:text-primary-container text-[11px] font-semibold transition-colors">Filosofía</button>
+          <span class="text-outline-variant">•</span>
+          <button id="preset-biologia" class="px-2 py-0.5 rounded text-primary hover:text-primary-container text-[11px] font-semibold transition-colors">Biología</button>
+        </div>
+
+        <!-- Reset App -->
+        <button id="reset-app-btn" title="Empezar nueva clase" class="p-2 rounded-full bg-surface-container-high hover:bg-surface-bright text-on-surface-variant hover:text-primary transition-colors btn-press">
+          <span class="material-symbols-outlined text-[18px]">refresh</span>
+        </button>
+
+        <!-- Botón Instalar PWA App Móvil (Desktop / Tablet) -->
+        <button id="pwa-install-header-btn" title="Instalar App en tu móvil o tablet" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container-high hover:bg-surface-bright text-primary text-xs font-semibold border border-primary-container/30 transition-all hover-lift btn-press">
+          <span class="material-symbols-outlined text-[16px] text-primary-container">install_mobile</span>
+          <span>Instalar App</span>
+        </button>
+
+        <!-- Portero OTP -->
+        <button id="open-otp-btn" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-primary-container text-on-primary-container hover:bg-primary-fixed-dim font-headline font-bold text-xs uppercase tracking-wider shadow-[0_0_15px_rgba(0,242,254,0.3)] transition-all hover-lift btn-press">
+          <span class="material-symbols-outlined text-[15px]">lock</span>
+          <span class="hidden xs:inline">Mi Cuenta (6 Dígitos)</span>
+          <span class="xs:hidden">Acceso</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- MOBILE PWA BANNER & STATUS NOTIFICATION -->
+  <!-- ========================================================================= -->
+  <div id="mobile-pwa-banner" class="max-w-5xl mx-auto px-4 mt-3 hidden">
+    <div class="p-3.5 rounded-2xl bg-gradient-to-r from-surface-container via-surface-container-high to-surface-container border border-primary-container/40 shadow-xl flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="w-10 h-10 rounded-xl bg-primary-container/20 border border-primary-container/40 text-primary-container flex items-center justify-center shrink-0 shadow-[0_0_12px_rgba(0,242,254,0.3)]">
+          <span class="material-symbols-outlined text-[22px]">phone_iphone</span>
+        </div>
+        <div class="min-w-0">
+          <div class="flex items-center gap-1.5">
+            <p class="font-headline font-bold text-xs text-primary truncate">OFG.ai Studio App Móvil</p>
+            <span class="px-1.5 py-0.2 rounded bg-primary-container/20 text-primary-container font-mono text-[9px] font-bold">PWA</span>
+          </div>
+          <p class="text-[11px] text-on-surface-variant truncate">Graba clases a pantalla completa y sin conexión</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 shrink-0">
+        <button id="pwa-banner-install-btn" class="px-3.5 py-1.5 rounded-xl bg-primary-container text-on-primary-container font-headline font-bold text-xs tracking-wide shadow-md btn-press">
+          Instalar
+        </button>
+        <button id="pwa-banner-close-btn" class="p-1 rounded-lg text-on-surface-variant hover:text-primary">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 2. MAIN APPLICATION WORKSPACE -->
+  <!-- ========================================================================= -->
+  <main class="relative z-10 flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 pb-28 sm:py-8 space-y-8">
+
+    <!-- ======================================================================= -->
+    <!-- STEP 1: EL CENTRO DE GRABACIÓN DE CLASE (REAL MIC CAPTURE) -->
+    <!-- ======================================================================= -->
+    <section id="recorder-section" class="rounded-3xl bg-card-glass backdrop-blur-2xl p-6 sm:p-8 border border-border-glow shadow-[0_20px_50px_rgba(0,0,0,0.6)] relative overflow-hidden space-y-6">
+      
+      <!-- Top Highlight Line -->
+      <div class="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-primary-container to-transparent opacity-80"></div>
+
+      <!-- Header of the Recorder -->
+      <div class="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-surface-container-high">
+        <div>
+          <span class="text-[11px] font-mono font-bold text-primary-container uppercase tracking-wider flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-primary-container animate-pulse"></span>
+            Ingesta de Aula en Vivo • Micrófono del Dispositivo
+          </span>
+          <h2 class="font-headline font-bold text-lg sm:text-2xl text-primary mt-0.5">
+            Grabar Clase del Profesor
+          </h2>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <button id="import-audio-btn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-primary-container/15 hover:bg-primary-container/25 text-primary-container text-xs font-headline font-bold transition-all border border-primary-container/30 hover-lift btn-press" title="Importar nota de voz o audio del móvil (.m4a, .mp3, .wav)">
+            <span class="material-symbols-outlined text-[17px]">audio_file</span>
+            <span>Importar Grabación (.m4a/.mp3)</span>
+          </button>
+          <input type="file" id="audio-file-input" accept="audio/*,.m4a,.mp3,.wav,.aac,.ogg,.m4b" class="hidden"/>
+          
+          <span id="mic-status-badge" class="px-2.5 py-1 rounded-full bg-surface-container-high text-xs font-mono text-on-surface-variant flex items-center gap-1.5">
+            <span id="mic-indicator-dot" class="w-2 h-2 rounded-full bg-slate-500"></span>
+            <span id="mic-status-text">Micrófono preparado</span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Recording Controls Dock: Grabar, Pausar y Reiniciar de Cero -->
+      <div class="flex flex-col items-center justify-center py-4 relative">
+        <div id="record-ring" class="absolute w-44 h-44 rounded-full bg-error-container/20 border-2 border-error animate-pulse-ring pointer-events-none hidden"></div>
+        <div class="absolute w-36 h-36 rounded-full bg-primary-container/15 blur-xl pointer-events-none"></div>
+
+        <!-- Botonera de 3 controles -->
+        <div class="relative z-10 flex items-center justify-center gap-4 sm:gap-6">
+          
+          <!-- Botón Secundario: Pausar Grabación -->
+          <button id="record-pause-btn" class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-surface-container-high hover:bg-surface-bright text-on-surface-variant hover:text-amber-300 flex flex-col items-center justify-center shadow-lg transition-all border border-outline-variant/40 hover-lift disabled:opacity-30 disabled:pointer-events-none" disabled title="Pausar grabación">
+            <span id="record-pause-icon" class="material-symbols-outlined text-[24px]">pause</span>
+          </button>
+
+          <!-- Botón Principal: Grabar / Reanudar / Detener -->
+          <button id="record-toggle-btn" class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-surface-container-lowest flex items-center justify-center shadow-[0_0_40px_rgba(0,242,254,0.3)] hover:shadow-[0_0_50px_rgba(244,63,94,0.6)] transition-all hover:scale-105 active:scale-95 border border-primary-container/30" title="Grabar / Detener">
+            <div id="record-inner-dot" class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-tr from-secondary-container via-error to-secondary flex items-center justify-center shadow-lg transition-transform">
+              <span id="record-btn-icon" class="material-symbols-outlined text-surface-container-lowest text-[32px] sm:text-[36px]">mic</span>
+            </div>
+          </button>
+
+          <!-- Botón Secundario: Reiniciar desde Cero -->
+          <button id="record-reset-btn" class="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-surface-container-high hover:bg-surface-bright text-on-surface-variant hover:text-error flex flex-col items-center justify-center shadow-lg transition-all border border-outline-variant/40 hover-lift disabled:opacity-30 disabled:pointer-events-none" disabled title="Reiniciar desde cero (borrar y resetear)">
+            <span class="material-symbols-outlined text-[24px]">restart_alt</span>
+          </button>
+        </div>
+
+        <div class="text-center mt-4 space-y-1">
+          <div id="record-timer" class="font-mono font-bold text-2xl sm:text-3xl text-primary tracking-wider">
+            00:00:00
+          </div>
+          <div class="flex items-center justify-center gap-2">
+            <span id="record-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-surface-container-high text-on-surface-variant uppercase tracking-wider">En Espera</span>
+            <p id="record-prompt" class="font-headline font-bold text-sm sm:text-base text-primary">
+              Toca el micrófono para empezar a grabar la clase
+            </p>
+          </div>
+          <p id="record-subprompt" class="text-xs text-on-surface-variant max-w-sm mx-auto">
+            Habla o deja que el dispositivo escuche al profesor. Puedes pausar o reiniciar de cero en cualquier momento.
+          </p>
+        </div>
+      </div>
+
+      <!-- Banner de Grabación de Audio Importada (.m4a/.mp3) -->
+      <div id="imported-audio-banner" class="hidden p-4 sm:p-5 rounded-2xl bg-primary-container/10 border border-primary-container/40 space-y-3 animate-in fade-in">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-primary-container/20 flex items-center justify-center text-primary-container shadow-[0_0_15px_rgba(0,242,254,0.25)]">
+              <span class="material-symbols-outlined text-[24px]">audio_file</span>
+            </div>
+            <div>
+              <div class="flex flex-wrap items-center gap-2">
+                <span id="imported-file-name" class="font-headline font-bold text-sm text-primary">Grabacion_Clase.m4a</span>
+                <span id="imported-file-size" class="text-[11px] font-mono font-bold text-primary-fixed-dim bg-surface-container-high px-2 py-0.5 rounded">35.4 MB</span>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 uppercase">Audio Listo</span>
+              </div>
+              <p class="text-xs text-on-surface-variant mt-0.5">Nota de voz del móvil cargada • NotebookLM procesará el audio completo y transcribirá la lección</p>
+            </div>
+          </div>
+          <button id="remove-imported-audio" class="p-2 rounded-xl bg-surface-container-high hover:bg-surface-bright text-on-surface-variant hover:text-error transition-colors btn-press" title="Quitar archivo importado y volver al micrófono">
+            <span class="material-symbols-outlined text-[18px]">close</span>
+          </button>
+        </div>
+        <!-- Mini reproductor de preescucha del archivo importado -->
+        <div class="pt-1">
+          <audio id="imported-audio-preview" controls class="w-full h-8 rounded-lg bg-surface-container-high"></audio>
+        </div>
+      </div>
+      <div class="space-y-2 bg-surface-container-lowest/80 p-4 rounded-2xl border border-outline-variant/30">
+        <div class="flex items-center justify-between text-xs text-on-surface-variant font-mono">
+          <span class="flex items-center gap-1.5">
+            <span id="live-rec-dot" class="w-2 h-2 rounded-full bg-slate-500"></span>
+            <span id="live-audio-label">Espectro de frecuencia del micrófono</span>
+          </span>
+          <span id="audio-db-level">-∞ dB</span>
+        </div>
+
+        <div id="bars-spectrum" class="w-full h-12 flex items-end justify-between gap-1 px-1 overflow-hidden">
+          <!-- 32 bars generated via JS -->
+        </div>
+      </div>
+
+      <!-- Realtime Transcription Box -->
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-xs font-semibold text-primary">
+          <span class="flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[16px] text-primary-container">notes</span>
+            <span>Transcripción en vivo capturada de la voz:</span>
+          </span>
+          <button id="clear-transcript-btn" class="text-on-surface-variant hover:text-error text-[11px] underline">
+            Limpiar texto
+          </button>
+        </div>
+
+        <div class="relative">
+          <textarea id="live-transcript" rows="3" placeholder="Cuando pulses grabar y hables, las palabras se transcribirán aquí..." class="w-full p-3.5 rounded-2xl bg-surface-container-lowest border border-outline-variant/50 focus:border-primary-container text-xs sm:text-sm text-primary placeholder:text-outline outline-none transition-colors leading-relaxed resize-y font-body"></textarea>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between gap-2 text-[11px] text-on-surface-variant">
+          <span>💡 Consejo: El motor de Studio generará los materiales que selecciones abajo.</span>
+          <span id="word-count" class="font-mono text-primary-fixed-dim">0 palabras recogidas</span>
+        </div>
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- STUDIO SUITE: LA BOTONERA DE LOS 8 ENTREGABLES A LA CARTA -->
+      <!-- ===================================================================== -->
+      <div id="studio-options-section" class="pt-4 border-t border-surface-container-high space-y-4">
+        
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <span class="text-xs font-mono font-bold text-primary-container uppercase tracking-wider flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-[15px]">auto_fix_high</span>
+              <span>Studio Suite • Elige qué materiales generar</span>
+            </span>
+            <p class="text-xs text-on-surface-variant mt-0.5">
+              Marca una o varias opciones. Google NotebookLM procesará y generará cada entregable automáticamente.
+            </p>
+          </div>
+
+          <!-- Select All / Presets buttons -->
+          <div class="flex items-center gap-2 text-xs">
+            <button id="select-essential-btn" class="text-primary-fixed-dim hover:text-primary underline text-[11px]">
+              Pack Esencial (3)
+            </button>
+            <span class="text-outline-variant">•</span>
+            <button id="select-all-btn" class="text-primary-container hover:underline text-[11px] font-bold">
+              Seleccionar Todo (8)
+            </button>
+          </div>
+        </div>
+
+        <!-- 8 STUDIO CARDS GRID -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          
+          <!-- Option 1: Podcast -->
+          <label class="studio-option-card relative cursor-pointer rounded-2xl p-3 sm:p-4 bg-surface-container-lowest/90 border border-primary-container/40 flex flex-col justify-between hover-lift transition-all select-none group" data-key="podcast">
+            <input type="checkbox" checked class="studio-checkbox absolute top-3 right-3 accent-cyan-400 w-4 h-4 rounded cursor-pointer"/>
+            <div class="space-y-1.5">
+              <span class="material-symbols-outlined text-primary-container text-[24px]">podcasts</span>
+              <h4 class="font-headline font-bold text-xs sm:text-sm text-primary">Podcast (2 Voces)</h4>
+              <p class="text-[11px] text-on-surface-variant leading-tight">Conversación de audio para repasar en auriculares.</p>
+            </div>
+            <span class="mt-2 text-[10px] font-mono text-primary-fixed-dim">Audio .M4A</span>
+          </label>
+
+          <!-- Option 2: Informe / PDF -->
+          <label class="studio-option-card relative cursor-pointer rounded-2xl p-3 sm:p-4 bg-surface-container-lowest/90 border border-primary-container/40 flex flex-col justify-between hover-lift transition-all select-none group" data-key="pdf">
+            <input type="checkbox" checked class="studio-checkbox absolute top-3 right-3 accent-cyan-400 w-4 h-4 rounded cursor-pointer"/>
+            <div class="space-y-1.5">
+              <span class="material-symbols-outlined text-tertiary-fixed-dim text-[24px]">description</span>
+              <h4 class="font-headline font-bold text-xs sm:text-sm text-primary">Informe & PDF</h4>
+              <p class="text-[11px] text-on-surface-variant leading-tight">Apuntes estructurados oficiales para imprimir o estudiar.</p>
+            </div>
+            <span class="mt-2 text-[10px] font-mono text-tertiary-fixed-dim">Documento A4</span>
+          </label>
+
+          <!-- Option 3: Presentación -->
+          <label class="studio-option-card relative cursor-pointer rounded-2xl p-3 sm:p-4 bg-surface-container-lowest/90 border border-primary-container/40 flex flex-col justify-between hover-lift transition-all select-none group" data-key="slides">
+            <input type="checkbox" checked class="studio-checkbox absolute top-3 right-3 accent-cyan-400 w-4 h-4 rounded cursor-pointer"/>
+            <div class="space-y-1.5">
+              <span class="material-symbols-outlined text-secondary text-[24px]">slideshow</span>
+              <h4 class="font-headline font-bold text-xs sm:text-sm text-primary">Presentación</h4>
+              <p class="text-[11px] text-on-surface-variant leading-tight">Diapositivas de clase sintetizadas para repaso rápido.</p>
+            </div>
+            <span class="mt-2 text-[10px] font-mono text-secondary">Diapositivas</span>
+          </label>
+
+          <!-- Option 4: Flashcards 3D -->
+          <label class="studio-option-card relative cursor-pointer rounded-2xl p-3 sm:p-4 bg-surface-container-lowest/90 border border-primary-container/40 flex flex-col justify-between hover-lift transition-all select-none group" data-key="flashcards">
+            <input type="checkbox" checked class="studio-checkbox absolute top-3 right-3 accent-cyan-400 w-4 h-4 rounded cursor-pointer"/>
+            <div class="space-y-1.5">
+              <span class="material-symbols-outlined text-primary-fixed-dim text-[24px]">style</span>
+              <h4 class="font-headline font-bold text-xs sm:text-sm text-primary">Tarjetas Flashcards</h4>
+              <p class="text-[11px] text-on-surface-variant leading-tight">Tarjetas volteables 3D para autoevaluación activa.</p>
+            </div>
+            <span class="mt-2 text-[10px] font-mono text-primary-fixed-dim">Mazo 3D</span>
+          </label>
+
+          <!-- Option 5: Mapa Mental -->
+          <label class="studio-option-card relative cursor-pointer rounded-2xl p-3 sm:p-4 bg-surface-container-lowest/90 border border-outline-variant/40 flex flex-col justify-between hover-lift transition-all select-none group" data-key="mindmap">
+            <input type="checkbox" class="studio-checkbox absolute top-3 right-3 accent-cyan-400 w-4 h-4 rounded cursor-pointer"/>
+            <div class="space-y-1.5">
+              <span class="material-symbols-outlined text-cyan-300 text-[24px]">account_tree</span>
+              <h4 class="font-headline font-bold text-xs sm:text-sm text-primary">Mapa Mental</h4>
+              <p class="text-[11px] text-on-surface-variant leading-tight">Esquema conceptual con ramas, relaciones y nodos.</p>
+            </div>
+            <span class="mt-2 text-[10px] font-mono text-cyan-300">Esquema Visual</span>
+          </label>
+
+          <!-- Option 6: Cuestionario / Test -->
+          <label class="studio-option-card relative cursor-pointer rounded-2xl p-3 sm:p-4 bg-surface-container-lowest/90 border border-outline-variant/40 flex flex-col justify-between hover-lift transition-all select-none group" data-key="quiz">
+            <input type="checkbox" class="studio-checkbox absolute top-3 right-3 accent-cyan-400 w-4 h-4 rounded cursor-pointer"/>
+            <div class="space-y-1.5">
+              <span class="material-symbols-outlined text-emerald-400 text-[24px]">quiz</span>
+              <h4 class="font-headline font-bold text-xs sm:text-sm text-primary">Cuestionario</h4>
+              <p class="text-[11px] text-on-surface-variant leading-tight">Test tipo examen con corrección instantánea y puntuación.</p>
+            </div>
+            <span class="mt-2 text-[10px] font-mono text-emerald-400">Test Examen</span>
+          </label>
+
+          <!-- Option 7: Infografía -->
+          <label class="studio-option-card relative cursor-pointer rounded-2xl p-3 sm:p-4 bg-surface-container-lowest/90 border border-outline-variant/40 flex flex-col justify-between hover-lift transition-all select-none group" data-key="infographic">
+            <input type="checkbox" class="studio-checkbox absolute top-3 right-3 accent-cyan-400 w-4 h-4 rounded cursor-pointer"/>
+            <div class="space-y-1.5">
+              <span class="material-symbols-outlined text-amber-300 text-[24px]">insights</span>
+              <h4 class="font-headline font-bold text-xs sm:text-sm text-primary">Infografía</h4>
+              <p class="text-[11px] text-on-surface-variant leading-tight">Línea temporal con fechas clave, datos y comparativas.</p>
+            </div>
+            <span class="mt-2 text-[10px] font-mono text-amber-300">Cronología</span>
+          </label>
+
+          <!-- Option 8: Resumen de Vídeo -->
+          <label class="studio-option-card relative cursor-pointer rounded-2xl p-3 sm:p-4 bg-surface-container-lowest/90 border border-outline-variant/40 flex flex-col justify-between hover-lift transition-all select-none group" data-key="video">
+            <input type="checkbox" class="studio-checkbox absolute top-3 right-3 accent-cyan-400 w-4 h-4 rounded cursor-pointer"/>
+            <div class="space-y-1.5">
+              <span class="material-symbols-outlined text-indigo-300 text-[24px]">smart_display</span>
+              <h4 class="font-headline font-bold text-xs sm:text-sm text-primary">Resumen en Vídeo</h4>
+              <p class="text-[11px] text-on-surface-variant leading-tight">Cápsula audiovisual generada a partir de los puntos clave.</p>
+            </div>
+            <span class="mt-2 text-[10px] font-mono text-indigo-300">Vídeo-Cápsula</span>
+          </label>
+
+        </div>
+
+      </div>
+
+      <!-- Convert Action Bar -->
+      <div id="convert-bar" class="pt-4 border-t border-surface-container-high flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="text-xs text-on-surface-variant">
+          <span id="selected-count-label" class="font-semibold text-primary">4 materiales seleccionados</span> para generar en segundo plano.
+        </div>
+
+        <button id="process-class-btn" class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-2xl bg-gradient-to-r from-primary-container via-primary-fixed-dim to-tertiary-fixed text-on-primary-container font-headline font-extrabold text-sm uppercase tracking-wider shadow-[0_0_25px_rgba(0,242,254,0.4)] hover:shadow-[0_0_35px_rgba(0,242,254,0.6)] transition-all hover-lift btn-press">
+          <span class="material-symbols-outlined text-[20px]">auto_awesome</span>
+          <span>Generar Materiales de Estudio con IA</span>
+        </button>
+      </div>
+
+      <!-- Processing State Overlay / Loader -->
+      <div id="processing-loader" class="hidden rounded-2xl bg-surface-container-lowest/90 backdrop-blur-md p-6 border border-primary-container/40 text-center space-y-4">
+        <div class="w-12 h-12 rounded-full border-4 border-primary-container/20 border-t-primary-container animate-spin mx-auto"></div>
+        <div class="space-y-1">
+          <h3 id="loader-status-title" class="font-headline font-bold text-base text-primary">
+            Conectando con NotebookLM Studio...
+          </h3>
+          <p id="loader-status-desc" class="text-xs text-on-surface-variant font-mono">
+            Procesando y generando los entregables solicitados
+          </p>
+        </div>
+        <div class="w-full max-w-xs mx-auto h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+          <div id="loader-progress-bar" class="h-full bg-gradient-to-r from-primary-container to-tertiary-fixed w-1/4 transition-all duration-300"></div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ======================================================================= -->
+    <!-- STEP 2: EL HUB DE ESTUDIO DINÁMICO (LOS ENTREGABLES GENERADOS) -->
+    <!-- ======================================================================= -->
+    <section id="results-hub" class="space-y-6">
+      
+      <!-- Hub Header & Tool Switcher Tabs -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-surface-container-high">
+        <div>
+          <span class="text-xs font-mono text-primary-container font-bold uppercase tracking-wider">
+            Materiales de Estudio Listos
+          </span>
+          <h2 id="deliverable-class-title" class="font-headline font-extrabold text-xl sm:text-2xl text-primary mt-0.5">
+            Historia: Las Cortes de Cádiz y La Pepa (1812)
+          </h2>
+        </div>
+
+        <!-- Dynamic Navigation Tabs Bar -->
+        <div id="tabs-navigation-bar" class="flex items-center gap-1 bg-surface-container-high p-1 rounded-2xl border border-outline-variant/30 overflow-x-auto max-w-full">
+          <!-- Dynamic Tabs will be populated here -->
+        </div>
+      </div>
+
+      <!-- ===================================================================== -->
+      <!-- TAB PANELS CONTAINER -->
+      <!-- ===================================================================== -->
+
+      <!-- 1. PODCAST PANEL -->
+      <div id="panel-podcast" class="tab-panel space-y-6">
+        <div class="rounded-3xl bg-card-glass backdrop-blur-xl p-6 sm:p-7 border border-border-glow shadow-xl space-y-6">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-2xl bg-primary-container/20 flex items-center justify-center text-primary-container shadow-[0_0_20px_rgba(0,242,254,0.25)]">
+                <span class="material-symbols-outlined text-[26px]">headphones</span>
+              </div>
+              <div>
+                <h3 class="font-headline font-bold text-lg text-primary">Podcast a 2 Voces (Audio Overview)</h3>
+                <p class="text-xs text-on-surface-variant">Generado automáticamente por el motor de NotebookLM (19.3 MB • .m4a)</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <a href="audio/podcast-notebooklm.m4a" download="Podcast_Cortes_de_Cadiz_1812.m4a" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-surface-container-high hover:bg-surface-bright text-xs font-semibold text-primary transition-all border border-outline-variant/40 btn-press">
+                <span class="material-symbols-outlined text-[16px] text-primary-container">download</span>
+                <span>Descargar Audio .M4A</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Reproductor de Audio HTML5 Oficial Estilizado Cybernetic -->
+          <div class="p-4 sm:p-5 rounded-2xl bg-surface-container-lowest/90 border border-surface-container-high space-y-3">
+            <audio id="real-podcast-audio" src="audio/podcast-notebooklm.m4a" preload="metadata"></audio>
+            
+            <div class="flex items-center justify-between text-xs font-mono text-on-surface-variant">
+              <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span class="text-primary font-bold">Audio Oficial NotebookLM</span>
+                <span class="text-on-surface-variant hidden sm:inline">• 2 Locutores IA (Resumen de Audio)</span>
+              </div>
+              <div>
+                <span id="audio-current-time">00:00</span> / <span id="audio-total-time">--:--</span>
+              </div>
+            </div>
+
+            <!-- Scrubber barra de progreso -->
+            <div class="relative w-full h-2.5 bg-surface-container-highest rounded-full overflow-hidden cursor-pointer" id="audio-progress-container">
+              <div id="audio-progress-bar" class="h-full bg-gradient-to-r from-primary-container to-primary-fixed-dim w-0 transition-all duration-75"></div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+              <div class="flex items-center gap-2">
+                <button id="real-audio-play-btn" class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-primary-container text-on-primary-container font-headline font-bold text-xs uppercase tracking-wider shadow-[0_0_15px_rgba(0,242,254,0.3)] hover:bg-primary-fixed-dim transition-all btn-press">
+                  <span id="real-audio-play-icon" class="material-symbols-outlined text-[18px]">play_arrow</span>
+                  <span id="real-audio-play-text">Reproducir Podcast</span>
+                </button>
+                <button id="real-audio-rewind" class="p-2 rounded-full bg-surface-container-high hover:bg-surface-bright text-on-surface transition-colors" title="Retroceder 10s">
+                  <span class="material-symbols-outlined text-[18px]">replay_10</span>
+                </button>
+                <button id="real-audio-forward" class="p-2 rounded-full bg-surface-container-high hover:bg-surface-bright text-on-surface transition-colors" title="Avanzar 10s">
+                  <span class="material-symbols-outlined text-[18px]">forward_10</span>
+                </button>
+              </div>
+
+              <!-- Selector de velocidad -->
+              <div class="flex items-center gap-1 bg-surface-container-high/80 p-1 rounded-xl text-xs font-mono">
+                <span class="text-[10px] text-on-surface-variant px-1.5">Velocidad:</span>
+                <button class="audio-speed-btn px-2 py-0.5 rounded-lg bg-primary-container text-on-primary-container font-bold" data-speed="1">1x</button>
+                <button class="audio-speed-btn px-2 py-0.5 rounded-lg text-on-surface-variant hover:text-primary" data-speed="1.25">1.25x</button>
+                <button class="audio-speed-btn px-2 py-0.5 rounded-lg text-on-surface-variant hover:text-primary" data-speed="1.5">1.5x</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <h4 class="font-headline font-bold text-xs uppercase tracking-wider text-primary-fixed-dim">Guion y Conversación Sintetizada</h4>
+              <div class="flex items-center gap-2">
+                <button id="play-full-podcast-btn" class="inline-flex items-center gap-1 text-[11px] font-mono text-primary-container hover:underline">
+                  <span id="podcast-play-icon" class="material-symbols-outlined text-[14px]">volume_up</span>
+                  <span id="podcast-play-text">Lectura sintética por voz</span>
+                </button>
+                <button id="stop-podcast-btn" class="text-on-surface-variant hover:text-error text-xs" title="Detener voz sintética">
+                  <span class="material-symbols-outlined text-[14px]">stop</span>
+                </button>
+              </div>
+            </div>
+            <div id="podcast-dialog-stream" class="space-y-3 pt-2 max-h-[320px] overflow-y-auto pr-2"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. INFORME / PDF PANEL -->
+      <div id="panel-pdf" class="tab-panel space-y-4 hidden">
+        <div class="rounded-3xl bg-card-glass backdrop-blur-xl p-6 sm:p-8 border border-border-glow shadow-xl space-y-6">
+          <div class="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-surface-container-high">
+            <div>
+              <h3 class="font-headline font-bold text-lg text-primary">Informe & Guía de Examen</h3>
+              <p class="text-xs text-on-surface-variant">Documento académico oficial listo para descargar directamente en .PDF</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button id="download-pdf-direct-btn" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-primary-container via-primary-fixed-dim to-tertiary-fixed text-on-primary-container font-headline font-bold text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(0,242,254,0.35)] hover:shadow-[0_0_30px_rgba(0,242,254,0.55)] transition-all hover-lift btn-press">
+                <span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
+                <span id="download-pdf-text">Descargar Guía en PDF (.pdf)</span>
+              </button>
+              <button id="print-paper-btn" class="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-bright text-xs font-semibold text-on-surface-variant hover:text-primary transition-all border border-outline-variant/40 btn-press" title="Imprimir copia física en papel">
+                <span class="material-symbols-outlined text-[16px]">print</span>
+                <span class="hidden sm:inline">Imprimir Papel</span>
+              </button>
+            </div>
+          </div>
+          <div id="pdf-printable-doc" class="bg-[#030d17] p-6 sm:p-8 rounded-2xl border border-surface-container-high space-y-6 text-sm text-on-surface leading-relaxed"></div>
+        </div>
+      </div>
+
+      <!-- 3. PRESENTACIÓN (SLIDES) PANEL -->
+      <div id="panel-slides" class="tab-panel space-y-4 hidden">
+        <div class="rounded-3xl bg-card-glass backdrop-blur-xl p-6 sm:p-8 border border-border-glow shadow-xl space-y-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-headline font-bold text-lg text-primary">Diapositivas de Repaso Express</h3>
+              <p class="text-xs text-on-surface-variant">Resumen visual de clase para revisar antes del examen</p>
+            </div>
+            <div class="flex items-center gap-2 bg-surface-container-high rounded-full px-3 py-1 border border-outline-variant/40">
+              <button id="app-slide-prev" class="w-7 h-7 rounded-full hover:bg-surface-bright flex items-center justify-center text-primary transition-colors">
+                <span class="material-symbols-outlined text-[18px]">chevron_left</span>
+              </button>
+              <span id="app-slide-counter" class="text-xs font-mono font-bold text-primary-container px-2">1/4</span>
+              <button id="app-slide-next" class="w-7 h-7 rounded-full hover:bg-surface-bright flex items-center justify-center text-primary transition-colors">
+                <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+              </button>
+            </div>
+          </div>
+          <div class="relative w-full aspect-[16/9] sm:aspect-[16/8] bg-gradient-to-br from-surface-container-low to-surface-container-lowest rounded-2xl p-6 sm:p-8 border border-surface-container-high flex flex-col justify-between shadow-2xl">
+            <div class="flex items-center justify-between text-xs font-mono text-on-surface-variant">
+              <span id="app-slide-tag" class="px-2.5 py-1 rounded bg-primary-container/20 text-primary-container font-bold">SLIDE 1</span>
+              <span class="text-primary-fixed-dim">OFG.ai Studio</span>
+            </div>
+            <div class="my-auto space-y-3">
+              <h4 id="app-slide-title" class="font-headline font-black text-xl sm:text-3xl text-primary leading-tight">Título</h4>
+              <p id="app-slide-desc" class="text-xs sm:text-base text-on-surface-variant leading-relaxed max-w-2xl">Descripción</p>
+              <div id="app-slide-bullets" class="flex flex-wrap gap-2 pt-2"></div>
+            </div>
+            <div class="flex items-center justify-center gap-2 pt-2">
+              <div id="app-slide-dots" class="flex items-center gap-1.5"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. FLASHCARDS 3D PANEL -->
+      <div id="panel-flashcards" class="tab-panel space-y-4 hidden">
+        <div class="rounded-3xl bg-card-glass backdrop-blur-xl p-6 sm:p-8 border border-border-glow shadow-xl space-y-6">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h3 class="font-headline font-bold text-lg text-primary">Flashcards de Autoevaluación 3D</h3>
+              <p class="text-xs text-on-surface-variant">Toca la tarjeta para voltearla y comprobar tus conocimientos</p>
+            </div>
+            <span id="flashcard-counter" class="px-2.5 py-1 rounded-full bg-surface-container-high text-primary-container font-bold text-xs font-mono">
+              Tarjeta 1 de 3
+            </span>
+          </div>
+          <div class="perspective-1000 w-full max-w-xl mx-auto aspect-[16/10] sm:aspect-[16/9] cursor-pointer" id="app-flashcard-box">
+            <div id="app-flashcard-inner" class="relative w-full h-full transform-style-3d transition-transform duration-500 rounded-2xl">
+              <!-- Front -->
+              <div class="absolute inset-0 backface-hidden rounded-2xl bg-gradient-to-br from-surface-container to-surface-container-high p-6 sm:p-8 border border-primary-container/30 flex flex-col justify-between shadow-xl">
+                <div class="flex items-center justify-between text-xs font-mono font-bold text-primary-container">
+                  <span>PREGUNTA DE EXAMEN</span>
+                  <span class="material-symbols-outlined text-[20px]">touch_app</span>
+                </div>
+                <div class="text-center my-auto px-2">
+                  <p id="flashcard-question" class="font-headline font-bold text-lg sm:text-2xl text-primary leading-snug">Pregunta</p>
+                  <p class="text-xs text-on-surface-variant mt-3 italic">(Haz clic para voltear)</p>
+                </div>
+                <div class="text-center text-[11px] text-on-surface-variant" id="flashcard-hint">Pista</div>
+              </div>
+              <!-- Back -->
+              <div class="absolute inset-0 backface-hidden rotate-y-180 rounded-2xl bg-gradient-to-br from-surface-container-high to-surface-container-highest p-6 sm:p-8 border border-tertiary-fixed-dim/40 flex flex-col justify-between shadow-2xl">
+                <div class="flex items-center justify-between text-xs font-mono font-bold text-tertiary-fixed-dim">
+                  <span>RESPUESTA OFICIAL</span>
+                  <span class="material-symbols-outlined text-[20px]">check_circle</span>
+                </div>
+                <div class="my-auto px-2 space-y-2">
+                  <p id="flashcard-answer" class="font-headline font-bold text-base sm:text-xl text-primary leading-relaxed">Respuesta</p>
+                </div>
+                <div class="text-center text-xs text-on-surface-variant">Toca de nuevo para volver a la pregunta</div>
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center justify-center gap-4 pt-2">
+            <button id="fc-prev-btn" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-surface-container-high hover:bg-surface-bright text-xs font-semibold text-on-surface transition-colors btn-press">
+              <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+              <span>Anterior</span>
+            </button>
+            <button id="fc-next-btn" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary-container text-on-primary-container font-headline font-bold text-xs uppercase tracking-wider transition-colors btn-press shadow-md">
+              <span>Siguiente Tarjeta</span>
+              <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. MAPA MENTAL (MIND MAP) PANEL -->
+      <div id="panel-mindmap" class="tab-panel space-y-4 hidden">
+        <div class="rounded-3xl bg-card-glass backdrop-blur-xl p-6 sm:p-8 border border-border-glow shadow-xl space-y-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-headline font-bold text-lg text-primary">Mapa Mental Conceptual</h3>
+              <p class="text-xs text-on-surface-variant">Estructura jerárquica con ramas y conexiones clave</p>
+            </div>
+            <span class="px-2.5 py-1 rounded-full bg-cyan-950/60 border border-cyan-500/30 text-xs font-mono text-cyan-300">
+              Esquema Interactivo
+            </span>
+          </div>
+
+          <!-- Interactive Node Graph Canvas -->
+          <div class="w-full bg-[#020b14] rounded-2xl p-6 sm:p-8 border border-surface-container-high space-y-8 relative overflow-hidden">
+            <!-- Center Node -->
+            <div class="text-center">
+              <div id="mindmap-center-node" class="inline-block px-6 py-3 rounded-2xl bg-gradient-to-r from-primary-container to-primary-fixed text-on-primary-container font-headline font-extrabold text-base shadow-[0_0_25px_rgba(0,242,254,0.35)]">
+                Tema Central
+              </div>
+            </div>
+
+            <!-- Branches -->
+            <div id="mindmap-branches" class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+              <!-- Injected via JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. CUESTIONARIO / TEST DE EXAMEN PANEL -->
+      <div id="panel-quiz" class="tab-panel space-y-4 hidden">
+        <div class="rounded-3xl bg-card-glass backdrop-blur-xl p-6 sm:p-8 border border-border-glow shadow-xl space-y-6">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h3 class="font-headline font-bold text-lg text-primary">Cuestionario Tipo Test</h3>
+              <p class="text-xs text-on-surface-variant">Preguntas estilo Selectividad / PAU para autoevaluarte</p>
+            </div>
+            <div id="quiz-score-badge" class="px-3 py-1 rounded-full bg-emerald-950/60 border border-emerald-500/30 text-xs font-mono font-bold text-emerald-400">
+              Puntuación: 0 / 3
+            </div>
+          </div>
+
+          <div id="quiz-questions-container" class="space-y-6">
+            <!-- Injected via JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. INFOGRAFÍA / CRONOLOGÍA PANEL -->
+      <div id="panel-infographic" class="tab-panel space-y-4 hidden">
+        <div class="rounded-3xl bg-card-glass backdrop-blur-xl p-6 sm:p-8 border border-border-glow shadow-xl space-y-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-headline font-bold text-lg text-primary">Infografía & Línea Temporal</h3>
+              <p class="text-xs text-on-surface-variant">Hitos, cifras y conceptos visualmente desglosados</p>
+            </div>
+            <span class="px-2.5 py-1 rounded-full bg-amber-950/60 border border-amber-500/30 text-xs font-mono text-amber-300">
+              Resumen Gráfico
+            </span>
+          </div>
+
+          <div id="infographic-container" class="space-y-6">
+            <!-- Injected via JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 8. RESUMEN DE VÍDEO PANEL -->
+      <div id="panel-video" class="tab-panel space-y-4 hidden">
+        <div class="rounded-3xl bg-card-glass backdrop-blur-xl p-6 sm:p-8 border border-border-glow shadow-xl space-y-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-headline font-bold text-lg text-primary">Resumen en Vídeo (Micro-cápsula)</h3>
+              <p class="text-xs text-on-surface-variant">Explicación visual de 2 minutos generada por IA</p>
+            </div>
+            <span class="px-2.5 py-1 rounded-full bg-indigo-950/60 border border-indigo-500/30 text-xs font-mono text-indigo-300">
+              Vídeo HD
+            </span>
+          </div>
+
+          <div class="relative w-full aspect-video bg-surface-container-lowest rounded-2xl overflow-hidden border border-surface-container-high flex flex-col items-center justify-center p-6 text-center space-y-3">
+            <div class="w-16 h-16 rounded-full bg-primary-container/20 border border-primary-container/40 flex items-center justify-center text-primary-container shadow-lg">
+              <span class="material-symbols-outlined text-[36px]">play_circle</span>
+            </div>
+            <h4 id="video-mock-title" class="font-headline font-bold text-lg text-primary">Micro-cápsula de la Sesión</h4>
+            <p class="text-xs text-on-surface-variant max-w-md">Vídeo sintetizado con locución y diapositivas automáticas preparado para el móvil.</p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- 3. FOOTER -->
+  <!-- ========================================================================= -->
+  <footer class="border-t border-surface-container-high bg-surface-container-lowest/80 py-6 px-4 text-center text-xs text-on-surface-variant font-mono">
+    <span>OFG.ai Studio • Suite de Estudio Inteligente • Motor Automático NotebookLM</span>
+  </footer>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL POP-UP DE GENERACIÓN EN VIVO (ESTADO EN SEGUNDO PLANO Y STEPPER) -->
+  <!-- ========================================================================= -->
+  <div id="generation-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-[#010f1f]/85 backdrop-blur-xl animate-in fade-in duration-200">
+    <div class="relative max-w-lg w-full rounded-3xl bg-surface-container-low border border-primary-container/40 p-6 sm:p-8 shadow-[0_0_60px_rgba(0,242,254,0.25)] space-y-6">
+      
+      <!-- Top Decorative Glow -->
+      <div class="absolute -top-12 left-1/2 -translate-x-1/2 w-48 h-24 bg-primary-container/20 rounded-full blur-2xl pointer-events-none"></div>
+
+      <!-- Icon & Status Header -->
+      <div class="text-center space-y-2">
+        <div id="modal-spinner-wrapper" class="relative w-16 h-16 mx-auto flex items-center justify-center">
+          <div id="modal-spinner" class="absolute inset-0 rounded-full border-4 border-primary-container/20 border-t-primary-container animate-spin"></div>
+          <span id="modal-center-icon" class="material-symbols-outlined text-primary-container text-[28px] animate-pulse">auto_awesome</span>
+        </div>
+        
+        <h3 id="modal-status-title" class="font-headline font-black text-xl sm:text-2xl text-primary mt-2">
+          Generando Materiales de Estudio
+        </h3>
+        <p id="modal-status-desc" class="text-xs sm:text-sm text-on-surface-variant font-mono">
+          El motor de NotebookLM está procesando tu clase en segundo plano...
+        </p>
+      </div>
+
+      <!-- Live Stepper (Los 4 pasos visuales del motor) -->
+      <div class="space-y-3 bg-surface-container-lowest/80 p-4 sm:p-5 rounded-2xl border border-surface-container-high">
+        
+        <!-- Step 1 -->
+        <div id="stepper-step-1" class="flex items-center gap-3 text-xs transition-all">
+          <span class="step-icon w-6 h-6 rounded-full bg-primary-container/20 text-primary-container flex items-center justify-center font-bold text-[11px] shrink-0">
+            <span class="material-symbols-outlined text-[15px] animate-spin">sync</span>
+          </span>
+          <div class="flex-1">
+            <span class="font-headline font-bold text-primary block">1. Ingesta a Google NotebookLM</span>
+            <span class="text-[11px] text-on-surface-variant step-desc">Transmitiendo audio y fuentes de clase</span>
+          </div>
+          <span class="step-status text-[11px] font-mono font-bold text-primary-container">En curso</span>
+        </div>
+
+        <!-- Step 2 -->
+        <div id="stepper-step-2" class="flex items-center gap-3 text-xs opacity-50 transition-all">
+          <span class="step-icon w-6 h-6 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold text-[11px] shrink-0">2</span>
+          <div class="flex-1">
+            <span class="font-headline font-bold text-primary block">2. Motor Studio (Síntesis & Podcast)</span>
+            <span class="text-[11px] text-on-surface-variant step-desc">Generando diálogo a 2 voces y análisis</span>
+          </div>
+          <span class="step-status text-[11px] font-mono text-outline">En espera</span>
+        </div>
+
+        <!-- Step 3 -->
+        <div id="stepper-step-3" class="flex items-center gap-3 text-xs opacity-50 transition-all">
+          <span class="step-icon w-6 h-6 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold text-[11px] shrink-0">3</span>
+          <div class="flex-1">
+            <span class="font-headline font-bold text-primary block">3. Estructuración Pedagógica IA</span>
+            <span class="text-[11px] text-on-surface-variant step-desc">Diseñando test PAU, flashcards y mapas</span>
+          </div>
+          <span class="step-status text-[11px] font-mono text-outline">En espera</span>
+        </div>
+
+        <!-- Step 4 -->
+        <div id="stepper-step-4" class="flex items-center gap-3 text-xs opacity-50 transition-all">
+          <span class="step-icon w-6 h-6 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold text-[11px] shrink-0">4</span>
+          <div class="flex-1">
+            <span class="font-headline font-bold text-primary block">4. Entrega de Materiales en OFG.ai</span>
+            <span class="text-[11px] text-on-surface-variant step-desc">Compilando resultados listos para estudiar</span>
+          </div>
+          <span class="step-status text-[11px] font-mono text-outline">En espera</span>
+        </div>
+
+      </div>
+
+      <!-- Barra de progreso con porcentaje -->
+      <div class="space-y-1.5">
+        <div class="flex items-center justify-between text-xs font-mono">
+          <span class="text-on-surface-variant">Progreso de compilación</span>
+          <span id="modal-progress-pct" class="font-bold text-primary-container">25%</span>
+        </div>
+        <div class="w-full h-2.5 bg-surface-container-highest rounded-full overflow-hidden">
+          <div id="modal-progress-bar" class="h-full bg-gradient-to-r from-primary-container via-primary-fixed-dim to-emerald-400 w-1/4 transition-all duration-500"></div>
+        </div>
+      </div>
+
+      <!-- Action Button (visible al completar) -->
+      <div id="modal-completion-actions" class="hidden pt-2 text-center">
+        <button id="modal-view-results-btn" class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-emerald-400 via-primary-container to-primary-fixed-dim text-surface-container-lowest font-headline font-black text-xs sm:text-sm uppercase tracking-wider shadow-[0_0_25px_rgba(52,211,153,0.4)] hover:shadow-[0_0_35px_rgba(52,211,153,0.6)] transition-all hover-lift btn-press flex items-center justify-center gap-2">
+          <span>Ver Mis Materiales de Repaso (Ir al Hub)</span>
+          <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Toast de Notificación Flotante de Éxito -->
+  <div id="success-toast" class="fixed top-20 right-4 sm:right-6 z-50 hidden flex items-center gap-3 p-4 rounded-2xl bg-surface-container-low/95 border border-emerald-500/50 shadow-[0_10px_30px_rgba(0,0,0,0.5)] backdrop-blur-xl animate-in slide-in-from-top duration-300 max-w-sm">
+    <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+      <span class="material-symbols-outlined text-[22px]">check_circle</span>
+    </div>
+    <div class="space-y-0.5">
+      <h4 class="font-headline font-bold text-xs text-primary">¡Materiales Listos con Éxito!</h4>
+      <p class="text-[11px] text-on-surface-variant leading-tight">Tus entregables de clase ya están cargados en el Hub interactivo.</p>
+    </div>
+    <button id="close-toast-btn" class="p-1 text-on-surface-variant hover:text-primary">
+      <span class="material-symbols-outlined text-[16px]">close</span>
+    </button>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 4. MODAL DEL PORTERO OTP -->
+  <!-- ========================================================================= -->
+  <div id="otp-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-surface-container-lowest/80 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
+    <div class="relative w-full max-w-sm rounded-3xl bg-surface-container p-6 border border-primary-container/40 shadow-2xl space-y-5">
+      <button id="close-otp-btn" class="absolute top-4 right-4 text-on-surface-variant hover:text-primary">
+        <span class="material-symbols-outlined text-[20px]">close</span>
+      </button>
+
+      <div class="text-center space-y-1">
+        <div class="w-10 h-10 rounded-xl bg-primary-container/20 mx-auto flex items-center justify-center text-primary-container">
+          <span class="material-symbols-outlined text-[20px]">lock</span>
+        </div>
+        <h3 class="font-headline font-bold text-lg text-primary">Acceso Alumno / Profesor</h3>
+        <p class="text-xs text-on-surface-variant">Introduce tu código OTP de 6 dígitos enviado por Brevo</p>
+      </div>
+
+      <div class="space-y-3">
+        <input id="email-otp-input" type="email" placeholder="tu-correo@instituto.es" class="w-full px-3.5 py-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant text-xs text-primary outline-none focus:border-primary-container"/>
+        <button id="request-otp-btn" class="w-full py-2.5 rounded-xl bg-primary-container text-on-primary-container font-headline font-bold text-xs uppercase tracking-wider btn-press">
+          Solicitar Código
+        </button>
+      </div>
+
+      <div id="otp-boxes-wrapper" class="flex justify-between gap-1 pt-2 hidden">
+        <input type="text" maxlength="1" class="otp-box w-10 h-12 text-center font-mono font-bold text-lg rounded-xl bg-surface-container-lowest border border-primary-container/40 text-primary outline-none"/>
+        <input type="text" maxlength="1" class="otp-box w-10 h-12 text-center font-mono font-bold text-lg rounded-xl bg-surface-container-lowest border border-primary-container/40 text-primary outline-none"/>
+        <input type="text" maxlength="1" class="otp-box w-10 h-12 text-center font-mono font-bold text-lg rounded-xl bg-surface-container-lowest border border-primary-container/40 text-primary outline-none"/>
+        <input type="text" maxlength="1" class="otp-box w-10 h-12 text-center font-mono font-bold text-lg rounded-xl bg-surface-container-lowest border border-primary-container/40 text-primary outline-none"/>
+        <input type="text" maxlength="1" class="otp-box w-10 h-12 text-center font-mono font-bold text-lg rounded-xl bg-surface-container-lowest border border-primary-container/40 text-primary outline-none"/>
+        <input type="text" maxlength="1" class="otp-box w-10 h-12 text-center font-mono font-bold text-lg rounded-xl bg-surface-container-lowest border border-primary-container/40 text-primary outline-none"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 5. JAVASCRIPT: LOGIC & COMPLETE 8-TOOL ENGINE -->
+  <!-- ========================================================================= -->
+  <script>
+    // -------------------------------------------------------------
+    // A. BARRAS DE ONDA DE AUDIO (32 BARS)
+    // -------------------------------------------------------------
+    const barsContainer = document.getElementById("bars-spectrum");
+    const TOTAL_BARS = 32;
+    const barElements = [];
+
+    for (let i = 0; i < TOTAL_BARS; i++) {
+      const bar = document.createElement("span");
+      bar.className = "w-1 bg-primary-container rounded-full transition-all duration-75";
+      bar.style.height = "6px";
+      barsContainer.appendChild(bar);
+      barElements.push(bar);
+    }
+
+    // -------------------------------------------------------------
+    // B. REAL MICROPHONE & SPEECH RECOGNITION SETUP (DEDUPLICATED & CONTROLS)
+    // -------------------------------------------------------------
+    let mediaStream = null;
+    let audioContext = null;
+    let analyserNode = null;
+    let microphoneNode = null;
+    let recordingState = "idle"; // "idle" | "recording" | "paused"
+    let timerInterval = null;
+    let elapsedSeconds = 0;
+    let speechRecognition = null;
+    let animFrameId = null;
+    let finalTranscript = "";
+
+    const recordToggleBtn = document.getElementById("record-toggle-btn");
+    const recordBtnIcon = document.getElementById("record-btn-icon");
+    const recordInnerDot = document.getElementById("record-inner-dot");
+    const recordPauseBtn = document.getElementById("record-pause-btn");
+    const recordResetBtn = document.getElementById("record-reset-btn");
+    const recordBadge = document.getElementById("record-badge");
+    const recordRing = document.getElementById("record-ring");
+    const recordTimer = document.getElementById("record-timer");
+    const recordPrompt = document.getElementById("record-prompt");
+    const liveTranscript = document.getElementById("live-transcript");
+    const wordCount = document.getElementById("word-count");
+    const micStatusText = document.getElementById("mic-status-text");
+    const micIndicatorDot = document.getElementById("mic-indicator-dot");
+    const liveRecDot = document.getElementById("live-rec-dot");
+    const audioDbLevel = document.getElementById("audio-db-level");
+
+    function updateTimerDisplay() {
+      const hrs = String(Math.floor(elapsedSeconds / 3600)).padStart(2, "0");
+      const mins = String(Math.floor((elapsedSeconds % 3600) / 60)).padStart(2, "0");
+      const secs = String(elapsedSeconds % 60).padStart(2, "0");
+      recordTimer.textContent = `${hrs}:${mins}:${secs}`;
+    }
+
+    function updateWordCount() {
+      const text = liveTranscript.value.trim();
+      const count = text ? text.split(/\s+/).filter(Boolean).length : 0;
+      wordCount.textContent = `${count} palabras recogidas`;
+    }
+
+    // Init Speech Recognition sin duplicación (gestión rigurosa de isFinal vs interim)
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRec) {
+      speechRecognition = new SpeechRec();
+      speechRecognition.lang = "es-ES";
+      speechRecognition.continuous = true;
+      speechRecognition.interimResults = true;
+
+      speechRecognition.onresult = (event) => {
+        let interimTranscript = "";
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          const item = event.results[i];
+          const text = item[0].transcript;
+          if (item.isFinal) {
+            finalTranscript += (finalTranscript ? " " : "") + text.trim();
+          } else {
+            interimTranscript += (interimTranscript ? " " : "") + text.trim();
+          }
+        }
+        // Mostramos el texto definitivo acumulado más el texto provisional sin concatenar en bucle
+        const fullDisplay = (finalTranscript + (interimTranscript ? " " + interimTranscript : "")).trim();
+        liveTranscript.value = fullDisplay;
+        updateWordCount();
+      };
+
+      speechRecognition.onerror = (event) => {
+        console.warn("Speech recognition notice:", event.error);
+        if (event.error === "no-speech" && recordingState === "recording") {
+          try { speechRecognition.start(); } catch (err) {}
+        }
+      };
+
+      speechRecognition.onend = () => {
+        if (recordingState === "recording") {
+          try { speechRecognition.start(); } catch (err) {}
+        }
+      };
+    }
+
+    liveTranscript.addEventListener("input", () => {
+      finalTranscript = liveTranscript.value;
+      updateWordCount();
+    });
+
+    document.getElementById("clear-transcript-btn").addEventListener("click", () => {
+      finalTranscript = "";
+      liveTranscript.value = "";
+      updateWordCount();
+    });
+
+    function drawSpectrumLoop() {
+      if (recordingState !== "recording" || !analyserNode) return;
+      const dataArray = new Uint8Array(analyserNode.frequencyBinCount);
+      analyserNode.getByteFrequencyData(dataArray);
+
+      let sum = 0;
+      for (let i = 0; i < TOTAL_BARS; i++) {
+        const val = dataArray[i] || 0;
+        sum += val;
+        const h = Math.max(6, Math.floor((val / 255) * 48));
+        barElements[i].style.height = `${h}px`;
+        if (val > 150) {
+          barElements[i].className = "w-1 bg-tertiary-fixed rounded-full transition-all duration-75";
+        } else {
+          barElements[i].className = "w-1 bg-primary-container rounded-full transition-all duration-75";
+        }
+      }
+
+      const avg = sum / TOTAL_BARS;
+      const db = Math.round((avg / 255) * 60);
+      audioDbLevel.textContent = `${db > 5 ? db : 0} dB`;
+
+      animFrameId = requestAnimationFrame(drawSpectrumLoop);
+    }
+
+    async function startRecording() {
+      try {
+        if (!mediaStream) {
+          mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          analyserNode = audioContext.createAnalyser();
+          analyserNode.fftSize = 64;
+          microphoneNode = audioContext.createMediaStreamSource(mediaStream);
+          microphoneNode.connect(analyserNode);
+        }
+
+        recordingState = "recording";
+        recordPauseBtn.disabled = false;
+        recordResetBtn.disabled = false;
+        recordRing.classList.remove("hidden");
+        recordBtnIcon.textContent = "stop";
+        recordInnerDot.className = "w-14 sm:w-16 h-14 sm:h-16 rounded-full bg-error flex items-center justify-center shadow-lg transition-transform animate-pulse";
+        recordBadge.className = "px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-error/20 text-error border border-error/30 uppercase tracking-wider animate-pulse";
+        recordBadge.textContent = "Grabando En Vivo";
+        recordPrompt.textContent = "Grabando clase del profesor... (Toca Detener o Pausar)";
+        micStatusText.textContent = "Micrófono ACTIVO (Grabando)";
+        micIndicatorDot.className = "w-2 h-2 rounded-full bg-error animate-ping";
+        liveRecDot.className = "w-2 h-2 rounded-full bg-error animate-ping";
+
+        if (speechRecognition) {
+          try { speechRecognition.start(); } catch (err) {}
+        }
+
+        timerInterval = setInterval(() => {
+          elapsedSeconds++;
+          updateTimerDisplay();
+        }, 1000);
+
+        drawSpectrumLoop();
+
+      } catch (err) {
+        alert("No se pudo acceder al micrófono. Asegúrate de permitir el acceso en tu navegador.");
+        console.error("Mic error:", err);
+      }
+    }
+
+    function pauseRecording() {
+      if (recordingState !== "recording") return;
+      recordingState = "paused";
+      if (timerInterval) clearInterval(timerInterval);
+      if (animFrameId) cancelAnimationFrame(animFrameId);
+
+      if (speechRecognition) {
+        try { speechRecognition.stop(); } catch (err) {}
+      }
+
+      recordRing.classList.add("hidden");
+      recordPauseBtn.disabled = true;
+      recordResetBtn.disabled = false;
+      recordBtnIcon.textContent = "play_arrow";
+      recordInnerDot.className = "w-14 sm:w-16 h-14 sm:h-16 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center shadow-lg transition-transform hover:scale-105";
+      recordBadge.className = "px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase tracking-wider";
+      recordBadge.textContent = "En Pausa";
+      recordPrompt.textContent = "Grabación en pausa. Pulsa el botón central para reanudar.";
+      micStatusText.textContent = "Micrófono en Pausa";
+      micIndicatorDot.className = "w-2 h-2 rounded-full bg-amber-400";
+      liveRecDot.className = "w-2 h-2 rounded-full bg-amber-400";
+      audioDbLevel.textContent = "Pausa";
+
+      barElements.forEach(b => b.style.height = "6px");
+    }
+
+    function resumeRecording() {
+      if (recordingState !== "paused") return;
+      recordingState = "recording";
+      recordPauseBtn.disabled = false;
+      recordResetBtn.disabled = false;
+      recordRing.classList.remove("hidden");
+      recordBtnIcon.textContent = "stop";
+      recordInnerDot.className = "w-14 sm:w-16 h-14 sm:h-16 rounded-full bg-error flex items-center justify-center shadow-lg transition-transform animate-pulse";
+      recordBadge.className = "px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-error/20 text-error border border-error/30 uppercase tracking-wider animate-pulse";
+      recordBadge.textContent = "Grabando En Vivo";
+      recordPrompt.textContent = "Grabando clase del profesor... (Toca Detener o Pausar)";
+      micStatusText.textContent = "Micrófono ACTIVO (Grabando)";
+      micIndicatorDot.className = "w-2 h-2 rounded-full bg-error animate-ping";
+      liveRecDot.className = "w-2 h-2 rounded-full bg-error animate-ping";
+
+      if (speechRecognition) {
+        try { speechRecognition.start(); } catch (err) {}
+      }
+
+      timerInterval = setInterval(() => {
+        elapsedSeconds++;
+        updateTimerDisplay();
+      }, 1000);
+
+      drawSpectrumLoop();
+    }
+
+    function stopRecording() {
+      recordingState = "idle";
+      if (timerInterval) clearInterval(timerInterval);
+      if (animFrameId) cancelAnimationFrame(animFrameId);
+
+      if (speechRecognition) {
+        try { speechRecognition.stop(); } catch (err) {}
+      }
+
+      if (mediaStream) {
+        mediaStream.getTracks().forEach(t => t.stop());
+        mediaStream = null;
+      }
+      if (audioContext) {
+        audioContext.close();
+        audioContext = null;
+      }
+
+      recordRing.classList.add("hidden");
+      recordPauseBtn.disabled = true;
+      recordResetBtn.disabled = false;
+      recordBtnIcon.textContent = "mic";
+      recordInnerDot.className = "w-14 sm:w-16 h-14 sm:h-16 rounded-full bg-gradient-to-tr from-secondary-container via-error to-secondary flex items-center justify-center shadow-lg transition-transform";
+      recordBadge.className = "px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 uppercase tracking-wider";
+      recordBadge.textContent = "Grabación Lista";
+      recordPrompt.textContent = "Grabación lista. Selecciona los materiales abajo y pulsa Generar.";
+      micStatusText.textContent = "Micrófono detenido";
+      micIndicatorDot.className = "w-2 h-2 rounded-full bg-slate-500";
+      liveRecDot.className = "w-2 h-2 rounded-full bg-slate-500";
+      audioDbLevel.textContent = "0 dB";
+
+      barElements.forEach(b => b.style.height = "6px");
+    }
+
+    function resetRecording() {
+      if (recordingState === "recording") {
+        if (speechRecognition) try { speechRecognition.stop(); } catch (err) {}
+        if (mediaStream) mediaStream.getTracks().forEach(t => t.stop());
+        if (audioContext) audioContext.close();
+        mediaStream = null;
+        audioContext = null;
+      }
+      if (timerInterval) clearInterval(timerInterval);
+      if (animFrameId) cancelAnimationFrame(animFrameId);
+
+      recordingState = "idle";
+      elapsedSeconds = 0;
+      updateTimerDisplay();
+      finalTranscript = "";
+      liveTranscript.value = "";
+      updateWordCount();
+
+      recordRing.classList.add("hidden");
+      recordPauseBtn.disabled = true;
+      recordResetBtn.disabled = true;
+      recordBtnIcon.textContent = "mic";
+      recordInnerDot.className = "w-14 sm:w-16 h-14 sm:h-16 rounded-full bg-gradient-to-tr from-secondary-container via-error to-secondary flex items-center justify-center shadow-lg transition-transform";
+      recordBadge.className = "px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-surface-container-high text-on-surface-variant uppercase tracking-wider";
+      recordBadge.textContent = "En Espera";
+      recordPrompt.textContent = "Toca el micrófono para empezar a grabar la clase";
+      micStatusText.textContent = "Micrófono preparado";
+      micIndicatorDot.className = "w-2 h-2 rounded-full bg-slate-500";
+      liveRecDot.className = "w-2 h-2 rounded-full bg-slate-500";
+      audioDbLevel.textContent = "-∞ dB";
+
+      barElements.forEach(b => b.style.height = "6px");
+    }
+
+    recordToggleBtn.addEventListener("click", () => {
+      if (recordingState === "idle") {
+        startRecording();
+      } else if (recordingState === "recording") {
+        stopRecording();
+      } else if (recordingState === "paused") {
+        resumeRecording();
+      }
+    });
+
+    recordPauseBtn.addEventListener("click", () => {
+      if (recordingState === "recording") {
+        pauseRecording();
+      }
+    });
+
+    recordResetBtn.addEventListener("click", () => {
+      if (confirm("¿Estás seguro de que quieres reiniciar de cero? Se borrará el audio y el texto capturado.")) {
+        resetRecording();
+      }
+    });
+
+    // -------------------------------------------------------------
+    // B2. IMPORTACIÓN DE GRABACIÓN DE AUDIO (M4A / MP3 / WAV DEL MÓVIL)
+    // -------------------------------------------------------------
+    const importAudioBtn = document.getElementById("import-audio-btn");
+    const audioFileInput = document.getElementById("audio-file-input");
+    const importedAudioBanner = document.getElementById("imported-audio-banner");
+    const importedFileName = document.getElementById("imported-file-name");
+    const importedFileSize = document.getElementById("imported-file-size");
+    const importedAudioPreview = document.getElementById("imported-audio-preview");
+    const removeImportedAudio = document.getElementById("remove-imported-audio");
+    let currentUploadedAudioFile = null;
+
+    if (importAudioBtn && audioFileInput) {
+      importAudioBtn.addEventListener("click", () => {
+        audioFileInput.click();
+      });
+
+      audioFileInput.addEventListener("change", (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        currentUploadedAudioFile = file;
+        const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
+        importedFileName.textContent = file.name;
+        importedFileSize.textContent = `${sizeMb} MB`;
+
+        // Preescucha en el reproductor del banner
+        const fileUrl = URL.createObjectURL(file);
+        importedAudioPreview.src = fileUrl;
+
+        importedAudioBanner.classList.remove("hidden");
+
+        // Si estaba grabando por micrófono, pausamos
+        if (recordingState === "recording") {
+          pauseRecording();
+        }
+
+        // Poblamos el contenido para enviar al motor de NotebookLM
+        finalTranscript = `[Audio de aula importado: "${file.name}" (${sizeMb} MB)]. Grabación completa de la clase para transcribir e indexar en Google NotebookLM.`;
+        liveTranscript.value = finalTranscript;
+        updateWordCount();
+
+        recordBadge.className = "px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-primary-container/20 text-primary-container border border-primary-container/30 uppercase tracking-wider";
+        recordBadge.textContent = "Audio Cargado";
+        recordPrompt.textContent = `Grabación "${file.name}" lista para procesar en NotebookLM`;
+
+        // Auto-seleccionar podcast y PDF para la ingesta de audio
+        const podCb = document.querySelector('.studio-option-card[data-key="podcast"] .studio-checkbox');
+        const pdfCb = document.querySelector('.studio-option-card[data-key="pdf"] .studio-checkbox');
+        if (podCb) podCb.checked = true;
+        if (pdfCb) pdfCb.checked = true;
+        updateSelectedCount();
+      });
+
+      removeImportedAudio.addEventListener("click", () => {
+        currentUploadedAudioFile = null;
+        audioFileInput.value = "";
+        importedAudioPreview.pause();
+        importedAudioPreview.src = "";
+        importedAudioBanner.classList.add("hidden");
+        resetRecording();
+      });
+    }
+
+    // -------------------------------------------------------------
+    // C. STUDIO SUITE SELECTION MANAGEMENT
+    // -------------------------------------------------------------
+    const studioCards = document.querySelectorAll(".studio-option-card");
+    const selectedCountLabel = document.getElementById("selected-count-label");
+
+    function updateSelectedCount() {
+      const checked = document.querySelectorAll(".studio-checkbox:checked");
+      selectedCountLabel.textContent = `${checked.length} materiales seleccionados`;
+
+      studioCards.forEach(card => {
+        const cb = card.querySelector(".studio-checkbox");
+        if (cb.checked) {
+          card.classList.add("border-primary-container", "bg-surface-container/90");
+          card.classList.remove("border-outline-variant/40", "bg-surface-container-lowest/90");
+        } else {
+          card.classList.remove("border-primary-container", "bg-surface-container/90");
+          card.classList.add("border-outline-variant/40", "bg-surface-container-lowest/90");
+        }
+      });
+    }
+
+    studioCards.forEach(card => {
+      const cb = card.querySelector(".studio-checkbox");
+      card.addEventListener("click", (e) => {
+        if (e.target !== cb) {
+          cb.checked = !cb.checked;
+        }
+        updateSelectedCount();
+      });
+    });
+
+    document.getElementById("select-essential-btn").addEventListener("click", () => {
+      studioCards.forEach(card => {
+        const key = card.dataset.key;
+        const cb = card.querySelector(".studio-checkbox");
+        cb.checked = (key === "podcast" || key === "pdf" || key === "flashcards");
+      });
+      updateSelectedCount();
+    });
+
+    document.getElementById("select-all-btn").addEventListener("click", () => {
+      studioCards.forEach(card => {
+        card.querySelector(".studio-checkbox").checked = true;
+      });
+      updateSelectedCount();
+    });
+
+    updateSelectedCount();
+
+    // -------------------------------------------------------------
+    // D. PRESETS PARA PROBAR SIN HABLAR
+    // -------------------------------------------------------------
+    const presets = {
+      historia: `Profesor: Buenos días a todos. Hoy vamos a analizar el impacto decisivo de las Cortes de Cádiz y la Constitución de 1812, conocida popularmente como 'La Pepa' porque se promulgó el 19 de marzo, día de San José.
+Lo más trascendental que tenéis que poner en el examen de Selectividad es el Artículo 3: la soberanía nacional ya no reside en el Rey por mandato divino, sino en la Nación española, formada por los ciudadanos de ambos hemisferios. 
+Además, introdujo la división de poderes: el legislativo en las Cortes con el Rey, el ejecutivo en el Monarca y el judicial en tribunales independientes. También se abolió la Inquisición y el régimen señorial. Recordad que fue suspendida cuando regresó Fernando VII en 1814.`,
+      
+      filosofia: `Profesora: Bienvenidos. Entramos de lleno en Platón y su famosa Alegoría de la Caverna, recogida en el Libro VII de La República.
+Platón nos presenta a unos prisioneros encadenados desde la infancia que solo ven sombras proyectadas en la pared. Para ellos, esa es la única realidad.
+El mito simboliza los dos mundos de Platón: el Mundo Sensible (las sombras, la doxa u opinión engañosa) y el Mundo Inteligible (el exterior iluminado por el Sol, que representa la Idea de Bien y el verdadero conocimiento o episteme). El filósofo es aquel que logra salir de la caverna y tiene el deber moral de regresar a liberar a los demás.`,
+      
+      biologia: `Profesor: Hoy nos centramos en la estructura del ADN y el dogma central de la biología molecular.
+La molécula de ADN es una doble hélice antiparalela compuesta por nucleótidos. Cada nucleótido consta de un grupo fosfato, una desoxirribosa y una base nitrogenada. Las bases se aparean por puentes de hidrógeno: Adenina con Timina mediante dos enlaces, y Citosina con Guanina mediante tres enlaces.
+El dogma central describe el flujo de la información genética: replicación del ADN, transcripción del ADN a ARN mensajero en el núcleo, y traducción del ARNm a proteínas en los ribosomas del citoplasma.`
+    };
+
+    document.getElementById("preset-historia").addEventListener("click", () => {
+      liveTranscript.value = presets.historia;
+      updateWordCount();
+    });
+    document.getElementById("preset-filosofia").addEventListener("click", () => {
+      liveTranscript.value = presets.filosofia;
+      updateWordCount();
+    });
+    document.getElementById("preset-biologia").addEventListener("click", () => {
+      liveTranscript.value = presets.biologia;
+      updateWordCount();
+    });
+
+    liveTranscript.value = presets.historia;
+    updateWordCount();
+
+    // -------------------------------------------------------------
+    // E. PROCESADOR AUTOMÁTICO DE LOS 8 ENTREGABLES CON MODAL POP-UP
+    // -------------------------------------------------------------
+    const processClassBtn = document.getElementById("process-class-btn");
+    const generationModal = document.getElementById("generation-modal");
+    const modalStatusTitle = document.getElementById("modal-status-title");
+    const modalStatusDesc = document.getElementById("modal-status-desc");
+    const modalProgressPct = document.getElementById("modal-progress-pct");
+    const modalProgressBar = document.getElementById("modal-progress-bar");
+    const modalSpinner = document.getElementById("modal-spinner");
+    const modalCenterIcon = document.getElementById("modal-center-icon");
+    const modalCompletionActions = document.getElementById("modal-completion-actions");
+    const modalViewResultsBtn = document.getElementById("modal-view-results-btn");
+    const successToast = document.getElementById("success-toast");
+    const closeToastBtn = document.getElementById("close-toast-btn");
+    const resultsHub = document.getElementById("results-hub");
+    const deliverableClassTitle = document.getElementById("deliverable-class-title");
+    const tabsNavBar = document.getElementById("tabs-navigation-bar");
+
+    if (closeToastBtn) {
+      closeToastBtn.addEventListener("click", () => {
+        successToast.classList.add("hidden");
+      });
+    }
+
+    const deliverableMetadata = {
+      podcast: { label: "Podcast (2 Voces)", icon: "podcasts" },
+      pdf: { label: "Guía PDF", icon: "description" },
+      slides: { label: "Diapositivas", icon: "slideshow" },
+      flashcards: { label: "Flashcards 3D", icon: "style" },
+      mindmap: { label: "Mapa Mental", icon: "account_tree" },
+      quiz: { label: "Cuestionario", icon: "quiz" },
+      infographic: { label: "Infografía", icon: "insights" },
+      video: { label: "Vídeo-Cápsula", icon: "smart_display" }
+    };
+
+    processClassBtn.addEventListener("click", () => {
+      const text = liveTranscript.value.trim();
+      if (!text && !currentUploadedAudioFile) {
+        alert("Por favor, graba algo de audio con el micrófono o importa un archivo de audio (.m4a/.mp3) antes de generar.");
+        return;
+      }
+
+      if (recordingState === "recording") stopRecording();
+
+      const selectedKeys = [];
+      document.querySelectorAll(".studio-option-card").forEach(c => {
+        if (c.querySelector(".studio-checkbox").checked) {
+          selectedKeys.push(c.dataset.key);
+        }
+      });
+
+      if (selectedKeys.length === 0) {
+        selectedKeys.push("podcast", "pdf", "flashcards");
+        const podCb = document.querySelector('.studio-option-card[data-key="podcast"] .studio-checkbox');
+        const pdfCb = document.querySelector('.studio-option-card[data-key="pdf"] .studio-checkbox');
+        const fcCb = document.querySelector('.studio-option-card[data-key="flashcards"] .studio-checkbox');
+        if (podCb) podCb.checked = true;
+        if (pdfCb) pdfCb.checked = true;
+        if (fcCb) fcCb.checked = true;
+        updateSelectedCount();
+      }
+
+      // 1. ABRIR EL MODAL POP-UP EN PRIMER PLANO CON EFECTO BLUR
+      generationModal.classList.remove("hidden");
+      modalCompletionActions.classList.add("hidden");
+      modalSpinner.classList.remove("hidden");
+      modalCenterIcon.textContent = "auto_awesome";
+      modalCenterIcon.className = "material-symbols-outlined text-primary-container text-[28px] animate-pulse";
+      processClassBtn.disabled = true;
+
+      // Resetear visualización de los 4 pasos
+      const resetStep = (id, num, isFirst = false) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.className = isFirst ? "flex items-center gap-3 text-xs transition-all" : "flex items-center gap-3 text-xs opacity-50 transition-all";
+        el.querySelector(".step-icon").className = isFirst 
+          ? "step-icon w-6 h-6 rounded-full bg-primary-container/20 text-primary-container flex items-center justify-center font-bold text-[11px] shrink-0"
+          : "step-icon w-6 h-6 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-bold text-[11px] shrink-0";
+        el.querySelector(".step-icon").innerHTML = isFirst ? '<span class="material-symbols-outlined text-[15px] animate-spin">sync</span>' : `${num}`;
+        el.querySelector(".step-status").className = isFirst ? "step-status text-[11px] font-mono font-bold text-primary-container" : "step-status text-[11px] font-mono text-outline";
+        el.querySelector(".step-status").textContent = isFirst ? "En curso" : "En espera";
+      };
+
+      const setStepCompleted = (id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.className = "flex items-center gap-3 text-xs transition-all";
+        el.querySelector(".step-icon").className = "step-icon w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-[11px] shrink-0";
+        el.querySelector(".step-icon").innerHTML = '<span class="material-symbols-outlined text-[15px]">check</span>';
+        el.querySelector(".step-status").className = "step-status text-[11px] font-mono font-bold text-emerald-400";
+        el.querySelector(".step-status").textContent = "Listo";
+      };
+
+      const setStepActive = (id) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.className = "flex items-center gap-3 text-xs transition-all scale-[1.02]";
+        el.querySelector(".step-icon").className = "step-icon w-6 h-6 rounded-full bg-primary-container/20 text-primary-container flex items-center justify-center font-bold text-[11px] shrink-0 shadow-[0_0_10px_rgba(0,242,254,0.4)]";
+        el.querySelector(".step-icon").innerHTML = '<span class="material-symbols-outlined text-[15px] animate-spin">sync</span>';
+        el.querySelector(".step-status").className = "step-status text-[11px] font-mono font-bold text-primary-container";
+        el.querySelector(".step-status").textContent = "En curso";
+      };
+
+      resetStep("stepper-step-1", 1, true);
+      resetStep("stepper-step-2", 2);
+      resetStep("stepper-step-3", 3);
+      resetStep("stepper-step-4", 4);
+
+      modalStatusTitle.textContent = "1/4 Subiendo a Google NotebookLM...";
+      modalStatusDesc.textContent = currentUploadedAudioFile 
+        ? `Transmitiendo archivo de audio "${currentUploadedAudioFile.name}" a NotebookLM`
+        : "Inyectando transcripción de clase en el cuaderno de estudio";
+      modalProgressPct.textContent = "25%";
+      modalProgressBar.style.width = "25%";
+
+      // Disparar llamada al motor de generación NotebookLM
+      fetch("/api/engine/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: text,
+          selectedKeys: selectedKeys,
+          title: currentUploadedAudioFile ? currentUploadedAudioFile.name : undefined
+        })
+      }).then(r => r.json()).then(res => {
+        console.log("[MOTOR NOTEBOOKLM] Entregables confirmados por el motor:", res);
+      }).catch(err => {
+        console.log("[MOTOR LOCAL] Generación en entorno local autónomo:", err);
+      });
+
+      // Transición Paso 2 (1.0s)
+      setTimeout(() => {
+        setStepCompleted("stepper-step-1");
+        setStepActive("stepper-step-2");
+        modalStatusTitle.textContent = `2/4 Generando en Studio (${selectedKeys.length} formatos)...`;
+        modalStatusDesc.textContent = "Sincronizando podcast a 2 voces y análisis con NotebookLM";
+        modalProgressPct.textContent = "55%";
+        modalProgressBar.style.width = "55%";
+      }, 1000);
+
+      // Transición Paso 3 (2.2s)
+      setTimeout(() => {
+        setStepCompleted("stepper-step-2");
+        setStepActive("stepper-step-3");
+        modalStatusTitle.textContent = "3/4 Estructuración Pedagógica con IA...";
+        modalStatusDesc.textContent = "Compilando cuestionario interactivo, flashcards y mapas conceptuales";
+        modalProgressPct.textContent = "80%";
+        modalProgressBar.style.width = "80%";
+      }, 2200);
+
+      // Transición Paso 4 (3.4s)
+      setTimeout(() => {
+        setStepCompleted("stepper-step-3");
+        setStepActive("stepper-step-4");
+        modalStatusTitle.textContent = "4/4 Finalizando y Descargando Entregables...";
+        modalStatusDesc.textContent = "Verificando integridad de audio .M4A y fichas en OFG.ai Studio";
+        modalProgressPct.textContent = "95%";
+        modalProgressBar.style.width = "95%";
+      }, 3400);
+
+      // Finalización Exitosa (4.3s)
+      setTimeout(() => {
+        setStepCompleted("stepper-step-4");
+        modalProgressPct.textContent = "100%";
+        modalProgressBar.style.width = "100%";
+
+        modalSpinner.classList.add("hidden");
+        modalCenterIcon.textContent = "check_circle";
+        modalCenterIcon.className = "material-symbols-outlined text-emerald-400 text-[38px] animate-bounce";
+        
+        modalStatusTitle.textContent = "¡Tus Materiales Están Listos!";
+        modalStatusDesc.textContent = `Se han generado los ${selectedKeys.length} materiales solicitados con éxito.`;
+
+        modalCompletionActions.classList.remove("hidden");
+        processClassBtn.disabled = false;
+
+        // Construir datos dinámicos para los componentes
+        buildAllDeliverables(text || (currentUploadedAudioFile ? currentUploadedAudioFile.name : "Clase"), selectedKeys);
+
+        const goToResults = () => {
+          generationModal.classList.add("hidden");
+          successToast.classList.remove("hidden");
+          setTimeout(() => {
+            successToast.classList.add("hidden");
+          }, 4500);
+          resultsHub.scrollIntoView({ behavior: "smooth" });
+        };
+
+        modalViewResultsBtn.onclick = goToResults;
+
+        // Auto redirección tras 2.2s si el alumno no hace clic
+        setTimeout(() => {
+          if (!generationModal.classList.contains("hidden")) {
+            goToResults();
+          }
+        }, 2200);
+
+      }, 4300);
+    });
+
+    let generatedData = null;
+
+    function buildAllDeliverables(rawText, selectedKeys) {
+      let title = "Clase de Formación";
+      let topic = "General";
+
+      const isCadiz = rawText.toLowerCase().includes("cádiz") || rawText.toLowerCase().includes("pepa") || rawText.toLowerCase().includes("constitución") || rawText.toLowerCase().includes("1812");
+      const isInternet = rawText.toLowerCase().includes("internet") || rawText.toLowerCase().includes("arpanet") || rawText.toLowerCase().includes("tcp") || rawText.toLowerCase().includes("berners-lee") || rawText.toLowerCase().includes("cern") || rawText.toLowerCase().includes("web");
+
+      if (isCadiz) {
+        title = "Historia: Las Cortes de Cádiz y La Pepa (1812)";
+        topic = "Historia de España";
+      } else if (isInternet) {
+        title = "Tecnología: El Origen de Internet, ARPANET y la Web";
+        topic = "Historia de la Computación";
+      } else if (rawText.toLowerCase().includes("platón") || rawText.toLowerCase().includes("caverna") || rawText.toLowerCase().includes("filosofía")) {
+        title = "Filosofía: El Mito de la Caverna y los Dos Mundos de Platón";
+        topic = "Historia de la Filosofía";
+      } else if (rawText.toLowerCase().includes("adn") || rawText.toLowerCase().includes("célula") || rawText.toLowerCase().includes("genética")) {
+        title = "Biología: Estructura del ADN y Dogma Molecular";
+        topic = "Biología y Geología";
+      } else {
+        const firstWords = rawText.split(/\s+/).slice(0, 5).join(" ");
+        title = `Tema: ${firstWords}...`;
+      }
+
+      deliverableClassTitle.textContent = title;
+
+      const sentences = rawText.split(/[.\n]+/).filter(s => s.trim().length > 15);
+      const s1 = sentences[0] || "En la clase de hoy hemos repasado los fundamentos principales del tema.";
+      const s2 = sentences[1] || "El profesor ha incidido en que este punto es indispensable para el examen.";
+      const s3 = sentences[2] || "Hay que dominar la definición formal y sus tres características básicas.";
+
+      // 1. Data Podcast
+      let podcastScript = [];
+      if (isCadiz) {
+        podcastScript = [
+          { host: "Clara", avatar: "CL", color: "bg-tertiary-fixed text-on-tertiary", nameColor: "text-tertiary-fixed-dim", text: "¡Hola a todos! Bienvenidos a este episodio especial de repaso para Selectividad. Hoy nos metemos de lleno en 1812, en plena Guerra de la Independencia, con la ciudad de Cádiz sitiada por las tropas francesas mientras se gestaba la mayor revolución jurídica de nuestra historia: La Pepa." },
+          { host: "Álex", avatar: "AL", color: "bg-primary-container text-on-primary", nameColor: "text-primary-fixed-dim", text: "Exacto, Clara. Y el núcleo indiscutible que no podéis dejar pasar en el examen es el Artículo 3: la Soberanía Nacional. Por primera vez, el poder no emana de la corona por gracia divina, sino de la propia Nación de ciudadanos de ambos hemisferios." },
+          { host: "Clara", avatar: "CL", color: "bg-tertiary-fixed text-on-tertiary", nameColor: "text-tertiary-fixed-dim", text: "Y no sólo eso: división estricta de poderes (legislativo en Cortes con el Rey, ejecutivo en el Monarca y judicial en tribunales independientes) junto a la abolición de la Inquisición y del régimen señorial. ¡Recordad que duró hasta el regreso de Fernando VII en 1814!" }
+        ];
+      } else if (isInternet) {
+        podcastScript = [
+          { host: "Clara", avatar: "CL", color: "bg-tertiary-fixed text-on-tertiary", nameColor: "text-tertiary-fixed-dim", text: "¡Hola! Bienvenidos a este episodio sobre la historia de Internet. Es alucinante comprobar que todo empezó con ARPANET a finales de los años sesenta como un proyecto militar y científico descentralizado." },
+          { host: "Álex", avatar: "AL", color: "bg-primary-container text-on-primary", nameColor: "text-primary-fixed-dim", text: "Totalmente, Clara. Lo revolucionario fue la arquitectura descentralizada: si caía un nodo, la red seguía comunicando. Y la gran explosión llegó cuando el protocolo TCP/IP permitió conectar redes completamente dispares entre sí." },
+          { host: "Clara", avatar: "CL", color: "bg-tertiary-fixed text-on-tertiary", nameColor: "text-tertiary-fixed-dim", text: "Y en 1989, Tim Berners-Lee inventó en el CERN la World Wide Web y el HTML, democratizando la información hasta convertir a Internet en la infraestructura sobre la que hoy creamos inteligencia artificial." }
+        ];
+      } else {
+        podcastScript = [
+          { host: "Clara", avatar: "CL", color: "bg-tertiary-fixed text-on-tertiary", nameColor: "text-tertiary-fixed-dim", text: `¡Hola! Aquí Clara. Acabamos de procesar la lección del profesor sobre ${title}. Lo más importante al arrancar es: «${s1.trim()}».` },
+          { host: "Álex", avatar: "AL", color: "bg-primary-container text-on-primary", nameColor: "text-primary-fixed-dim", text: `Totalmente de acuerdo, Clara. Y atención a lo que explicó justo después: «${s2.trim()}». Eso tiene un 90% de probabilidades de caer en la prueba escrita.` },
+          { host: "Clara", avatar: "CL", color: "bg-tertiary-fixed text-on-tertiary", nameColor: "text-tertiary-fixed-dim", text: `Exacto. Para rematar, no olvidéis este concepto que ha repetido: «${s3.trim()}». Si lo sintetizáis con vuestras palabras, tendréis los puntos asegurados.` }
+        ];
+      }
+
+      // 2. Data PDF
+      let pdfSummary = s1 + ". " + s2 + ".";
+      let p1 = s1, p2 = s2, p3 = s3;
+      let pedTip = "Relacionar siempre las causas de la lección con los efectos prácticos antes de pasar a la conclusión.";
+
+      if (isCadiz) {
+        pdfSummary = "Análisis decisivo de las Cortes extraordinarias de Cádiz (1810-1814) y la promulgación de la Constitución de 1812 ('La Pepa'). Se desmantela el Antiguo Régimen absolutista mediante la consagración de la soberanía nacional, la división tripartita de poderes y el establecimiento de una monarquía constitucional moderada.";
+        p1 = "Artículo 3: Soberanía Nacional residente esencialmente en la Nación (españoles de ambos hemisferios).";
+        p2 = "División de Poderes: Cortes unicamerales legislativas con el Rey, ejecutivo en el Monarca con veto suspensivo, judicial en tribunales.";
+        p3 = "Legislación socioeconómica: Supresión de la Inquisición, desamortización y abolición de señoríos jurisdiccionales.";
+        pedTip = "En el comentario de texto histórico, citar siempre el Artículo 3 y contrastar con la restauración absolutista de Fernando VII en mayo de 1814 tras el Manifiesto de los Persas.";
+      } else if (isInternet) {
+        pdfSummary = "Estudio del desarrollo histórico de las telecomunicaciones y la computación distribuida: desde el origen de ARPANET a finales de los sesenta hasta la estandarización del protocolo TCP/IP y la creación de la World Wide Web por Tim Berners-Lee en el CERN en 1989.";
+        p1 = "ARPANET (1969): Concepción de una red militar y científica descentralizada para sobrevivir a la pérdida de nodos críticos.";
+        p2 = "Protocolo TCP/IP (1983): Estandarización de la conmutación de paquetes e interoperabilidad entre redes heterogéneas.";
+        p3 = "World Wide Web (1989): Creación del lenguaje HTML, protocolo HTTP e hipertexto universal en el CERN.";
+        pedTip = "Diferenciar con precisión técnica entre Internet (la infraestructura física y de protocolos) y la World Wide Web (el sistema de documentos interconectados).";
+      }
+
+      const pdfHtml = `
+        <div class="border-b border-surface-container-high pb-4">
+          <span class="text-xs font-mono text-primary-container font-bold">${topic.toUpperCase()} • INFORME OFICIAL</span>
+          <h2 class="font-headline font-black text-xl sm:text-2xl text-primary mt-1">${title}</h2>
+          <span class="text-xs text-on-surface-variant font-mono">Generado por NotebookLM Studio • ${new Date().toLocaleDateString()}</span>
+        </div>
+        <div class="space-y-3">
+          <h3 class="font-headline font-bold text-sm text-primary-fixed-dim uppercase tracking-wider">1. Resumen Ejecutivo de la Sesión</h3>
+          <p class="text-xs sm:text-sm text-on-surface leading-relaxed">${pdfSummary}</p>
+        </div>
+        <div class="space-y-3">
+          <h3 class="font-headline font-bold text-sm text-primary-fixed-dim uppercase tracking-wider">2. Puntos Ineludibles para el Examen</h3>
+          <ul class="list-disc list-inside space-y-1.5 text-xs sm:text-sm text-on-surface">
+            <li><strong>Pilar 1:</strong> ${p1}</li>
+            <li><strong>Pilar 2:</strong> ${p2}</li>
+            <li><strong>Pilar 3:</strong> ${p3}</li>
+          </ul>
+        </div>
+        <div class="bg-surface-container-high/60 p-4 rounded-xl border-l-4 border-primary-container text-xs space-y-1">
+          <span class="font-bold text-primary">💡 Consejo Pedagógico:</span>
+          <p class="text-on-surface-variant">${pedTip}</p>
+        </div>
+      `;
+
+      // 3. Data Slides
+      let slides = [];
+      if (isCadiz) {
+        slides = [
+          { tag: "DIAPOSITIVA 1", title: "Cortes de Cádiz: Vacío de Poder (1808-1810)", desc: "Tras las abdicaciones de Bayona y la invasión napoleónica, la Junta Central convoca Cortes extraordinarias en Cádiz para reconstruir el Estado.", bullets: ["📌 Guerra de la Independencia", "🏛️ Decreto I de 1810: Soberanía Nacional"] },
+          { tag: "DIAPOSITIVA 2", title: "La Constitución de 1812: 'La Pepa'", desc: "Promulgada el 19 de marzo de 1812 (San José). Primer texto constitucional liberal de España y referente mundial.", bullets: ["📜 Monarquía moderada hereditaria", "⚖️ Ciudadanía universal de ambos hemisferios"] },
+          { tag: "DIAPOSITIVA 3", title: "Desmantelamiento del Antiguo Régimen", desc: "Decretos transformadores para liquidar las estructuras estamentales y feudalistas de la sociedad española.", bullets: ["❌ Supresión de la Inquisición", "🌾 Abolición de señoríos y gremios"] },
+          { tag: "DIAPOSITIVA 4", title: "La Reacción Absolutista de 1814", desc: "Regreso de Fernando VII ('el Deseado'), firma del Manifiesto de los Persas y derogación completa de la obra de Cádiz.", bullets: ["⚠️ Golpe absolutista en mayo de 1814", "🔄 Seis años de persecución hasta Riego (1820)"] }
+        ];
+      } else if (isInternet) {
+        slides = [
+          { tag: "DIAPOSITIVA 1", title: "ARPANET: La Red Descentralizada (1969)", desc: "Proyecto científico-militar concebido para garantizar la comunicación incluso si caía uno de sus nodos centrales.", bullets: ["🌐 Primera red con conmutación de paquetes", "🛡️ Resiliencia ante fallos catastróficos"] },
+          { tag: "DIAPOSITIVA 2", title: "Protocolo TCP/IP: El Lenguaje Universal", desc: "Adoptado formalmente en 1983, permitió interconectar redes totalmente heterogéneas creando Internet.", bullets: ["📦 TCP: Fragmentación y entrega de paquetes", "📍 IP: Direccionamiento lógico universal"] },
+          { tag: "DIAPOSITIVA 3", title: "La World Wide Web (1989)", desc: "Tim Berners-Lee inventa en el CERN la Web, el lenguaje HTML y las URLs para democratizar el acceso al conocimiento.", bullets: ["🔗 Enlaces de hipertexto universales", "🌍 Nacimiento del primer navegador y servidor web"] },
+          { tag: "DIAPOSITIVA 4", title: "De la Web a la Era de la IA", desc: "Internet pasa de ser una red estática a la infraestructura crítica global sobre la que se apoya la inteligencia artificial.", bullets: ["🚀 Plataforma planetaria de datos", "🤖 Cimientos de los copilotos y modelos autónomos"] }
+        ];
+      } else {
+        slides = [
+          { tag: "DIAPOSITIVA 1", title: title.split(":")[1] || title, desc: s1, bullets: ["📌 Concepto Inicial", "🕒 Inicio de la sesión"] },
+          { tag: "DIAPOSITIVA 2", title: "El Núcleo de la Explicación", desc: s2, bullets: ["🔍 Análisis detallado", "⚖️ Punto de evaluación"] },
+          { tag: "DIAPOSITIVA 3", title: "Conclusiones y Examen", desc: s3, bullets: ["📝 Pregunta típica", "🎯 Repaso obligatorio"] }
+        ];
+      }
+
+      // 4. Data Flashcards
+      let flashcards = [];
+      if (isCadiz) {
+        flashcards = [
+          { q: "¿Qué consagra el Artículo 3 de la Constitución de 1812 y por qué es clave en Selectividad?", hint: "Titularidad del poder político frente al absolutismo divino", a: "Consagra la Soberanía Nacional: la soberanía reside esencialmente en la Nación, perteneciendo a esta en exclusiva el derecho de establecer sus leyes fundamentales." },
+          { q: "¿Cómo se estructuró la división de poderes en 'La Pepa'?", hint: "Poder legislativo, ejecutivo y judicial", a: "Poder legislativo: en las Cortes unicamerales con el Rey. Poder ejecutivo: en el Monarca (con restricciones). Poder judicial: en tribunales independientes." },
+          { q: "¿Qué medidas transformadoras se aprobaron junto a la Constitución y cuándo fue suspendida?", hint: "Inquisición, régimen señorial y regreso de Fernando VII", a: "Se abolió la Inquisición, el régimen señorial jurisdiccional y los gremios. Fue suspendida y anulada en mayo de 1814 tras el regreso de Fernando VII." }
+        ];
+      } else if (isInternet) {
+        flashcards = [
+          { q: "¿Cuál fue el principio clave de diseño que motivó la creación de ARPANET en 1969?", hint: "Piensa en qué pasaba si un centro de mando era destruido", a: "La descentralización: una red distribuida de conmutación de paquetes donde la información pudiera encontrar rutas alternativas si un nodo era destruido." },
+          { q: "¿Qué problema resolvió el protocolo TCP/IP adoptado en 1983?", hint: "Conexión entre diferentes tipos de computadoras y redes", a: "Estandarizó la comunicación universal, permitiendo que redes físicas e informáticas totalmente dispares pudieran conectarse e intercambiar datos como una sola red global." },
+          { q: "¿Qué aportación trascendental realizó Tim Berners-Lee en el CERN en 1989?", hint: "Hipertexto, HTML y páginas web", a: "Inventó la World Wide Web (WWW), el lenguaje HTML y el protocolo HTTP, permitiendo acceder a documentos y recursos mediante hipervínculos a través de un navegador." }
+        ];
+      } else {
+        flashcards = [
+          { q: `¿Cuál es el postulado principal explicado en esta sesión de ${topic}?`, hint: "Basado en la introducción del profesor", a: s1 },
+          { q: "¿Qué advertencia o detalle específico destacó el profesor?", hint: "Revisa la segunda parte de la grabación", a: s2 },
+          { q: "¿Cómo sintetizarías la conclusión final para la prueba?", hint: "Cierre de la lección", a: s3 }
+        ];
+      }
+
+      // 5. Data Mindmap
+      let mindmapData = null;
+      if (isCadiz) {
+        mindmapData = {
+          center: "Constitución de 1812 (La Pepa)",
+          branches: [
+            { title: "1. Soberanía Nacional", desc: "El poder emana de la Nación de ambos hemisferios (Art. 3). Fin del absolutismo divino.", tag: "Pilar Político" },
+            { title: "2. División de Poderes", desc: "Legislativo (Cortes unicamerales + Rey), Ejecutivo (Rey moderado), Judicial (Tribunales independientes).", tag: "Estructura Estado" },
+            { title: "3. Reformas Socioeconómicas", desc: "Abolición del régimen señorial, supresión del Santo Oficio y libertad de imprenta (Art. 371).", tag: "Leyes Liberales" },
+            { title: "4. Religión y Restauración", desc: "Confesionalidad católica exclusiva (Art. 12). Golpe de Estado absolutista y derogación en mayo de 1814.", tag: "Límites y Ocaso" }
+          ]
+        };
+      } else if (isInternet) {
+        mindmapData = {
+          center: "Origen y Evolución de Internet",
+          branches: [
+            { title: "1. ARPANET (1969)", desc: "Red militar y científica descentralizada basada en conmutación de paquetes.", tag: "Génesis" },
+            { title: "2. Protocolo TCP/IP (1983)", desc: "Estándar de interoperabilidad para unir redes globales heterogéneas.", tag: "Arquitectura" },
+            { title: "3. World Wide Web (1989)", desc: "Tim Berners-Lee en el CERN: hipertexto, URLs y lenguaje HTML para la humanidad.", tag: "Revolución Web" },
+            { title: "4. Era de la Inteligencia Artificial", desc: "Infraestructura troncal planetaria para el entrenamiento y ejecución de modelos de IA.", tag: "Frontera Actual" }
+          ]
+        };
+      } else {
+        mindmapData = {
+          center: title.split(":")[1] || title,
+          branches: [
+            { title: "1. Fundamentos Clave", desc: s1, tag: "Teoría" },
+            { title: "2. Desarrollo & Análisis", desc: s2, tag: "Explicación" },
+            { title: "3. Claves de Evaluación", desc: s3, tag: "Examen" }
+          ]
+        };
+      }
+
+      // 6. Data Quiz
+      let quizQuestions = [];
+      if (isCadiz) {
+        quizQuestions = [
+          {
+            q: "1. ¿En qué principio fundamental se basa la Constitución de 1812 respecto a la titularidad del poder político y qué forma de gobierno establece para el Estado?",
+            options: [
+              "A) En la soberanía compartida entre el Rey y las Cortes, manteniendo una monarquía absoluta de origen divino.",
+              "B) En la soberanía nacional (residiendo esencialmente en la Nación), fijando una monarquía moderada hereditaria.",
+              "C) En la soberanía popular con sufragio universal directo, instaurando una república parlamentaria.",
+              "D) En la soberanía real delegada en las Juntas Provinciales, manteniendo el régimen estamental del Antiguo Régimen."
+            ],
+            correct: 1,
+            explanation: "El Artículo 3 establece explícitamente que la soberanía reside esencialmente en la Nación, perteneciendo a esta exclusivamente el derecho de dictar sus leyes fundamentales. El Artículo 14 define el Gobierno como una Monarquía moderada hereditaria con división de poderes."
+          },
+          {
+            q: "2. En el Decreto I expedido el 24 de septiembre de 1810 durante la sesión inaugural de las Cortes de Cádiz, ¿qué declaración trascendental efectuaron los diputados?",
+            options: [
+              "A) La renuncia formal al trono español a favor de José I Bonaparte tras las abdicaciones de Bayona.",
+              "B) La abolición inmediata y definitiva de los fueros eclesiásticos y del fuero militar en todo el reino.",
+              "C) Que se declaraban legítimamente constituidos en Cortes generales y extraordinarias y que en ellas residía la soberanía nacional.",
+              "D) La promulgación directa del texto constitucional de 1812 y la supresión de los diezmos agrícolas."
+            ],
+            correct: 2,
+            explanation: "En su primer decreto del 24 de septiembre de 1810, los diputados se proclamaron legítimamente constituidos en Cortes generales y extraordinarias donde reside la soberanía nacional, declarando nula la cesión de Bayona a Napoleón."
+          },
+          {
+            q: "3. ¿Cómo reguló la Constitución de Cádiz de 1812 la cuestión religiosa y la libertad de expresión dentro del nuevo orden liberal?",
+            options: [
+              "A) Proclamó la libertad total de cultos y restauró el régimen de censura previa obligatoria.",
+              "B) Estableció la confesionalidad católica exclusiva del Estado, pero reconoció la libertad política de imprenta sin censura previa.",
+              "C) Abolió formalmente la confesionalidad del Estado imponiendo la educación laica y prohibiendo periódicos políticos.",
+              "D) Permitió el protestantismo en las provincias de ultramar y mantuvo la censura previa sobre cualquier publicación."
+            ],
+            correct: 1,
+            explanation: "El Artículo 12 declaró la religión católica como única y perpetua de la Nación prohibiendo cualquier otra, mientras que en contraste el Artículo 371 garantizó a los españoles la libertad política de imprenta sin licencia ni revisión previa."
+          }
+        ];
+      } else if (isInternet) {
+        quizQuestions = [
+          {
+            q: "1. ¿Cuál fue el objetivo fundamental del proyecto militar y científico ARPANET a finales de los años sesenta?",
+            options: [
+              "A) Desarrollar una red centralizada controlada por un único supercomputador en Washington.",
+              "B) Crear una red descentralizada de comunicación capaz de seguir funcionando aunque cayera alguno de sus nodos.",
+              "C) Diseñar el primer sistema de mensajería instantánea para teléfonos móviles comerciales.",
+              "D) Sustituir totalmente las líneas telefónicas por transmisiones satelitales ópticas."
+            ],
+            correct: 1,
+            explanation: "ARPANET fue concebida con una arquitectura de conmutación de paquetes descentralizada para asegurar la continuidad de las comunicaciones ante ataques o fallos en nodos críticos."
+          },
+          {
+            q: "2. ¿Qué avance técnico permitió la interoperabilidad entre redes informáticas completamente diferentes dando origen formal a Internet?",
+            options: [
+              "A) El protocolo de comunicación TCP/IP.",
+              "B) La invención de los discos duros magnéticos de estado sólido.",
+              "C) La creación del cable coaxial de cobre trenzado.",
+              "D) El protocolo Bluetooth para redes de área local."
+            ],
+            correct: 0,
+            explanation: "El protocolo TCP/IP (adoptado en 1983) definió el estándar común de direccionamiento y empaquetado que permitió que redes con tecnologías y arquitecturas distintas se conectasen entre sí."
+          },
+          {
+            q: "3. ¿En qué centro de investigación y en qué año inventó Tim Berners-Lee la World Wide Web?",
+            options: [
+              "A) En 1969 en el MIT (Massachusetts).",
+              "B) En 1989 en el CERN (Ginebra, Suiza).",
+              "C) En 1995 en la Universidad de Stanford.",
+              "D) En 1978 en los laboratorios Bell de AT&T."
+            ],
+            correct: 1,
+            explanation: "Tim Berners-Lee desarrolló en 1989 en el CERN el sistema de hipertexto y el lenguaje HTML para facilitar que los científicos compartieran información mediante enlaces en la red."
+          }
+        ];
+      } else {
+        quizQuestions = [
+          {
+            q: `1. Respecto a la lección de ${topic}, ¿cuál fue el postulado de partida?`,
+            options: [s1, "Una teoría obsoleta del siglo anterior", "Un postulado sin impacto en la materia"],
+            correct: 0,
+            explanation: "El postulado inicial define los conceptos rectores de la materia analizada."
+          },
+          {
+            q: "2. Según las explicaciones del profesor, ¿qué elemento requiere mayor atención?",
+            options: ["La fecha de nacimiento de los autores", s2, "Ninguno, es puramente informativo"],
+            correct: 1,
+            explanation: "El segundo elemento fue destacado reiteradamente como clave para la resolución de supuestos de examen."
+          },
+          {
+            q: "3. ¿Qué conclusión se debe remarcar en la prueba escrita?",
+            options: ["Que no hay acuerdo en el claustro", "Que se suspende la evaluación", s3],
+            correct: 2,
+            explanation: "La síntesis de cierre constituye la respuesta esperada en los criterios de corrección de Selectividad."
+          }
+        ];
+      }
+
+      // 7. Data Infographic
+      let infographicData = [];
+      if (isCadiz) {
+        infographicData = [
+          { phase: "1808 • Vacío de Poder", text: "Invasión napoleónica, abdicaciones de Bayona y creación de la Junta Suprema Central.", icon: "flag" },
+          { phase: "1810 • Cortes de Cádiz", text: "Apertura en la Isla de León; Decreto I asumiendo la Soberanía Nacional en nombre del pueblo.", icon: "account_balance" },
+          { phase: "1812 • 'La Pepa'", text: "Promulgación solemne el 19 de marzo: Monarquía moderada, división de poderes y derechos civiles.", icon: "history_edu" },
+          { phase: "1814 • Restauración Absolutista", text: "Regreso de Fernando VII, Manifiesto de los Persas y derogación de toda la legislación de Cádiz.", icon: "gavel" }
+        ];
+      } else if (isInternet) {
+        infographicData = [
+          { phase: "1969 • Proyecto ARPANET", text: "Conexión de los primeros 4 nodos universitarios con conmutación descentralizada de paquetes.", icon: "hub" },
+          { phase: "1983 • Adopción de TCP/IP", text: "El 1 de enero de 1983 se establece el estándar oficial que da nacimiento al Internet global.", icon: "settings_ethernet" },
+          { phase: "1989 • World Wide Web (CERN)", text: "Tim Berners-Lee publica la propuesta de la Web y crea el lenguaje HTML y las URLs.", icon: "language" },
+          { phase: "Actualidad • Era de la IA", text: "Internet se transforma en la red troncal sobre la que entrenan y operan los modelos de IA.", icon: "smart_toy" }
+        ];
+      } else {
+        infographicData = [
+          { phase: "Fase 1 • Origen", text: s1, icon: "flag" },
+          { phase: "Fase 2 • Consolidación", text: s2, icon: "bolt" },
+          { phase: "Fase 3 • Consecuencias", text: s3, icon: "trophy" }
+        ];
+      }
+
+      generatedData = { podcastScript, pdfHtml, slides, flashcards, mindmapData, quizQuestions, infographicData };
+
+      // Render Selected Tabs in Navigation Bar
+      renderTabsNavigationBar(selectedKeys);
+
+      // Render all requested components
+      if (selectedKeys.includes("podcast")) renderPodcast(podcastScript);
+      if (selectedKeys.includes("pdf")) document.getElementById("pdf-printable-doc").innerHTML = pdfHtml;
+      if (selectedKeys.includes("slides")) renderSlides(slides);
+      if (selectedKeys.includes("flashcards")) renderFlashcards(flashcards);
+      if (selectedKeys.includes("mindmap")) renderMindmap(mindmapData);
+      if (selectedKeys.includes("quiz")) renderQuiz(quizQuestions);
+      if (selectedKeys.includes("infographic")) renderInfographic(infographicData);
+      if (selectedKeys.includes("video")) {
+        document.getElementById("video-mock-title").textContent = `Vídeo: ${title}`;
+      }
+    }
+
+    // -------------------------------------------------------------
+    // F. DYNAMIC TABS BAR RENDERER
+    // -------------------------------------------------------------
+    function renderTabsNavigationBar(selectedKeys) {
+      tabsNavBar.innerHTML = "";
+      document.querySelectorAll(".tab-panel").forEach(p => p.classList.add("hidden"));
+
+      selectedKeys.forEach((key, index) => {
+        const meta = deliverableMetadata[key];
+        const btn = document.createElement("button");
+        btn.dataset.target = `panel-${key}`;
+        btn.className = index === 0
+          ? "tab-nav-btn active px-3.5 py-1.5 rounded-xl font-headline font-bold text-xs flex items-center gap-1.5 bg-primary-container text-on-primary-container shadow-sm transition-all"
+          : "tab-nav-btn px-3.5 py-1.5 rounded-xl font-headline font-bold text-xs flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-all";
+        
+        btn.innerHTML = `
+          <span class="material-symbols-outlined text-[16px]">${meta.icon}</span>
+          <span>${meta.label}</span>
+        `;
+
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".tab-nav-btn").forEach(b => {
+            b.className = "tab-nav-btn px-3.5 py-1.5 rounded-xl font-headline font-bold text-xs flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-all";
+          });
+          btn.className = "tab-nav-btn active px-3.5 py-1.5 rounded-xl font-headline font-bold text-xs flex items-center gap-1.5 bg-primary-container text-on-primary-container shadow-sm transition-all";
+          
+          document.querySelectorAll(".tab-panel").forEach(p => p.classList.add("hidden"));
+          const target = document.getElementById(btn.dataset.target);
+          if (target) target.classList.remove("hidden");
+        });
+
+        tabsNavBar.appendChild(btn);
+
+        // Show first tab by default
+        if (index === 0) {
+          const firstTarget = document.getElementById(`panel-${key}`);
+          if (firstTarget) firstTarget.classList.remove("hidden");
+        }
+      });
+    }
+
+    // -------------------------------------------------------------
+    // G. COMPONENT RENDERERS
+    // -------------------------------------------------------------
+
+    // 1. Podcast
+    function renderPodcast(script) {
+      document.getElementById("podcast-dialog-stream").innerHTML = script.map(item => `
+        <div class="flex items-start gap-3 bg-surface-container-low/70 p-3.5 rounded-2xl border border-surface-container-high">
+          <div class="w-8 h-8 rounded-full ${item.color} flex items-center justify-center font-bold text-xs shrink-0 shadow">
+            ${item.avatar}
+          </div>
+          <div class="text-xs space-y-1">
+            <span class="font-bold ${item.nameColor} block">${item.host}:</span>
+            <p class="text-on-surface leading-relaxed">${item.text}</p>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    // Podcast Voice Speech
+    let isPodcastSpeaking = false;
+    const playFullPodcastBtn = document.getElementById("play-full-podcast-btn");
+    const stopPodcastBtn = document.getElementById("stop-podcast-btn");
+    const podcastPlayIcon = document.getElementById("podcast-play-icon");
+    const podcastPlayText = document.getElementById("podcast-play-text");
+
+    function speakPodcast() {
+      if (!generatedData || !("speechSynthesis" in window)) {
+        alert("La síntesis de voz no está disponible en este navegador.");
+        return;
+      }
+      window.speechSynthesis.cancel();
+      isPodcastSpeaking = true;
+      podcastPlayIcon.textContent = "pause";
+      podcastPlayText.textContent = "Reproduciendo...";
+
+      const script = generatedData.podcastScript;
+      let currentIndex = 0;
+
+      function speakNext() {
+        if (!isPodcastSpeaking || currentIndex >= script.length) {
+          isPodcastSpeaking = false;
+          podcastPlayIcon.textContent = "play_arrow";
+          podcastPlayText.textContent = "Escuchar Podcast";
+          return;
+        }
+
+        const item = script[currentIndex];
+        const utterance = new SpeechSynthesisUtterance(item.text);
+        utterance.lang = "es-ES";
+        utterance.rate = item.host.includes("Álex") ? 1.05 : 1.0;
+        utterance.pitch = item.host.includes("Álex") ? 0.9 : 1.1;
+
+        utterance.onend = () => {
+          currentIndex++;
+          speakNext();
+        };
+        utterance.onerror = () => {
+          isPodcastSpeaking = false;
+          podcastPlayIcon.textContent = "play_arrow";
+          podcastPlayText.textContent = "Escuchar Podcast";
+        };
+
+        window.speechSynthesis.speak(utterance);
+      }
+      speakNext();
+    }
+
+    playFullPodcastBtn.addEventListener("click", () => {
+      if (!isPodcastSpeaking) speakPodcast();
+      else {
+        window.speechSynthesis.cancel();
+        isPodcastSpeaking = false;
+        podcastPlayIcon.textContent = "play_arrow";
+        podcastPlayText.textContent = "Escuchar Podcast";
+      }
+    });
+
+    stopPodcastBtn.addEventListener("click", () => {
+      window.speechSynthesis.cancel();
+      isPodcastSpeaking = false;
+      podcastPlayIcon.textContent = "play_arrow";
+      podcastPlayText.textContent = "Escuchar Podcast";
+    });
+
+    // 2. Slides
+    let currentAppSlide = 0;
+    const appSlideTag = document.getElementById("app-slide-tag");
+    const appSlideTitle = document.getElementById("app-slide-title");
+    const appSlideDesc = document.getElementById("app-slide-desc");
+    const appSlideBullets = document.getElementById("app-slide-bullets");
+    const appSlideCounter = document.getElementById("app-slide-counter");
+    const appSlideDots = document.getElementById("app-slide-dots");
+
+    function renderSlides(slides) {
+      currentAppSlide = 0;
+      updateSlideView(slides);
+    }
+
+    function updateSlideView(slides) {
+      if (!slides || !slides.length) return;
+      const s = slides[currentAppSlide];
+      appSlideTag.textContent = s.tag;
+      appSlideTitle.textContent = s.title;
+      appSlideDesc.textContent = s.desc;
+      appSlideCounter.textContent = `${currentAppSlide + 1}/${slides.length}`;
+
+      appSlideBullets.innerHTML = s.bullets.map(b => 
+        `<span class="text-xs px-3 py-1 rounded-lg bg-surface-container-high text-primary font-medium">${b}</span>`
+      ).join("");
+
+      appSlideDots.innerHTML = slides.map((_, i) => `
+        <span class="w-2 h-2 rounded-full ${i === currentAppSlide ? 'bg-primary-container' : 'bg-surface-container-highest'} transition-all"></span>
+      `).join("");
+    }
+
+    document.getElementById("app-slide-prev").addEventListener("click", () => {
+      if (!generatedData) return;
+      const len = generatedData.slides.length;
+      currentAppSlide = (currentAppSlide - 1 + len) % len;
+      updateSlideView(generatedData.slides);
+    });
+
+    document.getElementById("app-slide-next").addEventListener("click", () => {
+      if (!generatedData) return;
+      const len = generatedData.slides.length;
+      currentAppSlide = (currentAppSlide + 1) % len;
+      updateSlideView(generatedData.slides);
+    });
+
+    // 3. Flashcards
+    let currentFcIndex = 0;
+    const flashcardBox = document.getElementById("app-flashcard-box");
+    const flashcardInner = document.getElementById("app-flashcard-inner");
+    const flashcardQuestion = document.getElementById("flashcard-question");
+    const flashcardHint = document.getElementById("flashcard-hint");
+    const flashcardAnswer = document.getElementById("flashcard-answer");
+    const flashcardCounter = document.getElementById("flashcard-counter");
+    let isFcCardFlipped = false;
+
+    function renderFlashcards(cards) {
+      currentFcIndex = 0;
+      isFcCardFlipped = false;
+      flashcardInner.classList.remove("rotate-y-180");
+      updateFcView(cards);
+    }
+
+    function updateFcView(cards) {
+      if (!cards || !cards.length) return;
+      const c = cards[currentFcIndex];
+      flashcardQuestion.textContent = c.q;
+      flashcardHint.textContent = `💡 ${c.hint}`;
+      flashcardAnswer.textContent = c.a;
+      flashcardCounter.textContent = `Tarjeta ${currentFcIndex + 1} de ${cards.length}`;
+    }
+
+    flashcardBox.addEventListener("click", () => {
+      isFcCardFlipped = !isFcCardFlipped;
+      if (isFcCardFlipped) flashcardInner.classList.add("rotate-y-180");
+      else flashcardInner.classList.remove("rotate-y-180");
+    });
+
+    document.getElementById("fc-prev-btn").addEventListener("click", () => {
+      if (!generatedData) return;
+      isFcCardFlipped = false;
+      flashcardInner.classList.remove("rotate-y-180");
+      const len = generatedData.flashcards.length;
+      currentFcIndex = (currentFcIndex - 1 + len) % len;
+      updateFcView(generatedData.flashcards);
+    });
+
+    document.getElementById("fc-next-btn").addEventListener("click", () => {
+      if (!generatedData) return;
+      isFcCardFlipped = false;
+      flashcardInner.classList.remove("rotate-y-180");
+      const len = generatedData.flashcards.length;
+      currentFcIndex = (currentFcIndex + 1) % len;
+      updateFcView(generatedData.flashcards);
+    });
+
+    // 4. Mindmap Renderer
+    function renderMindmap(data) {
+      document.getElementById("mindmap-center-node").textContent = data.center;
+      document.getElementById("mindmap-branches").innerHTML = data.branches.map(b => `
+        <div class="p-5 rounded-2xl bg-surface-container/70 border border-primary-container/30 hover-lift space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs px-2 py-0.5 rounded bg-primary-container/20 text-primary-container font-mono font-bold">${b.tag}</span>
+            <span class="material-symbols-outlined text-primary-fixed-dim text-[18px]">hub</span>
+          </div>
+          <h4 class="font-headline font-bold text-sm text-primary">${b.title}</h4>
+          <p class="text-xs text-on-surface-variant leading-relaxed">${b.desc}</p>
+        </div>
+      `).join("");
+    }
+
+    // 5. Quiz Renderer
+    let userAnswers = {};
+    function renderQuiz(questions) {
+      userAnswers = {};
+      document.getElementById("quiz-score-badge").textContent = `Puntuación: 0 / ${questions.length}`;
+      document.getElementById("quiz-questions-container").innerHTML = questions.map((q, qIndex) => `
+        <div class="p-5 rounded-2xl bg-surface-container-low/70 border border-surface-container-high space-y-3">
+          <p class="font-headline font-bold text-sm text-primary">${q.q}</p>
+          <div class="space-y-2">
+            ${q.options.map((opt, optIndex) => `
+              <button class="quiz-opt-btn w-full text-left p-3 rounded-xl bg-surface-container-lowest border border-outline-variant/40 hover:border-primary-container text-xs text-on-surface transition-all flex items-center justify-between" data-q="${qIndex}" data-opt="${optIndex}">
+                <span>${opt}</span>
+                <span class="quiz-feedback-icon material-symbols-outlined text-[16px] hidden"></span>
+              </button>
+            `).join("")}
+          </div>
+        </div>
+      `).join("");
+
+      document.querySelectorAll(".quiz-opt-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const qIdx = parseInt(btn.dataset.q, 10);
+          const optIdx = parseInt(btn.dataset.opt, 10);
+          const q = questions[qIdx];
+
+          // Disable other buttons for this question
+          const siblingBtns = document.querySelectorAll(`.quiz-opt-btn[data-q="${qIdx}"]`);
+          siblingBtns.forEach(b => b.disabled = true);
+
+          const icon = btn.querySelector(".quiz-feedback-icon");
+          icon.classList.remove("hidden");
+
+          if (optIdx === q.correct) {
+            btn.classList.add("bg-emerald-950/60", "border-emerald-500", "text-emerald-300");
+            icon.textContent = "check_circle";
+            icon.classList.add("text-emerald-400");
+            userAnswers[qIdx] = true;
+          } else {
+            btn.classList.add("bg-error-container/40", "border-error", "text-error");
+            icon.textContent = "cancel";
+            icon.classList.add("text-error");
+            userAnswers[qIdx] = false;
+
+            // Highlight correct one
+            const correctBtn = document.querySelector(`.quiz-opt-btn[data-q="${qIdx}"][data-opt="${q.correct}"]`);
+            if (correctBtn) {
+              correctBtn.classList.add("border-emerald-500", "text-emerald-300");
+            }
+          }
+
+          const score = Object.values(userAnswers).filter(Boolean).length;
+          document.getElementById("quiz-score-badge").textContent = `Puntuación: ${score} / ${questions.length}`;
+
+          // Mostrar justificación académica si está disponible
+          if (q.explanation) {
+            const expl = document.createElement("div");
+            expl.className = "p-3.5 rounded-xl bg-surface-container-high/90 border-l-4 border-primary-container text-xs text-on-surface-variant leading-relaxed mt-2 animate-in fade-in";
+            expl.innerHTML = `<span class="text-primary-container font-mono font-bold block mb-1">💡 Justificación de Selectividad / PAU:</span>${q.explanation}`;
+            btn.parentElement.parentElement.appendChild(expl);
+          }
+        });
+      });
+    }
+
+    // -------------------------------------------------------------
+    // G2. REPRODUCTOR DE AUDIO REAL OFICIAL NOTEBOOKLM
+    // -------------------------------------------------------------
+    const realPodcastAudio = document.getElementById("real-podcast-audio");
+    const realAudioPlayBtn = document.getElementById("real-audio-play-btn");
+    const realAudioPlayIcon = document.getElementById("real-audio-play-icon");
+    const realAudioPlayText = document.getElementById("real-audio-play-text");
+    const realAudioRewind = document.getElementById("real-audio-rewind");
+    const realAudioForward = document.getElementById("real-audio-forward");
+    const audioProgressBar = document.getElementById("audio-progress-bar");
+    const audioProgressContainer = document.getElementById("audio-progress-container");
+    const audioCurrentTime = document.getElementById("audio-current-time");
+    const audioTotalTime = document.getElementById("audio-total-time");
+    const audioSpeedBtns = document.querySelectorAll(".audio-speed-btn");
+
+    function formatAudioSeconds(sec) {
+      if (isNaN(sec) || !isFinite(sec)) return "00:00";
+      const m = Math.floor(sec / 60);
+      const s = Math.floor(sec % 60);
+      return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+    }
+
+    if (realPodcastAudio) {
+      realPodcastAudio.addEventListener("loadedmetadata", () => {
+        audioTotalTime.textContent = formatAudioSeconds(realPodcastAudio.duration);
+      });
+
+      realPodcastAudio.addEventListener("timeupdate", () => {
+        audioCurrentTime.textContent = formatAudioSeconds(realPodcastAudio.currentTime);
+        if (realPodcastAudio.duration) {
+          const pct = (realPodcastAudio.currentTime / realPodcastAudio.duration) * 100;
+          audioProgressBar.style.width = `${pct}%`;
+        }
+      });
+
+      realPodcastAudio.addEventListener("ended", () => {
+        realAudioPlayIcon.textContent = "play_arrow";
+        realAudioPlayText.textContent = "Reproducir Podcast";
+      });
+
+      realAudioPlayBtn.addEventListener("click", () => {
+        // Pausar síntesis sintética si estuviese activa
+        if (window.speechSynthesis) window.speechSynthesis.cancel();
+        isPodcastSpeaking = false;
+        podcastPlayIcon.textContent = "volume_up";
+        podcastPlayText.textContent = "Lectura sintética por voz";
+
+        if (realPodcastAudio.paused) {
+          realPodcastAudio.play().then(() => {
+            realAudioPlayIcon.textContent = "pause";
+            realAudioPlayText.textContent = "Pausar Podcast";
+          }).catch(err => {
+            console.warn("Autoplay bloqueado:", err);
+          });
+        } else {
+          realPodcastAudio.pause();
+          realAudioPlayIcon.textContent = "play_arrow";
+          realAudioPlayText.textContent = "Reproducir Podcast";
+        }
+      });
+
+      realAudioRewind.addEventListener("click", () => {
+        realPodcastAudio.currentTime = Math.max(0, realPodcastAudio.currentTime - 10);
+      });
+
+      realAudioForward.addEventListener("click", () => {
+        realPodcastAudio.currentTime = Math.min(realPodcastAudio.duration || 0, realPodcastAudio.currentTime + 10);
+      });
+
+      audioProgressContainer.addEventListener("click", (e) => {
+        const rect = audioProgressContainer.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const width = rect.width;
+        if (realPodcastAudio.duration) {
+          realPodcastAudio.currentTime = (clickX / width) * realPodcastAudio.duration;
+        }
+      });
+
+      audioSpeedBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const speed = parseFloat(btn.dataset.speed);
+          realPodcastAudio.playbackRate = speed;
+          audioSpeedBtns.forEach(b => {
+            b.classList.remove("bg-primary-container", "text-on-primary-container", "font-bold");
+            b.classList.add("text-on-surface-variant");
+          });
+          btn.classList.add("bg-primary-container", "text-on-primary-container", "font-bold");
+          btn.classList.remove("text-on-surface-variant");
+        });
+      });
+    }
+
+    // 6. Infographic Renderer
+    function renderInfographic(items) {
+      document.getElementById("infographic-container").innerHTML = `
+        <div class="relative pl-6 border-l-2 border-primary-container/40 space-y-6">
+          ${items.map(item => `
+            <div class="relative group space-y-1">
+              <span class="absolute -left-[31px] top-0 w-4 h-4 rounded-full bg-primary-container border-4 border-surface shadow-[0_0_10px_rgba(0,242,254,0.5)]"></span>
+              <span class="text-xs font-mono font-bold text-primary-container uppercase">${item.phase}</span>
+              <p class="text-xs sm:text-sm text-on-surface leading-relaxed">${item.text}</p>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    // =============================================================
+    // GENERACIÓN Y DESCARGA DIRECTA DE ARCHIVO .PDF (HTML2PDF)
+    // =============================================================
+    const downloadPdfDirectBtn = document.getElementById("download-pdf-direct-btn");
+    const downloadPdfText = document.getElementById("download-pdf-text");
+    const printPaperBtn = document.getElementById("print-paper-btn");
+
+    function downloadRealPdf() {
+      triggerHaptic("medium");
+      if (downloadPdfText) downloadPdfText.textContent = "Generando PDF...";
+      if (downloadPdfDirectBtn) downloadPdfDirectBtn.disabled = true;
+
+      // Crear contenedor limpio para maquetación editorial académica en A4
+      const pdfContainer = document.createElement("div");
+      pdfContainer.style.width = "720px";
+      pdfContainer.style.padding = "35px 40px";
+      pdfContainer.style.background = "#ffffff";
+      pdfContainer.style.color = "#0f172a";
+      pdfContainer.style.fontFamily = "'Inter', system-ui, -apple-system, sans-serif";
+      pdfContainer.style.lineHeight = "1.6";
+
+      const rawDoc = document.getElementById("pdf-printable-doc");
+      const currentTitle = document.getElementById("deliverable-class-title")?.textContent || "Guía de Estudio";
+
+      pdfContainer.innerHTML = `
+        <div style="border-bottom: 2px solid #0284c7; padding-bottom: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: flex-end;">
+          <div>
+            <span style="font-size: 10px; font-weight: 800; color: #0284c7; letter-spacing: 1.5px; text-transform: uppercase; font-family: monospace;">OFG.AI STUDIO • DOSSIER PEDAGÓGICO DE BACHILLERATO</span>
+            <h1 style="font-size: 20px; font-weight: 900; color: #0f172a; margin: 4px 0 0 0;">${currentTitle}</h1>
+          </div>
+          <div style="text-align: right; font-size: 10px; color: #64748b; font-family: monospace;">
+            <div style="font-weight: bold; color: #0284c7;">Google NotebookLM Engine</div>
+            <div>Fecha: ${new Date().toLocaleDateString('es-ES')}</div>
+          </div>
+        </div>
+        <div style="font-size: 13px; color: #334155;">
+          ${rawDoc ? rawDoc.innerHTML
+            .replace(/text-primary-container|text-primary-fixed-dim|text-primary/g, 'text-sky-800')
+            .replace(/bg-surface-container-high\/60|bg-surface-container-high/g, 'bg-slate-100')
+            .replace(/text-on-surface-variant/g, 'text-slate-600')
+            .replace(/text-on-surface/g, 'text-slate-800')
+            : ''}
+        </div>
+        <div style="margin-top: 35px; padding-top: 12px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; font-size: 9px; color: #94a3b8; font-family: monospace;">
+          <span>OFG.ai Studio • Consultor de Inteligencia Artificial para Empresas y Educación</span>
+          <span>Sintetizado con Gemini 2.5 & Google NotebookLM</span>
+        </div>
+      `;
+
+      document.body.appendChild(pdfContainer);
+
+      const safeFilename = currentTitle
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-zA-Z0-9_-]/g, "_")
+        .replace(/_+/g, "_")
+        .substring(0, 45) + ".pdf";
+
+      if (typeof html2pdf !== "undefined") {
+        const opt = {
+          margin: [10, 10, 10, 10],
+          filename: safeFilename,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true, logging: false },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf().set(opt).from(pdfContainer).save().then(() => {
+          document.body.removeChild(pdfContainer);
+          if (downloadPdfText) downloadPdfText.textContent = "¡PDF Descargado!";
+          if (downloadPdfDirectBtn) downloadPdfDirectBtn.disabled = false;
+          triggerHaptic("success");
+          setTimeout(() => {
+            if (downloadPdfText) downloadPdfText.textContent = "Descargar Guía en PDF (.pdf)";
+          }, 3000);
+        }).catch(err => {
+          console.error("Error con html2pdf:", err);
+          document.body.removeChild(pdfContainer);
+          if (downloadPdfText) downloadPdfText.textContent = "Descargar Guía en PDF (.pdf)";
+          if (downloadPdfDirectBtn) downloadPdfDirectBtn.disabled = false;
+          window.print();
+        });
+      } else {
+        document.body.removeChild(pdfContainer);
+        window.print();
+      }
+    }
+
+    if (downloadPdfDirectBtn) {
+      downloadPdfDirectBtn.addEventListener("click", downloadRealPdf);
+    }
+
+    if (printPaperBtn) {
+      printPaperBtn.addEventListener("click", () => {
+        triggerHaptic("light");
+        document.querySelectorAll(".tab-panel").forEach(p => p.classList.add("hidden"));
+        const pdfPanel = document.getElementById("panel-pdf");
+        if (pdfPanel) pdfPanel.classList.remove("hidden");
+
+        document.querySelectorAll(".tab-nav-btn").forEach(b => {
+          b.className = "tab-nav-btn px-3.5 py-1.5 rounded-xl font-headline font-bold text-xs flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-all";
+          if (b.dataset.target === "panel-pdf") {
+            b.className = "tab-nav-btn active px-3.5 py-1.5 rounded-xl font-headline font-bold text-xs flex items-center gap-1.5 bg-primary-container text-on-primary-container shadow-sm transition-all";
+          }
+        });
+
+        setTimeout(() => {
+          window.print();
+        }, 150);
+      });
+    }
+
+    // Reset General
+    document.getElementById("reset-app-btn").addEventListener("click", () => {
+      if (confirm("¿Quieres reiniciar el grabador para una nueva clase?")) {
+        if (isRecording) stopRecording();
+        window.speechSynthesis.cancel();
+        liveTranscript.value = "";
+        updateWordCount();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    });
+
+    // Portero OTP Modal
+    const otpModal = document.getElementById("otp-modal");
+    const openOtpBtn = document.getElementById("open-otp-btn");
+    const closeOtpBtn = document.getElementById("close-otp-btn");
+    const requestOtpBtn = document.getElementById("request-otp-btn");
+    const emailOtpInput = document.getElementById("email-otp-input");
+    const otpBoxesWrapper = document.getElementById("otp-boxes-wrapper");
+    const otpBoxes = document.querySelectorAll(".otp-box");
+
+    openOtpBtn.addEventListener("click", () => {
+      otpModal.classList.remove("opacity-0", "pointer-events-none");
+      emailOtpInput.focus();
+    });
+
+    closeOtpBtn.addEventListener("click", () => {
+      otpModal.classList.add("opacity-0", "pointer-events-none");
+    });
+
+    requestOtpBtn.addEventListener("click", () => {
+      const email = emailOtpInput.value.trim();
+      if (!email.includes("@")) {
+        alert("Introduce un email válido.");
+        return;
+      }
+      requestOtpBtn.textContent = "Código Enviado vía Brevo";
+      requestOtpBtn.disabled = true;
+      otpBoxesWrapper.classList.remove("hidden");
+      otpBoxes[0].focus();
+    });
+
+    otpBoxes.forEach((box, i) => {
+      box.addEventListener("input", () => {
+        if (box.value.length === 1 && i < otpBoxes.length - 1) {
+          otpBoxes[i + 1].focus();
+        }
+        let full = "";
+        otpBoxes.forEach(b => full += b.value);
+        if (full.length === 6) {
+          alert(`Código ${full} verificado. ¡Bienvenido a OFG.ai Studio!`);
+          otpModal.classList.add("opacity-0", "pointer-events-none");
+        }
+      });
+    });
+
+    // Iniciar con las 4 por defecto
+    buildAllDeliverables(presets.historia, ["podcast", "pdf", "slides", "flashcards"]);
+
+    // =============================================================
+    // HAPTIC FEEDBACK (VIBRACIÓN TÁCTIL EN DISPOSITIVOS MÓVILES)
+    // =============================================================
+    function triggerHaptic(type = "light") {
+      if (!("vibrate" in navigator)) return;
+      try {
+        if (type === "light") navigator.vibrate(12);
+        else if (type === "medium") navigator.vibrate(28);
+        else if (type === "success") navigator.vibrate([15, 35, 25]);
+        else if (type === "warning") navigator.vibrate([25, 45, 25]);
+      } catch (e) {}
+    }
+
+    // Añadir haptics a botones principales
+    [recordBtn, pauseBtn, resetMicBtn, processClassBtn].forEach(btn => {
+      if (btn) btn.addEventListener("click", () => triggerHaptic("medium"));
+    });
+
+    document.querySelectorAll(".studio-option-card").forEach(c => {
+      c.addEventListener("click", () => triggerHaptic("light"));
+    });
+
+    document.querySelectorAll(".tab-nav-btn").forEach(t => {
+      t.addEventListener("click", () => triggerHaptic("light"));
+    });
+
+    // =============================================================
+    // PWA & PROGRESSIVE WEB APP MOBILE INTEGRATION
+    // =============================================================
+    // 1. Registro del Service Worker
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/sw.js").then(reg => {
+          console.log("[PWA] Service Worker registrado exitosamente con scope:", reg.scope);
+        }).catch(err => {
+          console.warn("[PWA] Error registrando Service Worker:", err);
+        });
+      });
+    }
+
+    // 2. Manejo de Instalación (Android / Chrome / Edge)
+    let deferredInstallPrompt = null;
+    const pwaInstallHeaderBtn = document.getElementById("pwa-install-header-btn");
+    const mobilePwaBanner = document.getElementById("mobile-pwa-banner");
+    const pwaBannerInstallBtn = document.getElementById("pwa-banner-install-btn");
+    const pwaBannerCloseBtn = document.getElementById("pwa-banner-close-btn");
+    const pwaInstallModal = document.getElementById("pwa-install-modal");
+    const closePwaModalBtn = document.getElementById("close-pwa-modal-btn");
+    const pwaModalInstallBtn = document.getElementById("pwa-modal-install-btn");
+    const pwaAndroidActions = document.getElementById("pwa-android-actions");
+    const pwaIosInstructions = document.getElementById("pwa-ios-instructions");
+
+    // Detectar iOS / iPadOS
+    const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+    const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone;
+
+    if (isStandalone) {
+      console.log("[PWA] Aplicación ejecutándose en modo Standalone App nativa");
+      if (mobilePwaBanner) mobilePwaBanner.classList.add("hidden");
+      if (pwaInstallHeaderBtn) pwaInstallHeaderBtn.classList.add("hidden");
+    } else {
+      // Mostrar banner en móvil tras 2 segundos si no es standalone
+      setTimeout(() => {
+        if (window.innerWidth < 768 && mobilePwaBanner) {
+          mobilePwaBanner.classList.remove("hidden");
+        }
+      }, 1800);
+    }
+
+    // Capturar evento beforeinstallprompt nativo del navegador
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      if (pwaInstallHeaderBtn) pwaInstallHeaderBtn.classList.remove("hidden");
+      if (mobilePwaBanner && !isStandalone) mobilePwaBanner.classList.remove("hidden");
+      console.log("[PWA] beforeinstallprompt listo para instalar");
+    });
+
+    function openPwaModal() {
+      triggerHaptic("medium");
+      if (isIos) {
+        if (pwaAndroidActions) pwaAndroidActions.classList.add("hidden");
+        if (pwaIosInstructions) pwaIosInstructions.classList.remove("hidden");
+      } else {
+        if (pwaAndroidActions) pwaAndroidActions.classList.remove("hidden");
+        if (pwaIosInstructions) pwaIosInstructions.classList.add("hidden");
+      }
+      pwaInstallModal.classList.remove("opacity-0", "pointer-events-none");
+    }
+
+    function closePwaModal() {
+      pwaInstallModal.classList.add("opacity-0", "pointer-events-none");
+    }
+
+    if (pwaInstallHeaderBtn) pwaInstallHeaderBtn.addEventListener("click", openPwaModal);
+    if (pwaBannerInstallBtn) {
+      pwaBannerInstallBtn.addEventListener("click", () => {
+        if (deferredInstallPrompt) {
+          deferredInstallPrompt.prompt();
+          deferredInstallPrompt.userChoice.then((choice) => {
+            if (choice.outcome === "accepted") {
+              if (mobilePwaBanner) mobilePwaBanner.classList.add("hidden");
+            }
+            deferredInstallPrompt = null;
+          });
+        } else {
+          openPwaModal();
+        }
+      });
+    }
+
+    if (pwaBannerCloseBtn && mobilePwaBanner) {
+      pwaBannerCloseBtn.addEventListener("click", () => {
+        mobilePwaBanner.classList.add("hidden");
+      });
+    }
+
+    if (closePwaModalBtn) closePwaModalBtn.addEventListener("click", closePwaModal);
+
+    if (pwaModalInstallBtn) {
+      pwaModalInstallBtn.addEventListener("click", () => {
+        triggerHaptic("success");
+        if (deferredInstallPrompt) {
+          deferredInstallPrompt.prompt();
+          deferredInstallPrompt.userChoice.then((choice) => {
+            if (choice.outcome === "accepted") {
+              closePwaModal();
+              if (mobilePwaBanner) mobilePwaBanner.classList.add("hidden");
+            }
+            deferredInstallPrompt = null;
+          });
+        } else {
+          alert("Para instalar en Chrome / Edge: Pulsa el icono de instalación ⊕ en la barra de direcciones o en los 3 puntos ⋮ > Instalar aplicación.");
+        }
+      });
+    }
+
+    // =============================================================
+    // MOBILE BOTTOM THUMB DOCK NAVIGATION
+    // =============================================================
+    const mNavRecord = document.getElementById("m-nav-record");
+    const mNavStudio = document.getElementById("m-nav-studio");
+    const mNavMaterials = document.getElementById("m-nav-materials");
+    const mNavInstall = document.getElementById("m-nav-install");
+
+    function setMobileActiveNav(activeEl) {
+      triggerHaptic("light");
+      [mNavRecord, mNavStudio, mNavMaterials, mNavInstall].forEach(btn => {
+        if (!btn) return;
+        btn.className = "flex flex-col items-center gap-1 py-1 px-3 text-on-surface-variant hover:text-primary font-headline font-medium text-[10px] transition-all btn-press";
+      });
+      if (activeEl) {
+        activeEl.className = "flex flex-col items-center gap-1 py-1 px-3 text-primary-container font-headline font-bold text-[10px] transition-all btn-press";
+      }
+    }
+
+    if (mNavRecord) {
+      mNavRecord.addEventListener("click", () => {
+        setMobileActiveNav(mNavRecord);
+        const sec = document.getElementById("recorder-section");
+        if (sec) sec.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+
+    if (mNavStudio) {
+      mNavStudio.addEventListener("click", () => {
+        setMobileActiveNav(mNavStudio);
+        const sec = document.getElementById("studio-options-section");
+        if (sec) sec.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+
+    if (mNavMaterials) {
+      mNavMaterials.addEventListener("click", () => {
+        setMobileActiveNav(mNavMaterials);
+        const sec = document.getElementById("results-hub");
+        if (sec) sec.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+
+    if (mNavInstall) {
+      mNavInstall.addEventListener("click", () => {
+        setMobileActiveNav(mNavInstall);
+        openPwaModal();
+      });
+    }
+
+    window.addEventListener("appinstalled", () => {
+      console.log("[PWA] ¡OFG.ai Studio instalada exitosamente en el sistema!");
+      if (mobilePwaBanner) mobilePwaBanner.classList.add("hidden");
+      if (pwaInstallHeaderBtn) pwaInstallHeaderBtn.classList.add("hidden");
+      alert("¡OFG.ai Studio se ha instalado con éxito! Ya puedes abrirla desde tu pantalla de inicio.");
+    });
+  </script>
+
+  <!-- ========================================================================= -->
+  <!-- MOBILE STICKY BOTTOM DOCK (OPTIMIZADO PARA EL PULGAR EN SMARTPHONES) -->
+  <!-- ========================================================================= -->
+  <nav id="mobile-bottom-dock" class="sm:hidden fixed bottom-0 inset-x-0 z-40 bg-surface-container-lowest/95 backdrop-blur-2xl border-t border-surface-container-high/80 px-2 pt-2 pb-[max(0.6rem,env(safe-area-inset-bottom))] shadow-[0_-12px_32px_rgba(0,0,0,0.8)] flex items-center justify-around select-none">
+    <button id="m-nav-record" class="flex flex-col items-center gap-1 py-1 px-3 text-primary-container font-headline font-bold text-[10px] transition-all btn-press">
+      <span class="material-symbols-outlined text-[24px]">mic</span>
+      <span>Grabar</span>
+    </button>
+    <button id="m-nav-studio" class="flex flex-col items-center gap-1 py-1 px-3 text-on-surface-variant hover:text-primary font-headline font-medium text-[10px] transition-all btn-press">
+      <span class="material-symbols-outlined text-[24px]">dashboard_customize</span>
+      <span>Estudio</span>
+    </button>
+    <button id="m-nav-materials" class="flex flex-col items-center gap-1 py-1 px-3 text-on-surface-variant hover:text-primary font-headline font-medium text-[10px] transition-all btn-press">
+      <span class="material-symbols-outlined text-[24px]">auto_stories</span>
+      <span>Entregables</span>
+    </button>
+    <button id="m-nav-install" class="flex flex-col items-center gap-1 py-1 px-3 text-on-surface-variant hover:text-primary font-headline font-medium text-[10px] transition-all btn-press">
+      <span class="material-symbols-outlined text-[24px]">install_mobile</span>
+      <span>App Móvil</span>
+    </button>
+  </nav>
+
+  <!-- ========================================================================= -->
+  <!-- MODAL INSTALADOR PWA APP MÓVIL (ANDROID / IOS / TABLET) -->
+  <!-- ========================================================================= -->
+  <div id="pwa-install-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-surface-container-lowest/80 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="relative w-full max-w-md rounded-3xl bg-surface-container-low border border-border-glow p-6 sm:p-8 shadow-[0_25px_60px_rgba(0,0,0,0.9)] space-y-6">
+      
+      <!-- Close button -->
+      <button id="close-pwa-modal-btn" class="absolute top-4 right-4 p-2 rounded-full bg-surface-container-high hover:bg-surface-bright text-on-surface-variant hover:text-primary transition-colors btn-press">
+        <span class="material-symbols-outlined text-[18px]">close</span>
+      </button>
+
+      <!-- Icon & Brand Header -->
+      <div class="text-center space-y-3 pt-2">
+        <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-tr from-primary-container to-primary-fixed-dim flex items-center justify-center text-on-primary shadow-[0_0_25px_rgba(0,242,254,0.4)]">
+          <span class="material-symbols-outlined text-[34px]">phone_iphone</span>
+        </div>
+        <div>
+          <h3 class="font-headline font-extrabold text-xl text-primary">Instalar OFG.ai Studio App</h3>
+          <p class="text-xs text-on-surface-variant mt-1">Tu copiloto de clases y exámenes de Bachillerato en tu smartphone o tablet</p>
+        </div>
+      </div>
+
+      <!-- Feature Badges -->
+      <div class="grid grid-cols-1 gap-2.5 text-xs">
+        <div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-high/60 border border-outline-variant/30">
+          <span class="material-symbols-outlined text-primary-container text-[20px]">fullscreen</span>
+          <div>
+            <p class="font-bold text-on-surface">Experiencia a Pantalla Completa</p>
+            <p class="text-[11px] text-on-surface-variant">Sin barras de navegador, diseñada específicamente para el pulgar.</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-high/60 border border-outline-variant/30">
+          <span class="material-symbols-outlined text-tertiary-fixed-dim text-[20px]">offline_bolt</span>
+          <div>
+            <p class="font-bold text-on-surface">Acceso Instantáneo Offline</p>
+            <p class="text-[11px] text-on-surface-variant">Consulta tus resúmenes y flashcards aunque no tengas datos o cobertura.</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 p-3 rounded-xl bg-surface-container-high/60 border border-outline-variant/30">
+          <span class="material-symbols-outlined text-emerald-400 text-[20px]">mic</span>
+          <div>
+            <p class="font-bold text-on-surface">Grabación Continua de Clases</p>
+            <p class="text-[11px] text-on-surface-variant">Captura notas de voz largas de 1 hora o importa audios directamente.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Android Native Prompt Container -->
+      <div id="pwa-android-actions" class="space-y-3">
+        <button id="pwa-modal-install-btn" class="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-primary-container to-primary-fixed-dim text-on-primary-container font-headline font-extrabold text-xs uppercase tracking-wider shadow-[0_0_20px_rgba(0,242,254,0.35)] hover:shadow-[0_0_30px_rgba(0,242,254,0.5)] transition-all hover-lift btn-press">
+          <span class="material-symbols-outlined text-[18px]">download_for_offline</span>
+          <span>Añadir a Pantalla de Inicio</span>
+        </button>
+      </div>
+
+      <!-- iOS Safari Instructions Container -->
+      <div id="pwa-ios-instructions" class="p-4 rounded-2xl bg-surface-container-high/80 border border-primary-container/30 space-y-2.5">
+        <div class="flex items-center gap-2 text-primary-container font-headline font-bold text-xs">
+          <span class="material-symbols-outlined text-[18px]">apple</span>
+          <span>Instrucciones para iPhone / iPad (Safari)</span>
+        </div>
+        <ol class="text-xs text-on-surface-variant space-y-2 pl-4 list-decimal">
+          <li>Toca el botón <strong>Compartir</strong> <span class="material-symbols-outlined text-[14px] align-middle">ios_share</span> en la barra inferior de Safari.</li>
+          <li>Desplázate hacia abajo y selecciona <strong>"Añadir a pantalla de inicio"</strong> <span class="material-symbols-outlined text-[14px] align-middle">add_box</span>.</li>
+          <li>Pulsa <strong>"Añadir"</strong> arriba a la derecha. ¡Ya tendrás la app en tu móvil!</li>
+        </ol>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

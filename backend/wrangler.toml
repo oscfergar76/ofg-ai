@@ -1,0 +1,14 @@
+name = "ofg-ai-backend"
+main = "src/index.ts"
+compatibility_date = "2024-11-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Cloudflare D1 Database binding
+[[d1_databases]]
+binding = "DB"
+database_name = "ofg-ai-db"
+database_id = "ofg-ai-db-local"
+
+# Vars públicas no sensibles
+[vars]
+ENVIRONMENT = "development"
