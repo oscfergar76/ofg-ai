@@ -1,5 +1,5 @@
-// OFG.ai Studio Service Worker (PWA Mobile Shell & Cache v9)
-const CACHE_NAME = "ofg-studio-cache-v9";
+// OFG.ai Studio Service Worker (PWA Mobile Shell & Cache v10)
+const CACHE_NAME = "ofg-studio-cache-v10";
 const ASSETS_TO_CACHE = [
   "/manifest.webmanifest",
   "/icons/icon.svg",

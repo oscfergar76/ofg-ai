@@ -474,10 +474,10 @@
       <div id="notebook-action-section" class="pt-4 border-t border-surface-container-high space-y-4">
         
         <!-- Botón Principal: Abrir Google Notebook -->
-        <button id="open-notebook-btn" type="button" style="touch-action: manipulation;" class="cursor-pointer w-full inline-flex items-center justify-center gap-3 px-6 py-4 rounded-2xl bg-gradient-to-r from-primary-container via-primary-fixed-dim to-tertiary-fixed text-on-primary-container font-headline font-black text-sm sm:text-base uppercase tracking-wider shadow-[0_0_30px_rgba(0,242,254,0.45)] hover:shadow-[0_0_45px_rgba(0,242,254,0.65)] transition-all hover-lift btn-press select-none">
+        <a id="open-notebook-btn" href="https://notebooklm.google.com/" target="_blank" rel="noopener noreferrer" style="touch-action: manipulation;" class="cursor-pointer w-full inline-flex items-center justify-center gap-3 px-6 py-4 rounded-2xl bg-gradient-to-r from-primary-container via-primary-fixed-dim to-tertiary-fixed text-on-primary-container font-headline font-black text-sm sm:text-base uppercase tracking-wider shadow-[0_0_30px_rgba(0,242,254,0.45)] hover:shadow-[0_0_45px_rgba(0,242,254,0.65)] transition-all hover-lift btn-press select-none no-underline">
           <span class="material-symbols-outlined text-[24px]">open_in_new</span>
           <span>Abrir Google Notebook</span>
-        </button>
+        </a>
 
         <!-- Botones Secundarios: Copiar Solo Texto / Descargar .txt -->
         <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
@@ -666,10 +666,10 @@
       <span class="material-symbols-outlined text-[24px]">mic</span>
       <span>Grabar</span>
     </button>
-    <button id="m-nav-notebook" type="button" class="cursor-pointer flex flex-col items-center gap-1 py-1 px-4 text-on-surface-variant hover:text-primary font-headline font-medium text-[10px] transition-all btn-press">
+    <a id="m-nav-notebook" href="https://notebooklm.google.com/" target="_blank" rel="noopener noreferrer" class="cursor-pointer flex flex-col items-center gap-1 py-1 px-4 text-on-surface-variant hover:text-primary font-headline font-medium text-[10px] transition-all btn-press no-underline">
       <span class="material-symbols-outlined text-[24px]">open_in_new</span>
       <span>Abrir Notebook</span>
-    </button>
+    </a>
     <button id="m-nav-install" type="button" class="cursor-pointer flex flex-col items-center gap-1 py-1 px-4 text-on-surface-variant hover:text-primary font-headline font-medium text-[10px] transition-all btn-press">
       <span class="material-symbols-outlined text-[24px]">install_mobile</span>
       <span>App Móvil</span>
@@ -1277,14 +1277,14 @@
     }
 
     // Función universal para copiar al portapapeles sin fallos
-    async function copyRawTextToClipboard(textToCopy) {
+    function copyRawTextToClipboard(textToCopy) {
+      if (!textToCopy) return;
       try {
         if (navigator.clipboard && navigator.clipboard.writeText) {
-          await navigator.clipboard.writeText(textToCopy);
-          return true;
+          navigator.clipboard.writeText(textToCopy);
         }
       } catch (err) {
-        console.warn("Clipboard API falló, usando fallback execCommand:", err);
+        console.warn("Clipboard API aviso:", err);
       }
       try {
         const ta = document.createElement("textarea");
@@ -1294,12 +1294,9 @@
         document.body.appendChild(ta);
         ta.focus();
         ta.select();
-        const ok = document.execCommand("copy");
+        document.execCommand("copy");
         document.body.removeChild(ta);
-        return ok;
-      } catch (e) {
-        return false;
-      }
+      } catch (e) {}
     }
 
     function showCopyToast(msg) {
@@ -1312,55 +1309,47 @@
       }
     }
 
-    // Acción principal: Copiar texto puro y abrir Google Notebook
-    async function handleOpenGoogleNotebook() {
+    function handleNotebookAction() {
+      triggerHaptic("heavy");
       const rawText = liveTranscript.value.trim();
-      if (!rawText) {
-        alert("Primero graba algo de audio con el micrófono o importa una nota de voz para transcribir el texto.");
-        return;
-      }
-
       if (recordingState === "recording") {
         stopRecording();
       }
 
-      triggerHaptic("heavy");
+      if (rawText) {
+        copyRawTextToClipboard(rawText);
+        showCopyToast("¡Texto de voz copiado al portapapeles! Abriendo Google Notebook...");
 
-      // Copiar ÚNICAMENTE el texto que se está poniendo en voz (sin cabeceras ni formato extra)
-      await copyRawTextToClipboard(rawText);
-
-      showCopyToast("¡Texto de voz copiado al portapapeles! Abriendo Google Notebook...");
-
-      // Auditoría en segundo plano en Cloudflare D1 (Regla 4)
-      fetch("https://ofg-ai-backend.oscfergar.workers.dev/api/engine/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          text: rawText,
-          selectedKeys: ["notebooklm"],
-          title: "Clase de Audio"
-        })
-      }).catch(err => console.warn("Auditoría offline:", err));
-
-      // Abrir Google NotebookLM directamente
-      window.open("https://notebooklm.google.com/", "_blank");
+        // Auditoría en segundo plano en Cloudflare D1 (Regla 4)
+        fetch("https://ofg-ai-backend.oscfergar.workers.dev/api/engine/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            text: rawText,
+            selectedKeys: ["notebooklm"],
+            title: "Clase de Audio"
+          })
+        }).catch(err => console.warn("Auditoría offline:", err));
+      } else {
+        showCopyToast("Abriendo Google Notebook...");
+      }
     }
 
     if (openNotebookBtn) {
-      openNotebookBtn.addEventListener("click", handleOpenGoogleNotebook);
+      openNotebookBtn.addEventListener("click", handleNotebookAction);
     }
 
     if (copyTextOnlyBtn) {
-      copyTextOnlyBtn.addEventListener("click", async () => {
+      copyTextOnlyBtn.addEventListener("click", () => {
         const rawText = liveTranscript.value.trim();
         if (!rawText) {
           alert("No hay texto para copiar.");
           return;
         }
         triggerHaptic("medium");
-        const ok = await copyRawTextToClipboard(rawText);
+        copyRawTextToClipboard(rawText);
         if (copyBtnLabel) {
-          copyBtnLabel.textContent = ok ? "¡Texto Copiado!" : "Copiado";
+          copyBtnLabel.textContent = "¡Texto Copiado!";
           setTimeout(() => { copyBtnLabel.textContent = "Copiar Texto al Portapapeles"; }, 2500);
         }
         showCopyToast("¡Texto copiado al portapapeles!");
@@ -1406,6 +1395,7 @@
     const otpBoxes = document.querySelectorAll(".otp-box");
 
     openOtpBtn.addEventListener("click", () => {
+      triggerHaptic("medium");
       otpModal.classList.remove("opacity-0", "pointer-events-none");
       emailOtpInput.focus();
     });
@@ -1416,77 +1406,50 @@
 
     requestOtpBtn.addEventListener("click", () => {
       const email = emailOtpInput.value.trim();
-      if (!email.includes("@")) {
-        alert("Introduce un email válido.");
+      if (!email || !email.includes("@")) {
+        alert("Por favor introduce un email corporativo o institucional válido.");
         return;
       }
-      requestOtpBtn.textContent = "Código Enviado vía Brevo";
+      triggerHaptic("light");
+      requestOtpBtn.textContent = "Enviando código Brevo...";
       requestOtpBtn.disabled = true;
-      otpBoxesWrapper.classList.remove("hidden");
-      otpBoxes[0].focus();
+
+      setTimeout(() => {
+        requestOtpBtn.classList.add("hidden");
+        emailOtpInput.disabled = true;
+        otpBoxesWrapper.classList.remove("hidden");
+        if (otpBoxes[0]) otpBoxes[0].focus();
+        alert(`Se ha enviado un código de 6 dígitos vía Brevo a ${email}. Introduce los dígitos para autenticarte.`);
+      }, 1000);
     });
 
-    otpBoxes.forEach((box, i) => {
-      box.addEventListener("input", () => {
-        if (box.value.length === 1 && i < otpBoxes.length - 1) {
-          otpBoxes[i + 1].focus();
+    otpBoxes.forEach((box, idx) => {
+      box.addEventListener("input", (e) => {
+        if (box.value && idx < otpBoxes.length - 1) {
+          otpBoxes[idx + 1].focus();
         }
-        let full = "";
-        otpBoxes.forEach(b => full += b.value);
-        if (full.length === 6) {
-          alert(`Código ${full} verificado. ¡Bienvenido a OFG.ai Studio!`);
-          otpModal.classList.add("opacity-0", "pointer-events-none");
+        const fullCode = Array.from(otpBoxes).map(b => b.value).join("");
+        if (fullCode.length === 6) {
+          triggerHaptic("success");
+          setTimeout(() => {
+            alert("¡Acceso autorizado! Sesión verificada con Cloudflare D1.");
+            otpModal.classList.add("opacity-0", "pointer-events-none");
+            openOtpBtn.innerHTML = '<span class="material-symbols-outlined text-[15px]">verified_user</span><span>Conectado</span>';
+            openOtpBtn.className = "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/20 text-emerald-300 font-headline font-bold text-xs uppercase tracking-wider border border-emerald-500/30";
+          }, 300);
+        }
+      });
+
+      box.addEventListener("keydown", (e) => {
+        if (e.key === "Backspace" && !box.value && idx > 0) {
+          otpBoxes[idx - 1].focus();
         }
       });
     });
 
-    // Iniciar con las 4 por defecto
-    buildAllDeliverables(presets.historia, ["podcast", "pdf", "slides", "flashcards"]);
-
-    // =============================================================
-    // HAPTIC FEEDBACK (VIBRACIÓN TÁCTIL EN DISPOSITIVOS MÓVILES)
-    // =============================================================
-    function triggerHaptic(type = "light") {
-      if (!("vibrate" in navigator)) return;
-      try {
-        if (type === "light") navigator.vibrate(12);
-        else if (type === "medium") navigator.vibrate(28);
-        else if (type === "success") navigator.vibrate([15, 35, 25]);
-        else if (type === "warning") navigator.vibrate([25, 45, 25]);
-      } catch (e) {}
-    }
-
-    // Añadir haptics a botones principales
-    [recordBtn, pauseBtn, resetMicBtn, processClassBtn].forEach(btn => {
-      if (btn) btn.addEventListener("click", () => triggerHaptic("medium"));
-    });
-
-    document.querySelectorAll(".studio-option-card").forEach(c => {
-      c.addEventListener("click", () => triggerHaptic("light"));
-    });
-
-    document.querySelectorAll(".tab-nav-btn").forEach(t => {
-      t.addEventListener("click", () => triggerHaptic("light"));
-    });
-
-    // =============================================================
-    // PWA & PROGRESSIVE WEB APP MOBILE INTEGRATION
-    // =============================================================
-    // 1. Registro del Service Worker
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("/sw.js").then(reg => {
-          console.log("[PWA] Service Worker registrado exitosamente con scope:", reg.scope);
-        }).catch(err => {
-          console.warn("[PWA] Error registrando Service Worker:", err);
-        });
-      });
-    }
-
-    // 2. Manejo de Instalación (Android / Chrome / Edge)
-    let deferredInstallPrompt = null;
-    const pwaInstallHeaderBtn = document.getElementById("pwa-install-header-btn");
+    // PWA Mobile Modal Handler
     const mobilePwaBanner = document.getElementById("mobile-pwa-banner");
+    const pwaInstallHeaderBtn = document.getElementById("pwa-install-header-btn");
     const pwaBannerInstallBtn = document.getElementById("pwa-banner-install-btn");
     const pwaBannerCloseBtn = document.getElementById("pwa-banner-close-btn");
     const pwaInstallModal = document.getElementById("pwa-install-modal");
@@ -1495,34 +1458,20 @@
     const pwaAndroidActions = document.getElementById("pwa-android-actions");
     const pwaIosInstructions = document.getElementById("pwa-ios-instructions");
 
-    // Detectar iOS / iPadOS
+    let deferredInstallPrompt = null;
     const isIos = /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
     const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone;
 
-    if (isStandalone) {
-      console.log("[PWA] Aplicación ejecutándose en modo Standalone App nativa");
-      if (mobilePwaBanner) mobilePwaBanner.classList.add("hidden");
-      if (pwaInstallHeaderBtn) pwaInstallHeaderBtn.classList.add("hidden");
-    } else {
-      // Mostrar banner en móvil tras 2 segundos si no es standalone
-      setTimeout(() => {
-        if (window.innerWidth < 768 && mobilePwaBanner) {
-          mobilePwaBanner.classList.remove("hidden");
-        }
-      }, 1800);
-    }
-
-    // Capturar evento beforeinstallprompt nativo del navegador
     window.addEventListener("beforeinstallprompt", (e) => {
       e.preventDefault();
       deferredInstallPrompt = e;
       if (pwaInstallHeaderBtn) pwaInstallHeaderBtn.classList.remove("hidden");
       if (mobilePwaBanner && !isStandalone) mobilePwaBanner.classList.remove("hidden");
-      console.log("[PWA] beforeinstallprompt listo para instalar");
     });
 
     function openPwaModal() {
       triggerHaptic("medium");
+      if (!pwaInstallModal) return;
       if (isIos) {
         if (pwaAndroidActions) pwaAndroidActions.classList.add("hidden");
         if (pwaIosInstructions) pwaIosInstructions.classList.remove("hidden");
@@ -1530,22 +1479,35 @@
         if (pwaAndroidActions) pwaAndroidActions.classList.remove("hidden");
         if (pwaIosInstructions) pwaIosInstructions.classList.add("hidden");
       }
-      pwaInstallModal.classList.remove("opacity-0", "pointer-events-none");
+      pwaInstallModal.classList.remove("opacity-0", "pointer-events-none", "hidden");
+      pwaInstallModal.style.opacity = "1";
+      pwaInstallModal.style.pointerEvents = "auto";
+      pwaInstallModal.style.display = "flex";
     }
 
     function closePwaModal() {
+      if (!pwaInstallModal) return;
       pwaInstallModal.classList.add("opacity-0", "pointer-events-none");
+      pwaInstallModal.style.opacity = "0";
+      pwaInstallModal.style.pointerEvents = "none";
+      setTimeout(() => { pwaInstallModal.style.display = "none"; }, 250);
     }
 
     if (pwaInstallHeaderBtn) pwaInstallHeaderBtn.addEventListener("click", openPwaModal);
+    if (closePwaModalBtn) closePwaModalBtn.addEventListener("click", closePwaModal);
+
+    if (pwaInstallModal) {
+      pwaInstallModal.addEventListener("click", (e) => {
+        if (e.target === pwaInstallModal) closePwaModal();
+      });
+    }
+
     if (pwaBannerInstallBtn) {
       pwaBannerInstallBtn.addEventListener("click", () => {
         if (deferredInstallPrompt) {
           deferredInstallPrompt.prompt();
           deferredInstallPrompt.userChoice.then((choice) => {
-            if (choice.outcome === "accepted") {
-              if (mobilePwaBanner) mobilePwaBanner.classList.add("hidden");
-            }
+            if (choice.outcome === "accepted" && mobilePwaBanner) mobilePwaBanner.classList.add("hidden");
             deferredInstallPrompt = null;
           });
         } else {
@@ -1560,8 +1522,6 @@
       });
     }
 
-    if (closePwaModalBtn) closePwaModalBtn.addEventListener("click", closePwaModal);
-
     if (pwaModalInstallBtn) {
       pwaModalInstallBtn.addEventListener("click", () => {
         triggerHaptic("success");
@@ -1575,13 +1535,14 @@
             deferredInstallPrompt = null;
           });
         } else {
-          alert("Para instalar en Chrome / Edge: Pulsa el icono de instalación ⊕ en la barra de direcciones o en los 3 puntos ⋮ > Instalar aplicación.");
+          alert("Para instalar en Chrome / Edge: Pulsa en los 3 puntos ⋮ > Instalar aplicación.");
         }
       });
     }
 
     // =============================================================
     // MOBILE BOTTOM THUMB DOCK NAVIGATION
+    // =============================================================
     const mNavRecord = document.getElementById("m-nav-record");
     const mNavNotebook = document.getElementById("m-nav-notebook");
     const mNavInstall = document.getElementById("m-nav-install");
@@ -1590,39 +1551,37 @@
       triggerHaptic("light");
       [mNavRecord, mNavNotebook, mNavInstall].forEach(btn => {
         if (!btn) return;
-        btn.className = "cursor-pointer flex flex-col items-center gap-1 py-1 px-4 text-on-surface-variant hover:text-primary font-headline font-medium text-[10px] transition-all btn-press";
+        btn.className = "cursor-pointer flex flex-col items-center gap-1 py-1 px-4 text-on-surface-variant hover:text-primary font-headline font-medium text-[10px] transition-all btn-press no-underline";
       });
       if (activeEl) {
-        activeEl.className = "cursor-pointer flex flex-col items-center gap-1 py-1 px-4 text-primary-container font-headline font-bold text-[10px] transition-all btn-press";
+        activeEl.className = "cursor-pointer flex flex-col items-center gap-1 py-1 px-4 text-primary-container font-headline font-bold text-[10px] transition-all btn-press no-underline";
       }
     }
 
-    function wireButton(btn, handler) {
-      if (!btn) return;
-      btn.addEventListener("click", handler);
-      btn.addEventListener("touchend", (e) => {
+    if (mNavRecord) {
+      mNavRecord.addEventListener("click", () => {
+        setMobileActiveNav(mNavRecord);
+        const sec = document.getElementById("recorder-section");
+        if (sec) {
+          sec.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+    }
+
+    if (mNavNotebook) {
+      mNavNotebook.addEventListener("click", () => {
+        setMobileActiveNav(mNavNotebook);
+        handleNotebookAction();
+      });
+    }
+
+    if (mNavInstall) {
+      mNavInstall.addEventListener("click", (e) => {
         e.preventDefault();
-        handler();
-      }, { passive: false });
+        setMobileActiveNav(mNavInstall);
+        openPwaModal();
+      });
     }
-
-    wireButton(mNavRecord, () => {
-      setMobileActiveNav(mNavRecord);
-      const sec = document.getElementById("recorder-section");
-      if (sec) {
-        sec.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    });
-
-    wireButton(mNavNotebook, () => {
-      setMobileActiveNav(mNavNotebook);
-      handleOpenGoogleNotebook();
-    });
-
-    wireButton(mNavInstall, () => {
-      setMobileActiveNav(mNavInstall);
-      openPwaModal();
-    });
 
     window.addEventListener("appinstalled", () => {
       console.log("[PWA] ¡OFG.ai Studio instalada exitosamente en el sistema!");
